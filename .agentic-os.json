@@ -1,0 +1,37 @@
+{
+  "schema": "agentic-os/repository-profile/v1",
+  "repository": "github.com/huijoohwee/agentic-design-system",
+  "canonical": {
+    "localRef": "refs/heads/main",
+    "remoteRef": "refs/remotes/origin/main"
+  },
+  "adapters": {
+    "repository": {
+      "id": "git",
+      "version": "1"
+    },
+    "provider": {
+      "id": "github",
+      "version": "1"
+    }
+  },
+  "requiredChecks": [
+    "Integration Gate"
+  ],
+  "capabilities": [
+    "quarantine-worktree-cleanup-opt-in"
+  ],
+  "authority": {
+    "runtime": "consumer",
+    "release": "consumer"
+  },
+  "cleanup": {
+    "localBranch": "retain",
+    "remoteBranch": "retain",
+    "remoteTrackingRef": "retain",
+    "unreachableObjects": "retain",
+    "worktreeProjection": "quarantine",
+    "worktreeRegistration": "quarantine"
+  },
+  "profileDigest": "b5f4ba4945000249ef816e0baf62e8ba57250ff6f88edbffcd2950cc6cac207c"
+}
