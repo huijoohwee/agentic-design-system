@@ -3,6 +3,7 @@ import { execFileSync } from "node:child_process";
 import { readFile, readdir, stat } from "node:fs/promises";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { validateCommerceProfile } from "./commerce-profile.mjs";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const expectedFiles = [
@@ -12,12 +13,14 @@ const expectedFiles = [
   "LICENSE",
   "README.md",
   "scripts/check-public-release.mjs",
+  "scripts/commerce-profile.mjs",
   "site/THIRD-PARTY-NOTICES.txt",
   "site/app.js",
   "site/catalog.json",
   "site/catalog.schema.json",
   "site/index.html",
   "site/sw.js",
+  "site/tokens/commerce-profile.json",
   "site/vendor/agentic-base-browser-data-view.css",
   "site/vendor/agentic-base-browser-data-view.js",
 ].sort();
@@ -101,6 +104,8 @@ if (catalog.$schema !== "./catalog.schema.json" || catalog.catalogId !== "agenti
   || catalog.release.status !== "released" && catalog.records.length > 0) {
   fail("Public catalog does not satisfy its release contract");
 }
+
+validateCommerceProfile(await readFile(resolve(root, "site/tokens/commerce-profile.json"), "utf8"));
 
 const notices = await readFile(resolve(root, "site/THIRD-PARTY-NOTICES.txt"), "utf8");
 if (!notices.includes("The MIT License (MIT)") || !notices.includes("ISC License")) {

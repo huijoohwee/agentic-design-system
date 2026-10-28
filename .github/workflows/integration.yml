@@ -33,6 +33,9 @@ jobs:
           node --check site/app.js
           node --check site/sw.js
           node --check scripts/check-public-release.mjs
+          node --check scripts/commerce-profile.mjs
 
       - name: Check public release contents
-        run: node scripts/check-public-release.mjs
+        run: |
+          node scripts/commerce-profile.mjs --check
+          node scripts/check-public-release.mjs
