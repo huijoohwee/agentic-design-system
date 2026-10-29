@@ -1,19 +1,19 @@
 ---
 title: "Agentic Design System — Shared Ownership and Singleton Tokens"
 doc_type: "PRD-TAD-ADR-MVP-GTM"
-version: "0.6.0"
-revision: "0.6.0"
+version: "0.7.0"
+revision: "0.7.0"
 date: "2026-10-29"
-updated_date: "2026-10-29"
+updated_date: "2026-10-30"
 lang: "en-US"
 frontmatter_contract: "required"
 owner: "Design-system product function"
 continuity_id: "DESIGN-TOKEN-ADOPTION-001"
-prd_revision: "0.6.0"
-tad_revision: "0.6.0"
-adr_revision: "0.6.0"
-mvp_revision: "0.6.0"
-gtm_revision: "0.6.0"
+prd_revision: "0.7.0"
+tad_revision: "0.7.0"
+adr_revision: "0.7.0"
+mvp_revision: "0.7.0"
+gtm_revision: "0.7.0"
 local_rung: "dev-proven"
 delivered_rung: "undocumented"
 lane: "authoring"
@@ -26,9 +26,9 @@ guideline_source: "https://github.com/huijoohwee/huijoohwee.github.io/blob/e944d
 template_source: "https://github.com/huijoohwee/huijoohwee.github.io/blob/82835ac37d524643faa6b9703cb077ea9474ab15/guidelines/prd-tad-adr-mvp-gtm-templates.md"
 parent: "https://github.com/huijoohwee/huijoohwee.github.io/blob/d6b6112cc63e4b610ff21ba93db233f548d91510/docs/documents/prd-tad-adr-mvp-gtm-agentic-design-system.md"
 parent_version: "0.2.0"
-worktree_id: "agentic-design-system-plan-bootstrap"
+worktree_id: "device-0232231d4a19--design-system-registry"
 agent_id: "codex"
-source_revision: "9dd6c3a98621aaebdf2a36187d3aa9272c27fbee"
+source_revision: "a1c56f8ba3c3b8892897fcdbf6d61ed09784b6b7"
 lifecycle_status: "proposed"
 load_policy: "on-demand"
 runtime_readiness_policy: "fail-closed"
@@ -36,9 +36,9 @@ runtime_readiness_policy: "fail-closed"
 
 # Agentic Design System — Shared Ownership and Singleton Tokens
 
-**Join:** `DESIGN-TOKEN-ADOPTION-001@0.6.0`, superseding `0.5.0`, `0.4.0`, `0.3.0`, and `0.2.0`. This revision records a central registry candidate containing Commerce, Base, and exact-grant Graph profiles. The design-system repository is the intended single registry and eventual editable value owner for the four-repository design surface. Native component behavior remains with its product owner. Source rights, migration status, and runtime adoption are separate facts; this audit does not claim whole-repository centralization.
+**Join:** `DESIGN-TOKEN-ADOPTION-001@0.7.0`, superseding `0.6.0`, `0.5.0`, `0.4.0`, `0.3.0`, and `0.2.0`. This revision records the AOS pull-request integration requirement discovered during release handoff. The central registry candidate still contains Commerce, Base, and exact-grant Graph profiles; native component behavior remains with its product owner. Source rights, migration status, and runtime adoption are separate facts; this audit does not claim whole-repository centralization.
 
-**Change boundary:** this document records implementation evidence from the active authoring lane based on `9dd6c3a98621aaebdf2a36187d3aa9272c27fbee`. The user granted public reuse of four exact Graph artifacts on 2026-10-29; that does not authorize other Graph sources or future revisions. No consumer migration, protected merge, catalog release, or deployment is claimed. The catalog and three profiles remain draft candidates.
+**Change boundary:** this successor starts from the published central candidate `a1c56f8ba3c3b8892897fcdbf6d61ed09784b6b7`. It binds `.agentic-os.json` to AOS's protected pull-request integration path and makes the public-release checker enforce that capability. The user granted public reuse of four exact Graph artifacts on 2026-10-29; that does not authorize other Graph sources or future revisions. No consumer migration, protected merge, catalog release, or deployment is claimed. The catalog and three profiles remain draft candidates.
 
 ## Codebase grounding record
 
@@ -155,6 +155,12 @@ Threats are duplicate keys, poisoned or stale owner metadata, digest drift, casc
 
 **Budgets:** $0 incremental external spend; no paid dependency or model token; ≤25 changed paths across the plan's first implementation slice; ≤100 kB incremental shipped bytes; ≤3 new runtime modules; each file under 600 lines; one owner registry, one validator, one generator path. Stop at a cap and revise the plan before widening scope. External waits are blockers with an owner and recheck condition, not an ETA.
 
+### Protected integration profile
+
+The repository profile must select `protected-integration:pull-request` whenever release uses AOS `land` and `promote plan|apply`. The local `land` command must project the exact same-repository PR for the published head and protected base; the promotion plan must bind that PR, head, base, selected Integration Gate run, and squash method. The public-release check requires the capability and a valid profile digest. Do not select strict-base, merge-queue, or merge-method protection unless the live provider observation proves that policy. The profile change grants no merge authority.
+
+The provider currently reports an Integration Gate check but no required pull-request rule. Therefore the profile successor can be prepared and locally verified, but protected publication/promotion remains blocked until repository authority applies a matching PR rule. This plan does not change provider settings or close the predecessor PR.
+
 ## ADR-01 — Central registry, native source owners, generated consumers
 
 **Status:** proposed. **Decision:** make this repository the sole registry and, after rights-cleared migration, the sole editable value owner for adopted visual tokens across the product repositories. A migration records the current source as provenance, moves the value into the central source, and removes the old editable definition in the same owner-reviewed adoption. Generated consumer files are projections only. No product can override a registered key. If source rights or owner approval blocks transfer, keep one native source, mark the key blocked, and do not claim the centralization is complete.
@@ -165,7 +171,7 @@ Threats are duplicate keys, poisoned or stale owner metadata, digest drift, casc
 
 ## MVP
 
-**Bounded implementation slice:** add the central ownership/key contract, source map for four repositories, three pinned candidate profiles, fail-closed global key and local declaration checks, deterministic Base/Graph CSS projections, local ownership/search UI, shared read-only MCP/WebMCP contract, and a dependency-free `npm run dev` loopback server. The catalog and profiles stay draft. Consumer migrations remain owner-scoped and are not part of this slice.
+**Bounded implementation slice:** add the central ownership/key contract, source map for four repositories, three pinned candidate profiles, fail-closed global key and local declaration checks, deterministic Base/Graph CSS projections, local ownership/search UI, shared read-only MCP/WebMCP contract, a dependency-free `npm run dev` loopback server, and the AOS protected pull-request profile binding. The catalog and profiles stay draft. Consumer migrations remain owner-scoped and are not part of this slice.
 
 | VCC set | Evidence | Local rung | Delivered rung |
 |---|---|---|---|
@@ -188,7 +194,7 @@ Audit surface: authoring lane `agent/device-0232231d4a19/design-system-registry`
 | DS-09 | Pass | `PORT=0 npm run dev` printed `http://127.0.0.1:57869/`; the page and its seven profile/catalog/script/favicon resources returned HTTP 200. The server binds only `127.0.0.1`, uses a strict file allowlist, and has zero declared runtime dependencies. | No production deployment is implied. |
 | DS-10 | Partial; shared read-only contract passes | `npm run check:design-system` verifies browser query fixtures, WebMCP stub registration, equal MCP/WebMCP names and schemas, and a real stdio MCP initialize/list/call exchange. The live browser correctly reports that WebMCP is unavailable and keeps search active. | Native WebMCP execution could not be tested because this browser exposes no `document.modelContext`; verify on a supporting browser before claiming native browser-tool execution. |
 
-Additional local evidence: `node scripts/design-registry.mjs check`, JavaScript syntax checks for the changed JS modules, and `git diff --check` passed. The public-release file allowlist previously passed against the candidate tree using a temporary Git index; it will be rerun after this plan update. The site contains 86,812 bytes across 13 files; the lane has 24 changed paths; the largest changed file is 563 lines; runtime-module additions are within the three-module budget when build-time profile generators are excluded. `package.json` declares zero dependencies. Incremental external spend and product model calls are $0 and 0. No production audit or deployment was run.
+Additional local evidence at predecessor head `a1c56f8ba3c3b8892897fcdbf6d61ed09784b6b7`: `npm run check:design-system`, `node scripts/check-public-release.mjs`, and `git diff --check` passed. The live AOS `land` recheck reported `no pull-request integration capability selected`; `.agentic-os.json` did not bind the PR route, leaving the lane projection's PR number null. `queue show` confirmed that the current provider requires the Integration Gate but has no required pull-request rule; provider policy is a separate repository-authority action. The site contains 86,812 bytes across 13 files; predecessor lane has 24 changed paths; the largest changed file is 563 lines; runtime-module additions are within the three-module budget when build-time profile generators are excluded. `package.json` declares zero dependencies. Incremental external spend and product model calls are $0 and 0. No production audit or deployment was run.
 
 **Audit result:** the bounded central registry/UI slice is `dev-proven`; the joined product is not `runtime-ready`. Three central candidate profiles are present and exact source rights are recorded, but Base and Graph remain native consumers and Commerce has no completed migration. Cross-repository duplicate/override scanning and consumer rollback are absent; native WebMCP execution, keyboard/reduced-motion/contrast review, actual 200% browser zoom, and the five-task user pilot remain incomplete. No whole-repository parity, savings, buyer demand, protected merge, release, or deployment is claimed.
 
@@ -207,7 +213,7 @@ Additional local evidence: `node scripts/design-registry.mjs check`, JavaScript 
 
 ### ADLC boundary
 
-This is an authoring-lane implementation audit, not an Integration Receipt or deployment receipt. AOS status classifies `agent/device-0232231d4a19/design-system-registry` as active with author/publish/integrate capabilities; `doctor` confirms hook closure and two registered worktrees with none stale. It warns that canonical byte-cleanliness is deferred and four local lane refs are retained. The central lane has no remote-tracking branch or PR yet; the repository requires the protected Integration Gate. This record grants no merge or deployment authority. RELEASE, deploy, runtime readback, rollback, and cleanup receipts remain separate; the product deploy owner has not been identified in this plan.
+This is an authoring-lane implementation audit, not an Integration Receipt or deployment receipt. The predecessor lane `agent/device-0232231d4a19/design-system-registry` is published at `a1c56f8ba3c3b8892897fcdbf6d61ed09784b6b7`; PR #5 is open at that exact head and the protected base is `9dd6c3a98621aaebdf2a36187d3aa9272c27fbee`. AOS `land` did not project the PR because the predecessor profile omitted `protected-integration:pull-request`. This successor adds that profile capability and enforces it in the public-release check. The live provider does not yet require PRs, so this successor does not claim a successful provider handoff, merge, release, or deployment; PR #5 remains open pending separate disposition. RELEASE, deploy, runtime readback, rollback, and cleanup receipts remain separate; the product deploy owner has not been identified in this plan.
 
 ## GTM
 
@@ -221,7 +227,7 @@ No revenue, market size, ROI, or time savings are claimed. Revenue and buyer evi
 
 ## C01–C16 coverage
 
-**Join:** `DESIGN-TOKEN-ADOPTION-001@0.6.0` · **Owner:** Design-system product function · **As of:** 2026-10-29. **0:** four source owners are grounded at exact revisions; drift pain and willingness to pay are not measured. **1:** resolve one key to one owner and pin in ≤5 minutes in a five-task pilot; observation not run.
+**Join:** `DESIGN-TOKEN-ADOPTION-001@0.7.0` · **Owner:** Design-system product function · **As of:** 2026-10-30. **0:** four source owners are grounded at exact revisions; drift pain and willingness to pay are not measured. **1:** resolve one key to one owner and pin in ≤5 minutes in a five-task pilot; observation not run.
 
 | Domain | Disposition | Evidence / gap | Owner and next check |
 |---|---|---|---|
@@ -238,7 +244,7 @@ No revenue, market size, ROI, or time savings are claimed. Revenue and buyer evi
 | C11 Organization, obligations | covered | Native owner and rights gates recorded; legal review open. | Product · resolve before public release. |
 | C12 Financial viability | covered | $0 spend target; labor/hosting allocation unknown. | Finance · record actual cost only. |
 | C13 Capital, milestones | covered | No funding or recurring offer; optional $1 sponsorship untested. | Product · no collection in MVP. |
-| C14 ADLC execution | covered | Active local lane and exact base recorded; closeout is blocked by dirty source, unresolved authority, and missing cleanup receipt. No merge/deploy authority is inferred. | ADLC owner · resolve lane evidence before RELEASE. |
+| C14 ADLC execution | covered | Predecessor PR #5 is open and green, but its lane record has no PR binding because the repository profile did not select pull-request integration. This successor binds that capability; the provider must separately require PRs before AOS publication/promotion can pass. No merge/deploy authority is inferred. | ADLC owner · obtain repository-authority PR-rule evidence, then rerun `land` and prepare exact promotion plan. |
 | C15 Audience projections | deferred | No validated buyer or financial inputs. | Product · revisit after pilot and WTP evidence. |
 | C16 Learning, next increment | covered | Five-task baseline remains unmeasured; next increment is cross-source conformance and owner-scoped migrations. | Product · record pilot and same-plan successor after evidence. |
 
@@ -251,5 +257,5 @@ No revenue, market size, ROI, or time savings are claimed. Revenue and buyer evi
 - MCP transport contract · [official specification, 2025-11-25](https://modelcontextprotocol.io/specification/2025-11-25/basic/transports) · local stdio uses newline-delimited JSON-RPC; no HTTP service is needed for this slice.
 - WebMCP contract · [Web Machine Learning Community Group draft](https://github.com/webmachinelearning/webmcp/blob/main/index.bs) and [Chrome for Developers guidance](https://developer.chrome.com/docs/ai/webmcp/) · progressive enhancement and API support remain browser-dependent.
 - Predecessor plans `DESIGN-TOKEN-ADOPTION-001@0.3.0` and `@0.2.0` · exact path and revision in `parent`.
-- Local implementation audit and evidence are recorded in the MVP section above; authoritative code base SHA is `9dd6c3a98621aaebdf2a36187d3aa9272c27fbee`.
+- Local implementation audit and evidence are recorded in the MVP section above; predecessor source SHA is `a1c56f8ba3c3b8892897fcdbf6d61ed09784b6b7` and the original protected base is `9dd6c3a98621aaebdf2a36187d3aa9272c27fbee`.
 - Source commits, paths, and file digests in the Codebase Grounding Record; all are inspection evidence only.
