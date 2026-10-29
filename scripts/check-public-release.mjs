@@ -12,6 +12,7 @@ const expectedFiles = [
   ".gitignore",
   "LICENSE",
   "README.md",
+  "prd-tad-adr-mvp-gtm-agentic-design-system.md",
   "scripts/check-public-release.mjs",
   "scripts/commerce-profile.mjs",
   "site/THIRD-PARTY-NOTICES.txt",
