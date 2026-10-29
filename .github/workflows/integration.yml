@@ -22,6 +22,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
@@ -30,12 +32,15 @@ jobs:
 
       - name: Check JavaScript syntax
         run: |
-          node --check site/app.js
+          node --input-type=module --check < site/app.js
+          node --check site/registry-query.js
           node --check site/sw.js
+          node --check scripts/base-profile.mjs
           node --check scripts/check-public-release.mjs
           node --check scripts/commerce-profile.mjs
+          node --check scripts/design-registry.mjs
+          node --check scripts/dev.mjs
+          node --check scripts/graph-profile.mjs
 
       - name: Check public release contents
-        run: |
-          node scripts/commerce-profile.mjs --check
-          node scripts/check-public-release.mjs
+        run: node scripts/check-public-release.mjs

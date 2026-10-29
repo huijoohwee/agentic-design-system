@@ -10,5 +10,236 @@
     "predecessor": null
   },
   "requestedPath": "/agentic-design-system/",
-  "records": []
+  "records": [],
+  "registry": {
+    "schema": "agentic-design-system/owner-registry/v1",
+    "registryId": "agentic-design-system",
+    "revision": "0.4.0",
+    "owner": "github.com/huijoohwee/agentic-design-system",
+    "coverage": "Commerce, Base, and Graph candidate profiles are revision-pinned; Graph reuse is limited to four granted artifacts; consumer adoption and whole-repository parity are not claimed",
+    "keyContract": {
+      "schema": "agentic-design-system/design-key/v1",
+      "canonicalKeyPattern": "^[a-z0-9][a-z0-9.-]*(?::[a-z0-9][a-z0-9.-]*)*$",
+      "cssVariablePattern": "^--[a-z][a-z0-9-]*$",
+      "uniqueBy": [
+        "canonicalKey",
+        "cssVariable"
+      ],
+      "overridePolicy": "deny"
+    },
+    "owners": [
+      {
+        "id": "agentic-os",
+        "name": "Agentic OS",
+        "repository": "github.com/huijoohwee/agentic-os",
+        "revision": "7b61883346a68db615317fe6e24c497be5a93bd7",
+        "scopes": [
+          "governance"
+        ],
+        "role": "Runtime policy and release governance; not a visual-token source.",
+        "reuseGate": "reference-only",
+        "sources": [
+          {
+            "path": "guides/SYSTEM-PROMPT-RUNTIME.md",
+            "kind": "policy",
+            "digest": "sha256:edfab6a19768c47508e7a6110d59216af9752821787129387826f4a2f1fc294f"
+          }
+        ]
+      },
+      {
+        "id": "agentic-commerce-os",
+        "name": "Agentic Commerce OS",
+        "repository": "github.com/huijoohwee/agentic-commerce-os",
+        "revision": "6ce3bc918717b97a738ac831dfb4fb3319a02fb6",
+        "scopes": [
+          "commerce",
+          "shop",
+          "vendor",
+          "admin",
+          "sme-business-pack"
+        ],
+        "role": "Native owner of Commerce shell behavior and product state.",
+        "reuseGate": "mit-verified",
+        "sources": [
+          {
+            "path": "public/local-first/workspace-shell.css",
+            "kind": "native",
+            "digest": "sha256:2e0b86c0efa040618b8cbfab9d130a751ab85e7d937f94762b8d523a5920f100"
+          },
+          {
+            "path": "public/local-first/index.html",
+            "kind": "native",
+            "digest": "sha256:bff3aefecb745a23388b6a4cc85dd5ea285e84b8fb68dc18fe4619dcbe3d6429"
+          },
+          {
+            "path": "public/local-first/commerce-theme.css",
+            "kind": "generated",
+            "digest": "sha256:c512ee76dc6160ff41e8bac9706b8e8d0b9e56f42b6c4b128594605e19c93474"
+          }
+        ]
+      },
+      {
+        "id": "agentic-graph",
+        "name": "Agentic Graph",
+        "repository": "github.com/huijoohwee/agentic-graph",
+        "revision": "bed770d91a9b3f1b663eee9637a472bf19b36361",
+        "scopes": [
+          "graph"
+        ],
+        "role": "Native owner of graph token values and typography; only the four pinned profile artifacts have a public reuse grant.",
+        "reuseGate": "rights-review-required",
+        "sources": [
+          {
+            "path": "grph-shared/src/ui/kgTokens.ts",
+            "kind": "native",
+            "digest": "sha256:4a8e7e57e011f986cc86d94f5d77d43cea26660627677cd5c0f4ab7fd25bc30e"
+          },
+          {
+            "path": "grph-shared/src/ui/typography.ts",
+            "kind": "native",
+            "digest": "sha256:82d83deb9cba2ae5549069780e028849ee7365d46d97dff2574cdd1a00df8047"
+          },
+          {
+            "path": "grph-shared/src/ui/fontStacks.js",
+            "kind": "native",
+            "digest": "sha256:27fe9d5fb35e866c662a28551162a3451604aea43b93ecaf7ba457cb8c356916"
+          },
+          {
+            "path": "canvas/src/styles/kgTokens.generated.css",
+            "kind": "generated",
+            "digest": "sha256:b676d411f7f1683a9b208b2a74f03a921d7e77a32a6f2b4a4274a41c6441dee8"
+          }
+        ]
+      },
+      {
+        "id": "agentic-base",
+        "name": "Agentic Base",
+        "repository": "github.com/huijoohwee/agentic-base",
+        "revision": "a5d0f2d87d8c6871e9639f8224f5eaee056c5b6e",
+        "scopes": [
+          "shared-data-view"
+        ],
+        "role": "Native owner of shared data-view presentation and behavior.",
+        "reuseGate": "mit-verified",
+        "sources": [
+          {
+            "path": "packages/views-react/src/browser/browserDataView.css",
+            "kind": "native",
+            "digest": "sha256:f00b3f4c88dfa81946fdc1577aa01ff49ea3e6f996f32607bc715a5d93079b69"
+          },
+          {
+            "path": "packages/views-react/dist/browser-data-view.css",
+            "kind": "generated",
+            "digest": "sha256:f00b3f4c88dfa81946fdc1577aa01ff49ea3e6f996f32607bc715a5d93079b69"
+          }
+        ]
+      }
+    ],
+    "profiles": [
+      {
+        "id": "commerce",
+        "name": "Commerce theme profile",
+        "owner": "github.com/huijoohwee/agentic-design-system",
+        "repository": "github.com/huijoohwee/agentic-design-system",
+        "revision": "c18253b35e8bcc0bed548cfb717ec31909422dbe",
+        "source": "./tokens/commerce-profile.json",
+        "digest": "sha256:000adeb267d0d0ff9527e1227faefcd5fd2c15faee463fa70173204783ea7c9e",
+        "scope": [
+          "commerce",
+          "shop",
+          "vendor",
+          "admin",
+          "sme-business-pack"
+        ],
+        "status": "candidate",
+        "rights": "cleared",
+        "permissionEvidence": "User instruction on 2026-10-29 to centralize the named product repositories in Agentic Design System.",
+        "licenseEvidence": [
+          {
+            "repository": "github.com/huijoohwee/agentic-design-system",
+            "revision": "c18253b35e8bcc0bed548cfb717ec31909422dbe",
+            "path": "LICENSE",
+            "digest": "sha256:b2e476300173b31043c1222c840b5cd3a8c234d50ffc5f44f104fcbf66fc5ffe"
+          },
+          {
+            "repository": "github.com/huijoohwee/agentic-commerce-os",
+            "revision": "6ce3bc918717b97a738ac831dfb4fb3319a02fb6",
+            "path": "LICENSE",
+            "digest": "sha256:939721e4008a40f28594af8bdd7c122e388d9b22534ef1e6799dc771023691a1"
+          }
+        ],
+        "consumerPins": [
+          {
+            "repository": "github.com/huijoohwee/agentic-commerce-os",
+            "revision": "6ce3bc918717b97a738ac831dfb4fb3319a02fb6",
+            "path": "public/local-first/commerce-theme.css",
+            "digest": "sha256:c512ee76dc6160ff41e8bac9706b8e8d0b9e56f42b6c4b128594605e19c93474"
+          }
+        ]
+      },
+      {
+        "id": "base",
+        "name": "Base shared data-view profile",
+        "owner": "github.com/huijoohwee/agentic-base",
+        "repository": "github.com/huijoohwee/agentic-base",
+        "revision": "a5d0f2d87d8c6871e9639f8224f5eaee056c5b6e",
+        "source": "./tokens/base-profile.json",
+        "digest": "sha256:3c231b5a57ae6acac862a4ede882d24657d93e45b1bc7ea32d1799ef4b32e361",
+        "scope": [
+          "shared-data-view"
+        ],
+        "status": "candidate",
+        "rights": "cleared",
+        "permissionEvidence": "User instruction on 2026-10-29 to centralize the named product repositories; Base MIT license is pinned to the source revision.",
+        "licenseEvidence": [
+          {
+            "repository": "github.com/huijoohwee/agentic-design-system",
+            "revision": "9dd6c3a98621aaebdf2a36187d3aa9272c27fbee",
+            "path": "LICENSE",
+            "digest": "sha256:b2e476300173b31043c1222c840b5cd3a8c234d50ffc5f44f104fcbf66fc5ffe"
+          },
+          {
+            "repository": "github.com/huijoohwee/agentic-base",
+            "revision": "a5d0f2d87d8c6871e9639f8224f5eaee056c5b6e",
+            "path": "LICENSE",
+            "digest": "sha256:939721e4008a40f28594af8bdd7c122e388d9b22534ef1e6799dc771023691a1"
+          }
+        ],
+        "consumerPins": [],
+        "projection": {
+          "path": "./vendor/base-profile.css",
+          "digest": "sha256:3e4fe01378e8e6ce347c74205659a0b0bdaa04759a2fe1f17c4060702bce6345"
+        }
+      },
+      {
+        "id": "graph",
+        "name": "Graph token and typography profile",
+        "owner": "github.com/huijoohwee/agentic-graph",
+        "repository": "github.com/huijoohwee/agentic-graph",
+        "revision": "bed770d91a9b3f1b663eee9637a472bf19b36361",
+        "source": "./tokens/graph-profile.json",
+        "digest": "sha256:e19a588f6b18aebe7c55e5369930dedd91263905c412c64a42baf28cb04dd64a",
+        "scope": [
+          "graph-ui",
+          "application-typography"
+        ],
+        "status": "candidate",
+        "rights": "cleared-scoped",
+        "permissionEvidence": "User grant 2026-10-29: public reuse of the exact four Graph artifacts listed here, with attribution, in this central MIT repository; no broader Graph source grant.",
+        "licenseEvidence": [
+          {
+            "repository": "github.com/huijoohwee/agentic-design-system",
+            "revision": "9dd6c3a98621aaebdf2a36187d3aa9272c27fbee",
+            "path": "LICENSE",
+            "digest": "sha256:b2e476300173b31043c1222c840b5cd3a8c234d50ffc5f44f104fcbf66fc5ffe"
+          }
+        ],
+        "consumerPins": [],
+        "projection": {
+          "path": "./vendor/graph-profile.css",
+          "digest": "sha256:e4be7fd758ded0ad93437e73d687f5223f44e20e9dfde6384bb446f525775c2c"
+        }
+      }
+    ]
+  }
 }
