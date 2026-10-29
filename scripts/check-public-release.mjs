@@ -108,6 +108,18 @@ if (catalog.$schema !== "./catalog.schema.json" || catalog.catalogId !== "agenti
 
 validateCommerceProfile(await readFile(resolve(root, "site/tokens/commerce-profile.json"), "utf8"));
 
+const html = await readFile(resolve(root, "site/index.html"), "utf8");
+const csp = [...html.matchAll(/<meta\s+http-equiv="Content-Security-Policy"\s+content="([^"]+)"\s*>/giu)];
+const inlineStyles = [...html.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style\s*>/giu)];
+const styleHash = inlineStyles.map(([, css]) => `'sha256-${createHash("sha256").update(css).digest("base64")}'`);
+const styleDirective = csp[0]?.[1].split(";").map((item) => item.trim()).find((item) => item.startsWith("style-src "));
+if (csp.length !== 1 || inlineStyles.length !== 1
+  || /'unsafe-inline'|'unsafe-eval'|\*/u.test(csp[0]?.[1] ?? "")
+  || !styleHash.every((hash) => styleDirective?.split(/\s+/u).includes(hash))
+  || /<[^>]+\sstyle\s*=/iu.test(html)) {
+  fail("Production HTML CSP must hash its inline stylesheet and forbid unsafe inline sources");
+}
+
 const notices = await readFile(resolve(root, "site/THIRD-PARTY-NOTICES.txt"), "utf8");
 if (!notices.includes("The MIT License (MIT)") || !notices.includes("ISC License")) {
   fail("Third-party license notices are incomplete");
