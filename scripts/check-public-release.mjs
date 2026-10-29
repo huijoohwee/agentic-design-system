@@ -147,6 +147,7 @@ const { profileDigest, ...profileContent } = profile;
 if (profile.schema !== "agentic-os/repository-profile/v1"
   || profile.repository !== "github.com/huijoohwee/agentic-design-system"
   || profile.requiredChecks?.length !== 1 || profile.requiredChecks[0] !== "Integration Gate"
+  || !profile.capabilities?.includes("protected-integration:pull-request")
   || !profile.capabilities?.includes("quarantine-worktree-cleanup-opt-in")
   || profile.cleanup?.worktreeProjection !== "quarantine"
   || profile.cleanup?.worktreeRegistration !== "quarantine"

@@ -19,6 +19,7 @@
     "Integration Gate"
   ],
   "capabilities": [
+    "protected-integration:pull-request",
     "quarantine-worktree-cleanup-opt-in"
   ],
   "authority": {
@@ -33,5 +34,5 @@
     "worktreeProjection": "quarantine",
     "worktreeRegistration": "quarantine"
   },
-  "profileDigest": "b5f4ba4945000249ef816e0baf62e8ba57250ff6f88edbffcd2950cc6cac207c"
+  "profileDigest": "25918e9c4feb951ea73b2452974017595d29ce2f45ba6c6493ed65f743326815"
 }
