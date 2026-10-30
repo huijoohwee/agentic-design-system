@@ -1,19 +1,19 @@
 ---
 title: "Agentic Design System — Shared Ownership and Singleton Tokens"
 doc_type: "PRD-TAD-ADR-MVP-GTM"
-version: "0.7.0"
-revision: "0.7.0"
+version: "0.8.0"
+revision: "0.8.0"
 date: "2026-10-29"
 updated_date: "2026-10-30"
 lang: "en-US"
 frontmatter_contract: "required"
 owner: "Design-system product function"
 continuity_id: "DESIGN-TOKEN-ADOPTION-001"
-prd_revision: "0.7.0"
-tad_revision: "0.7.0"
-adr_revision: "0.7.0"
-mvp_revision: "0.7.0"
-gtm_revision: "0.7.0"
+prd_revision: "0.8.0"
+tad_revision: "0.8.0"
+adr_revision: "0.8.0"
+mvp_revision: "0.8.0"
+gtm_revision: "0.8.0"
 local_rung: "dev-proven"
 delivered_rung: "undocumented"
 lane: "authoring"
@@ -28,7 +28,7 @@ parent: "https://github.com/huijoohwee/huijoohwee.github.io/blob/d6b6112cc63e4b6
 parent_version: "0.2.0"
 worktree_id: "device-0232231d4a19--design-system-registry"
 agent_id: "codex"
-source_revision: "a1c56f8ba3c3b8892897fcdbf6d61ed09784b6b7"
+source_revision: "6b60519f1f6e58053db02d83fd13ad0417940b2f"
 lifecycle_status: "proposed"
 load_policy: "on-demand"
 runtime_readiness_policy: "fail-closed"
@@ -36,9 +36,9 @@ runtime_readiness_policy: "fail-closed"
 
 # Agentic Design System — Shared Ownership and Singleton Tokens
 
-**Join:** `DESIGN-TOKEN-ADOPTION-001@0.7.0`, superseding `0.6.0`, `0.5.0`, `0.4.0`, `0.3.0`, and `0.2.0`. This revision records the AOS pull-request integration requirement discovered during release handoff. The central registry candidate still contains Commerce, Base, and exact-grant Graph profiles; native component behavior remains with its product owner. Source rights, migration status, and runtime adoption are separate facts; this audit does not claim whole-repository centralization.
+**Join:** `DESIGN-TOKEN-ADOPTION-001@0.8.0`, superseding `0.7.0`, `0.6.0`, `0.5.0`, `0.4.0`, `0.3.0`, and `0.2.0`. This revision records the AOS pull-request integration requirement and reduces initial catalog layout shift by matching static copy to the validated UI and revealing below-fold status content after catalog load. The central registry candidate still contains Commerce, Base, and exact-grant Graph profiles; native component behavior remains with its product owner. Source rights, migration status, and runtime adoption are separate facts; this audit does not claim whole-repository centralization.
 
-**Change boundary:** this successor starts from the published central candidate `a1c56f8ba3c3b8892897fcdbf6d61ed09784b6b7`. It binds `.agentic-os.json` to AOS's protected pull-request integration path and makes the public-release checker enforce that capability. The user granted public reuse of four exact Graph artifacts on 2026-10-29; that does not authorize other Graph sources or future revisions. No consumer migration, protected merge, catalog release, or deployment is claimed. The catalog and three profiles remain draft candidates.
+**Change boundary:** this successor starts from the published central candidate `a1c56f8ba3c3b8892897fcdbf6d61ed09784b6b7`. It binds `.agentic-os.json` to AOS's protected pull-request integration path and makes the public-release checker enforce that capability. Commit `6b60519f1f6e58053db02d83fd13ad0417940b2f` also removes loading-time copy swaps, defers below-fold status content until the catalog validates, and advances the offline cache version. The user granted public reuse of four exact Graph artifacts on 2026-10-29; that does not authorize other Graph sources or future revisions. No consumer migration, protected merge, catalog release, or deployment is claimed. The catalog and three profiles remain draft candidates.
 
 ## Codebase grounding record
 
@@ -177,9 +177,9 @@ The provider currently reports an Integration Gate check but no required pull-re
 |---|---|---|---|
 | DS-01–DS-10 | The bounded central candidate and local invocation slice is implemented. DS-01, DS-03, DS-05, DS-06, and DS-09 pass within their declared local boundaries; DS-02 and DS-04 are partial because no full consumer scan ran; DS-07 and DS-10 retain the evidence gaps below; DS-08 has no consumer rollback receipt. | dev-proven | undocumented |
 
-### Implementation completion audit · 2026-10-29
+### Implementation completion audit · 2026-10-30
 
-Audit surface: authoring lane `agent/device-0232231d4a19/design-system-registry`, base `9dd6c3a98621aaebdf2a36187d3aa9272c27fbee`. The checks below ran locally on this lane. A local result does not establish protected integration or delivery.
+Audit surface: authoring lane `agent/device-0232231d4a19/design-system-registry`, candidate `6b60519`, base `9dd6c3a98621aaebdf2a36187d3aa9272c27fbee`. The checks below ran locally on this lane. A local result does not establish protected integration or delivery.
 
 | VCC | Status | Evidence Reference | Remaining limit |
 |---|---|---|---|
@@ -188,10 +188,10 @@ Audit surface: authoring lane `agent/device-0232231d4a19/design-system-registry`
 | DS-03 | Pass for central projections and the existing Commerce pin | `design-generated-output-check` confirms the Base and Graph generated CSS projections match their profile digests and Commerce CSS matches its consumer pin. | Graph and Base have no central consumer pins or adoption receipts; source-owner regeneration and consumer rollback are not demonstrated. |
 | DS-04 | Partial | The registry checker rejects a conflicting declaration in its site fixtures and scans site CSS/HTML/JS for Commerce variables. | It does not scan consumer cascade layers or all product declarations; consumer override prevention remains unproven. |
 | DS-05 | Pass for declared rights boundaries | `design-license-boundary-check` verifies the central/Base and Commerce MIT evidence plus the exact four-file Graph grant. The Graph repository's default private classification remains in force outside those four files. Graph PR #1849 records the grant; its docs-contract and Integration Gate checks pass, and the PR remains open. | No other Graph source or future revision is cleared. Owner-record integration is still pending. |
-| DS-06 | Pass for the local static candidate | At `http://127.0.0.1:57869/`, widths 320, 360, 640, 768, and 1280 CSS px had matching document/body widths; ten visible controls remained at least 44×44 CSS px. `@agentic-graph` and `#shared-data-view` returned the expected owner/profile and candidate-key results. Eight observed page requests were loopback HTTP 200; the browser reported zero console warnings/errors. With the server stopped, a previously primed service-worker cache rendered the candidate and `#shared-data-view` locally. | This is browser-session evidence, not a repeatable automated browser gate. Offline proof covers only the primed local cache and does not prove deployed behavior. |
-| DS-07 | Partial; 200% zoom and keyboard review remain open | Ten visible links/controls measured at least 44×44 CSS px across 320, 360, 640, 768, and 1280 CSS px. | Current candidate has no recorded manual contrast review, keyboard-only review, reduced-motion check, or actual browser UI 200% zoom run. |
+| DS-06 | Pass for the local static candidate | At `http://127.0.0.1:4173/`, widths 320, 360, 640, 768, and 1280 CSS px had matching document/body widths; visible controls remained at least 44 CSS px high. Keyboard search for `#shared-data-view` returned one owner, one profile, and nine keys. Mobile and desktop Lighthouse each passed all 54 audits, including zero cumulative layout shift on desktop and 0.005 CLS on mobile. An offline reload after cache priming served all seven owner/profile cards from service-worker cache r7; resource origins remained loopback-only. | This is browser-session evidence, not a repeatable automated browser gate. Offline proof covers only the primed local cache and does not prove deployed behavior. |
+| DS-07 | Partial; manual review and actual zoom remain open | Search accepted keyboard entry and Enter; Tab moved focus from the search field to the Tokens navigation link. Visible targets remained at least 44 CSS px across 320, 360, 640, 768, and 1280 CSS px. Lighthouse accessibility scored 100 on mobile and desktop. | No manual contrast review, reduced-motion readback, or actual browser UI 200% zoom run is recorded. Lighthouse does not replace those checks. |
 | DS-08 | Not implemented | No consumer rollback or rollback receipt exists in this lane. | Requires an owner-scoped consumer pin rollback and verification of its exact predecessor revision/digest. |
-| DS-09 | Pass | `PORT=0 npm run dev` printed `http://127.0.0.1:57869/`; the page and its seven profile/catalog/script/favicon resources returned HTTP 200. The server binds only `127.0.0.1`, uses a strict file allowlist, and has zero declared runtime dependencies. | No production deployment is implied. |
+| DS-09 | Pass | `npm run dev` printed `http://127.0.0.1:4173/`; the page and local profile/catalog/script/favicon resources returned HTTP 200. Resource origins remained loopback-only. The server binds only `127.0.0.1`, uses a strict file allowlist, and has zero declared runtime dependencies. | No production deployment is implied. |
 | DS-10 | Partial; shared read-only contract passes | `npm run check:design-system` verifies browser query fixtures, WebMCP stub registration, equal MCP/WebMCP names and schemas, and a real stdio MCP initialize/list/call exchange. The live browser correctly reports that WebMCP is unavailable and keeps search active. | Native WebMCP execution could not be tested because this browser exposes no `document.modelContext`; verify on a supporting browser before claiming native browser-tool execution. |
 
 Additional local evidence at predecessor head `a1c56f8ba3c3b8892897fcdbf6d61ed09784b6b7`: `npm run check:design-system`, `node scripts/check-public-release.mjs`, and `git diff --check` passed. The live AOS `land` recheck reported `no pull-request integration capability selected`; `.agentic-os.json` did not bind the PR route, leaving the lane projection's PR number null. `queue show` confirmed that the current provider requires the Integration Gate but has no required pull-request rule; provider policy is a separate repository-authority action. The site contains 86,812 bytes across 13 files; predecessor lane has 24 changed paths; the largest changed file is 563 lines; runtime-module additions are within the three-module budget when build-time profile generators are excluded. `package.json` declares zero dependencies. Incremental external spend and product model calls are $0 and 0. No production audit or deployment was run.
@@ -227,7 +227,7 @@ No revenue, market size, ROI, or time savings are claimed. Revenue and buyer evi
 
 ## C01–C16 coverage
 
-**Join:** `DESIGN-TOKEN-ADOPTION-001@0.7.0` · **Owner:** Design-system product function · **As of:** 2026-10-30. **0:** four source owners are grounded at exact revisions; drift pain and willingness to pay are not measured. **1:** resolve one key to one owner and pin in ≤5 minutes in a five-task pilot; observation not run.
+**Join:** `DESIGN-TOKEN-ADOPTION-001@0.8.0` · **Owner:** Design-system product function · **As of:** 2026-10-30. **0:** four source owners are grounded at exact revisions; drift pain and willingness to pay are not measured. **1:** resolve one key to one owner and pin in ≤5 minutes in a five-task pilot; observation not run.
 
 | Domain | Disposition | Evidence / gap | Owner and next check |
 |---|---|---|---|
