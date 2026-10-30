@@ -10,13 +10,9 @@ const catalogNavigation = document.querySelector("#catalog-navigation");
 const catalogUrl = new URL("./catalog.json", location.href);
 let registryContext = null;
 
-document.querySelector("#top").textContent = "One map for shared design values.";
-document.querySelector(".intro").textContent = "Find the source owner, exact revision, reuse scope, and consumer state for each design profile. Values are version pinned; product behavior stays with its owner.";
-document.querySelector("#records-heading").textContent = "Owners and candidate profiles";
-grid.setAttribute("aria-label", "Native owners and candidate token profiles");
-search.labels[0].querySelector("span").textContent = "Find an owner, token key, section, or scope";
-search.placeholder = "/section, @owner, #scope, or text";
-document.querySelector(".hint").textContent = "Use / for a section, @ for an owner, and # for a product scope. Search stays in this browser.";
+const sectionIndex = document.querySelector(".section-index");
+const lateContent = [toolStatus, offlineStatus, document.querySelector("#release-summary"), document.querySelector("footer")];
+const revealLateContent = () => lateContent.forEach(element => { element.hidden = false; });
 
 function exactKeys(value, keys, label) {
   if (!value || typeof value !== "object" || Array.isArray(value)
@@ -200,6 +196,9 @@ async function loadRegistry() {
   const tokenCount = profiles.reduce((total, profile) => total + profile.tokens.length, 0);
   document.querySelector("#release-summary").textContent = `${catalog.registry.owners.length} source owners · ${profileCount} pinned candidate profiles · ${tokenCount} globally unique keys/variables · draft catalog; no consumer migrations claimed.`;
   renderCatalog(search.value);
+  sectionIndex.hidden = false;
+  sectionIndex.removeAttribute("aria-busy");
+  revealLateContent();
   try {
     const tools = await registerWebMcpTools(document.modelContext, registryContext);
     toolStatus.textContent = tools.supported
@@ -212,6 +211,9 @@ async function loadRegistry() {
 
 search.addEventListener("input", () => renderCatalog(search.value));
 loadRegistry().catch(error => {
+  sectionIndex.hidden = false;
+  sectionIndex.removeAttribute("aria-busy");
+  revealLateContent();
   document.querySelector("#release-summary").textContent = "Ownership map unavailable or a pinned profile failed validation.";
   empty.hidden = false;
   empty.textContent = error instanceof Error ? error.message : "The local registry failed validation.";

@@ -1,6 +1,6 @@
-const CACHE_NAME = "agentic-design-system-v0.5.0-draft-registry-r6";
+const CACHE_NAME = "agentic-design-system-v0.5.0-draft-registry-r7";
 const CORE_FILES = [
-  "./", "./app.js?v=c104158", "./registry-query.js?v=c104158", "./catalog.json", "./catalog.schema.json",
+  "./", "./app.js?v=20261030-cumulative-layout", "./registry-query.js?v=c104158", "./catalog.json", "./catalog.schema.json",
   "./tokens/commerce-profile.json", "./tokens/base-profile.json", "./tokens/graph-profile.json",
   "./vendor/base-profile.css", "./vendor/graph-profile.css", "./THIRD-PARTY-NOTICES.txt", "./favicon.svg",
 ];
