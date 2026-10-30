@@ -1,19 +1,19 @@
 ---
 title: "Agentic Design System — Shared Ownership and Singleton Tokens"
 doc_type: "PRD-TAD-ADR-MVP-GTM"
-version: "0.8.0"
-revision: "0.8.0"
+version: "0.9.0"
+revision: "0.9.0"
 date: "2026-10-29"
 updated_date: "2026-10-30"
 lang: "en-US"
 frontmatter_contract: "required"
 owner: "Design-system product function"
 continuity_id: "DESIGN-TOKEN-ADOPTION-001"
-prd_revision: "0.8.0"
-tad_revision: "0.8.0"
-adr_revision: "0.8.0"
-mvp_revision: "0.8.0"
-gtm_revision: "0.8.0"
+prd_revision: "0.9.0"
+tad_revision: "0.9.0"
+adr_revision: "0.9.0"
+mvp_revision: "0.9.0"
+gtm_revision: "0.9.0"
 local_rung: "dev-proven"
 delivered_rung: "undocumented"
 lane: "authoring"
@@ -36,7 +36,7 @@ runtime_readiness_policy: "fail-closed"
 
 # Agentic Design System — Shared Ownership and Singleton Tokens
 
-**Join:** `DESIGN-TOKEN-ADOPTION-001@0.8.0`, superseding `0.7.0`, `0.6.0`, `0.5.0`, `0.4.0`, `0.3.0`, and `0.2.0`. This revision records the AOS pull-request integration requirement and reduces initial catalog layout shift by matching static copy to the validated UI and revealing below-fold status content after catalog load. The central registry candidate still contains Commerce, Base, and exact-grant Graph profiles; native component behavior remains with its product owner. Source rights, migration status, and runtime adoption are separate facts; this audit does not claim whole-repository centralization.
+**Join:** `DESIGN-TOKEN-ADOPTION-001@0.9.0`, superseding `0.8.0`, `0.7.0`, `0.6.0`, `0.5.0`, `0.4.0`, `0.3.0`, and `0.2.0`. This revision records browser contrast and reduced-motion evidence for the local candidate. Actual browser UI 200% zoom remains unverified. The central registry candidate still contains Commerce, Base, and exact-grant Graph profiles; native component behavior remains with its product owner. Source rights, migration status, and runtime adoption are separate facts; this audit does not claim whole-repository centralization.
 
 **Change boundary:** this successor starts from the published central candidate `a1c56f8ba3c3b8892897fcdbf6d61ed09784b6b7`. It binds `.agentic-os.json` to AOS's protected pull-request integration path and makes the public-release checker enforce that capability. Commit `6b60519f1f6e58053db02d83fd13ad0417940b2f` also removes loading-time copy swaps, defers below-fold status content until the catalog validates, and advances the offline cache version. The user granted public reuse of four exact Graph artifacts on 2026-10-29; that does not authorize other Graph sources or future revisions. No consumer migration, protected merge, catalog release, or deployment is claimed. The catalog and three profiles remain draft candidates.
 
@@ -149,7 +149,7 @@ The catalog reads local JSON. Future adopted consumers will pin static generated
 
 ### Quality, security, and operation
 
-The site must reflow at 320, 360, 768, and 1280 CSS px without page-level horizontal overflow. Interactive targets are at least 44 CSS px; text contrast is at least 4.5:1 (large text 3:1), and control/focus contrast is at least 3:1. Current candidate verification covers 320, 360, 640, 768, and 1280 CSS px for page overflow and ten visible control targets. Keyboard-only use, reduced-motion behavior, manual contrast review, and actual 200% browser zoom remain gaps for this candidate. Evidence and limits are listed in the implementation audit below.
+The site must reflow at 320, 360, 768, and 1280 CSS px without page-level horizontal overflow. Interactive targets are at least 44 CSS px; text contrast is at least 4.5:1 (large text 3:1), and control/focus contrast is at least 3:1. Current candidate verification covers 320, 360, 640, 768, and 1280 CSS px for page overflow and ten visible control targets. Keyboard search/focus, reduced-motion emulation, and browser-computed text/control contrast have been checked. Actual browser UI 200% zoom and repeatable/manual accessibility review remain gaps. Evidence and limits are listed in the implementation audit below.
 
 Threats are duplicate keys, poisoned or stale owner metadata, digest drift, cascade overrides, rights leakage, incompatible projection, and a false rollback. Validate bounded JSON, render text safely, reject unknown fields, keep private/restricted content out of the public payload, and preserve a verified predecessor. The site has no user accounts, remote data service, analytics, or model calls.
 
@@ -189,14 +189,14 @@ Audit surface: authoring lane `agent/device-0232231d4a19/design-system-registry`
 | DS-04 | Partial | The registry checker rejects a conflicting declaration in its site fixtures and scans site CSS/HTML/JS for Commerce variables. | It does not scan consumer cascade layers or all product declarations; consumer override prevention remains unproven. |
 | DS-05 | Pass for declared rights boundaries | `design-license-boundary-check` verifies the central/Base and Commerce MIT evidence plus the exact four-file Graph grant. The Graph repository's default private classification remains in force outside those four files. Graph PR #1849 records the grant; its docs-contract and Integration Gate checks pass, and the PR remains open. | No other Graph source or future revision is cleared. Owner-record integration is still pending. |
 | DS-06 | Pass for the local static candidate | At `http://127.0.0.1:4173/`, widths 320, 360, 640, 768, and 1280 CSS px had matching document/body widths; visible controls remained at least 44 CSS px high. Keyboard search for `#shared-data-view` returned one owner, one profile, and nine keys. Mobile and desktop Lighthouse each passed all 54 audits, including zero cumulative layout shift on desktop and 0.005 CLS on mobile. An offline reload after cache priming served all seven owner/profile cards from service-worker cache r7; resource origins remained loopback-only. | This is browser-session evidence, not a repeatable automated browser gate. Offline proof covers only the primed local cache and does not prove deployed behavior. |
-| DS-07 | Partial; manual review and actual zoom remain open | Search accepted keyboard entry and Enter; Tab moved focus from the search field to the Tokens navigation link. Visible targets remained at least 44 CSS px across 320, 360, 640, 768, and 1280 CSS px. Lighthouse accessibility scored 100 on mobile and desktop. | No manual contrast review, reduced-motion readback, or actual browser UI 200% zoom run is recorded. Lighthouse does not replace those checks. |
+| DS-07 | Partial; browser UI 200% zoom remains open | Keyboard search and focus visibility passed. Browser-computed contrast across visible text had a minimum of 5.77:1; the focus ring measured 7.47:1 against the page and 8.04:1 against the search surface; the search border measured 3.10:1 against white. With `prefers-reduced-motion: reduce`, the query matched and input animation/transition durations resolved to 0.00001 seconds. Visible targets remained at least 44 CSS px across the tested widths. | The computed color pass and reduced-motion emulation are browser-session evidence, not a repeatable CI gate. Actual browser UI 200% zoom remains unverified. |
 | DS-08 | Not implemented | No consumer rollback or rollback receipt exists in this lane. | Requires an owner-scoped consumer pin rollback and verification of its exact predecessor revision/digest. |
 | DS-09 | Pass | `npm run dev` printed `http://127.0.0.1:4173/`; the page and local profile/catalog/script/favicon resources returned HTTP 200. Resource origins remained loopback-only. The server binds only `127.0.0.1`, uses a strict file allowlist, and has zero declared runtime dependencies. | No production deployment is implied. |
 | DS-10 | Partial; shared read-only contract passes | `npm run check:design-system` verifies browser query fixtures, WebMCP stub registration, equal MCP/WebMCP names and schemas, and a real stdio MCP initialize/list/call exchange. The live browser correctly reports that WebMCP is unavailable and keeps search active. | Native WebMCP execution could not be tested because this browser exposes no `document.modelContext`; verify on a supporting browser before claiming native browser-tool execution. |
 
 Additional local evidence at predecessor head `a1c56f8ba3c3b8892897fcdbf6d61ed09784b6b7`: `npm run check:design-system`, `node scripts/check-public-release.mjs`, and `git diff --check` passed. The live AOS `land` recheck reported `no pull-request integration capability selected`; `.agentic-os.json` did not bind the PR route, leaving the lane projection's PR number null. `queue show` confirmed that the current provider requires the Integration Gate but has no required pull-request rule; provider policy is a separate repository-authority action. The site contains 86,812 bytes across 13 files; predecessor lane has 24 changed paths; the largest changed file is 563 lines; runtime-module additions are within the three-module budget when build-time profile generators are excluded. `package.json` declares zero dependencies. Incremental external spend and product model calls are $0 and 0. No production audit or deployment was run.
 
-**Audit result:** the bounded central registry/UI slice is `dev-proven`; the joined product is not `runtime-ready`. Three central candidate profiles are present and exact source rights are recorded, but Base and Graph remain native consumers and Commerce has no completed migration. Cross-repository duplicate/override scanning and consumer rollback are absent; native WebMCP execution, keyboard/reduced-motion/contrast review, actual 200% browser zoom, and the five-task user pilot remain incomplete. No whole-repository parity, savings, buyer demand, protected merge, release, or deployment is claimed.
+**Audit result:** the bounded central registry/UI slice is `dev-proven`; the joined product is not `runtime-ready`. Three central candidate profiles are present and exact source rights are recorded, but Base and Graph remain native consumers and Commerce has no completed migration. Cross-repository duplicate/override scanning and consumer rollback are absent; native WebMCP execution, manual contrast review beyond computed values, actual 200% browser zoom, a repeatable accessibility gate, and the five-task user pilot remain incomplete. No whole-repository parity, savings, buyer demand, protected merge, release, or deployment is claimed.
 
 **Demo:** search a canonical key → inspect its one owner, revision, rights, and consumer pins → show a duplicate or override as blocked → follow the local predecessor pin. Target ≤3 minutes; timed pilot not run.
 
@@ -207,7 +207,7 @@ Additional local evidence at predecessor head `a1c56f8ba3c3b8892897fcdbf6d61ed09
 | A · registry baseline | P1, unvalidated; reuse the existing static catalog and exact owner-source pins. | Four owner references and rights states grounded; Commerce, Base, and exact-grant Graph candidates verified. | Keep every profile draft until its consumer lane and owner receipt are complete. |
 | B · central contract and UI | Reuse existing local assets, schema, and search; zero paid dependencies. | Local search, 114-key singleton fixtures, read-only MCP, WebMCP adapter, offline UI, and strict public-file check are implemented; DS-02/04, DS-07, and native WebMCP evidence remain partial. | Keep the catalog draft; do not claim all-repository singleton coverage without owner-scoped consumer checks. |
 | C · consumer projections | Reuse each native generator and owner workflow. | Requires an owner-scoped plan/lane per consumer, pinned generated output, removal of the old editable value, and DS-03/04/08 evidence. | Graph grant covers only the four exact profile artifacts; owner-record PR #1849 remains open. Commerce/Base/Graph adoption requires separate migration and rollback evidence. |
-| D · accessibility and value | Reuse browser and accessibility evidence; run five contributor tasks. | Actual 200% zoom, manual contrast review beyond Lighthouse, and measured lookup/correction baseline. | Report gaps; do not claim parity or savings. |
+| D · accessibility and value | Reuse browser and accessibility evidence; run five contributor tasks. | Actual 200% browser UI zoom, repeatable accessibility checks, and measured lookup/correction baseline. | Report gaps; do not claim parity or savings. |
 
 **Next bounded action:** open owner-scoped consumer lanes for cross-repository duplicate/override checks, then migrate only rights-cleared keys with predecessor pins and rollback receipts. **Owner:** each consumer repository owner. **Prerequisites:** a fresh START-bound plan/mission and scoped adoption receipt per consumer; Graph values are centrally permitted only for the four exact source artifacts. **Estimate:** no ETA until those owner decisions and lane receipts exist. **Caps per lane:** ≤25 paths, ≤100 kB shipped delta, ≤1 new runtime module, <600 lines/module, $0 spend, 0 model tokens. **Completion check:** each consumer independently rejects duplicate/override fixtures and proves generated output, predecessor rollback, and protected integration. **Recheck trigger:** consumer owner grants a scoped lane; native WebMCP test reopens when the browser exposes `document.modelContext`.
 
@@ -227,7 +227,7 @@ No revenue, market size, ROI, or time savings are claimed. Revenue and buyer evi
 
 ## C01–C16 coverage
 
-**Join:** `DESIGN-TOKEN-ADOPTION-001@0.8.0` · **Owner:** Design-system product function · **As of:** 2026-10-30. **0:** four source owners are grounded at exact revisions; drift pain and willingness to pay are not measured. **1:** resolve one key to one owner and pin in ≤5 minutes in a five-task pilot; observation not run.
+**Join:** `DESIGN-TOKEN-ADOPTION-001@0.9.0` · **Owner:** Design-system product function · **As of:** 2026-10-30. **0:** four source owners are grounded at exact revisions; drift pain and willingness to pay are not measured. **1:** resolve one key to one owner and pin in ≤5 minutes in a five-task pilot; observation not run.
 
 | Domain | Disposition | Evidence / gap | Owner and next check |
 |---|---|---|---|
