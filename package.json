@@ -10,5 +10,8 @@
     "dev": "node scripts/dev.mjs",
     "check:design-system": "node scripts/design-registry.mjs check",
     "mcp": "node scripts/design-registry.mjs mcp"
+  },
+  "devDependencies": {
+    "agentic-os": "https://codeload.github.com/huijoohwee/agentic-os/tar.gz/2bf74425791761c3253e8112a181ed496c1cdf91"
   }
 }
