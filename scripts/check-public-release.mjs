@@ -3,7 +3,7 @@ import { execFileSync } from "node:child_process";
 import { readFile, readdir, stat } from "node:fs/promises";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { validateCommerceProfile } from "./commerce-profile.mjs";
+import { checkDesignRegistry } from "./design-registry.mjs";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const expectedFiles = [
@@ -12,18 +12,28 @@ const expectedFiles = [
   ".gitignore",
   "LICENSE",
   "README.md",
+  "package-lock.json",
+  "package.json",
   "prd-tad-adr-mvp-gtm-agentic-design-system.md",
+  "scripts/base-profile.mjs",
   "scripts/check-public-release.mjs",
   "scripts/commerce-profile.mjs",
+  "scripts/design-registry.mjs",
+  "scripts/dev.mjs",
+  "scripts/graph-profile.mjs",
   "site/THIRD-PARTY-NOTICES.txt",
   "site/app.js",
   "site/catalog.json",
   "site/catalog.schema.json",
+  "site/favicon.svg",
   "site/index.html",
+  "site/registry-query.js",
   "site/sw.js",
+  "site/tokens/base-profile.json",
   "site/tokens/commerce-profile.json",
-  "site/vendor/agentic-base-browser-data-view.css",
-  "site/vendor/agentic-base-browser-data-view.js",
+  "site/tokens/graph-profile.json",
+  "site/vendor/base-profile.css",
+  "site/vendor/graph-profile.css",
 ].sort();
 const prohibitedPaths = [
   "registry",
@@ -42,6 +52,52 @@ function fail(message) {
   throw new Error(message);
 }
 
+function verifyContentSecurityPolicy(indexHtml) {
+  const meta = [...indexHtml.matchAll(/<meta\s+http-equiv="Content-Security-Policy"\s+content="([^"]+)"\s*>/giu)];
+  if (meta.length !== 1) fail('Static HTML must declare exactly one Content-Security-Policy');
+  const directives = new Map();
+  for (const raw of meta[0][1].split(';')) {
+    const [name, ...sources] = raw.trim().split(/\s+/u);
+    const normalized = name?.toLowerCase();
+    if (!normalized || !/^[a-z][a-z0-9-]*$/u.test(normalized) || !sources.length || directives.has(normalized)) {
+      fail('Static CSP contains an empty, malformed, or duplicate directive');
+    }
+    directives.set(normalized, sources);
+  }
+  const inlineStyleHashes = [...indexHtml.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style\s*>/giu)]
+    .map(([, css]) => {
+      const digest = createHash('sha256').update(css).digest('base64');
+      return `'sha256-${digest}'`;
+    });
+  const hashes = [...new Set(inlineStyleHashes)];
+  const required = new Map([
+    ['default-src', ["'self'"]], ['connect-src', ["'self'"]], ['script-src', ["'self'"]],
+    ['worker-src', ["'self'"]], ['style-src', ["'self'", ...hashes]],
+    ['object-src', ["'none'"]], ['base-uri', ["'none'"]], ['form-action', ["'none'"]],
+  ]);
+  if (directives.size !== required.size) fail('Static CSP contains an unapproved or missing directive');
+  for (const [name, sources] of required) {
+    const actual = directives.get(name);
+    if (!actual || JSON.stringify([...actual].sort()) !== JSON.stringify([...sources].sort())) {
+      fail(`Static CSP directive drifted: ${name}`);
+    }
+  }
+  if (/<[^>]+\sstyle\s*=/iu.test(indexHtml)) fail('Inline style attributes are not allowed');
+}
+
+function assertCspFailClosedFixtures() {
+  const policy = "default-src 'self'; connect-src 'self'; script-src 'self'; worker-src 'self'; style-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'";
+  verifyContentSecurityPolicy(`<meta http-equiv="Content-Security-Policy" content="${policy}">`);
+  const mustReject = (html, label) => {
+    try { verifyContentSecurityPolicy(html); } catch { return; }
+    fail(`CSP fixture did not reject ${label}`);
+  };
+  mustReject(`<meta http-equiv="Content-Security-Policy" content="${policy}; default-src *">`, 'duplicate directives');
+  mustReject(`<meta http-equiv="Content-Security-Policy" content="${policy}; img-src https://example.invalid">`, 'unapproved fetch sources');
+  const unsafeStylePolicy = policy.replace("style-src 'self'", "style-src 'self' 'unsafe-inline'");
+  mustReject(`<meta http-equiv="Content-Security-Policy" content="${unsafeStylePolicy}">`, 'unsafe inline styles');
+}
+
 function stableJson(value) {
   if (Array.isArray(value)) return `[${value.map(stableJson).join(",")}]`;
   if (value && typeof value === "object") {
@@ -55,6 +111,7 @@ async function listFiles(directory, prefix = "") {
   for (const entry of await readdir(directory, { withFileTypes: true })) {
     const path = prefix ? `${prefix}/${entry.name}` : entry.name;
     if (path === ".git") continue;
+    if (!prefix && path === "node_modules") continue;
     if (entry.isSymbolicLink()) fail(`Symlink is not allowed in the public tree: ${path}`);
     if (entry.isDirectory()) rows.push(...await listFiles(resolve(directory, entry.name), path));
     else if (entry.isFile()) rows.push(path);
@@ -90,6 +147,7 @@ const { profileDigest, ...profileContent } = profile;
 if (profile.schema !== "agentic-os/repository-profile/v1"
   || profile.repository !== "github.com/huijoohwee/agentic-design-system"
   || profile.requiredChecks?.length !== 1 || profile.requiredChecks[0] !== "Integration Gate"
+  || !profile.capabilities?.includes("protected-integration:pull-request")
   || !profile.capabilities?.includes("quarantine-worktree-cleanup-opt-in")
   || profile.cleanup?.worktreeProjection !== "quarantine"
   || profile.cleanup?.worktreeRegistration !== "quarantine"
@@ -98,6 +156,8 @@ if (profile.schema !== "agentic-os/repository-profile/v1"
 }
 
 const catalog = JSON.parse(await readFile(resolve(root, "site/catalog.json"), "utf8"));
+verifyContentSecurityPolicy(await readFile(resolve(root, "site/index.html"), "utf8"));
+assertCspFailClosedFixtures();
 if (catalog.$schema !== "./catalog.schema.json" || catalog.catalogId !== "agentic-design-system"
   || catalog.requestedPath !== "/agentic-design-system/" || !/^\d+\.\d+\.\d+$/u.test(catalog.schemaVersion)
   || !Array.isArray(catalog.records) || !catalog.release?.version
@@ -106,22 +166,14 @@ if (catalog.$schema !== "./catalog.schema.json" || catalog.catalogId !== "agenti
   fail("Public catalog does not satisfy its release contract");
 }
 
-validateCommerceProfile(await readFile(resolve(root, "site/tokens/commerce-profile.json"), "utf8"));
-
-const html = await readFile(resolve(root, "site/index.html"), "utf8");
-const csp = [...html.matchAll(/<meta\s+http-equiv="Content-Security-Policy"\s+content="([^"]+)"\s*>/giu)];
-const inlineStyles = [...html.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style\s*>/giu)];
-const styleHash = inlineStyles.map(([, css]) => `'sha256-${createHash("sha256").update(css).digest("base64")}'`);
-const styleDirective = csp[0]?.[1].split(";").map((item) => item.trim()).find((item) => item.startsWith("style-src "));
-if (csp.length !== 1 || inlineStyles.length !== 1
-  || /'unsafe-inline'|'unsafe-eval'|\*/u.test(csp[0]?.[1] ?? "")
-  || !styleHash.every((hash) => styleDirective?.split(/\s+/u).includes(hash))
-  || /<[^>]+\sstyle\s*=/iu.test(html)) {
-  fail("Production HTML CSP must hash its inline stylesheet and forbid unsafe inline sources");
-}
+await checkDesignRegistry();
 
 const notices = await readFile(resolve(root, "site/THIRD-PARTY-NOTICES.txt"), "utf8");
-if (!notices.includes("The MIT License (MIT)") || !notices.includes("ISC License")) {
+if (!notices.includes("MIT License\n")
+  || !notices.includes("Commerce theme values\n---------------------\nSource: agentic-commerce-os@6ce3bc918717b97a738ac831dfb4fb3319a02fb6")
+  || !notices.includes("Base shared data-view values\n---------------------------\nSource: agentic-base@a5d0f2d87d8c6871e9639f8224f5eaee056c5b6e")
+  || !notices.includes("Graph token and typography values\n-------------------------------\nSource: agentic-graph@bed770d91a9b3f1b663eee9637a472bf19b36361")
+  || !notices.includes("User grant 2026-10-29: public reuse of the exact four Graph artifacts listed here")) {
   fail("Third-party license notices are incomplete");
 }
 
