@@ -7,9 +7,10 @@ attribution, permission evidence, and digest. The local ownership map pins the f
 repositories and keeps rights and adoption state explicit. External consumers remain source-mapped
 until their owners review a migration; no adoption or cross-repository parity is implied.
 
-Three candidate profiles hold 114 globally unique keys and CSS variables: Commerce has 36
-product-scoped values, Base has 9 shared data-view values, and Graph has 69 color, typography, and
-font values across light, dark, and black modes. Profile bytes, source revisions, generated output,
+Four candidate profiles hold 116 globally unique keys and CSS variables: Commerce has 36
+product-scoped values, Base has 9 shared data-view values, Graph has 69 color, typography, and
+font values across light, dark, and black modes, and Design System owns two shared icon-size values.
+Profile bytes, source revisions, generated output,
 rights, and consumer pins are checked independently. The exact Graph grant covers only its four
 pinned token/typography files; the repository-wide private classification remains in force. No
 consumer migration or whole-repository parity is claimed. Component behavior and icon artwork stay

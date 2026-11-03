@@ -47,7 +47,7 @@ export function validateSharedUiProfile(source) {
 export function renderSharedUiCss(profile, sourceRevision, profileDigest) {
   if (!/^[a-f0-9]{40}$/u.test(sourceRevision ?? "") || !/^[a-f0-9]{64}$/u.test(profileDigest ?? "")) fail("projection binding");
   const declarations = profile.tokens.map(token => `  ${token.cssVar}: ${token.value};`);
-  return `/* Generated from agentic-design-system@${sourceRevision}; profile sha256 ${profileDigest}. Do not edit. */\n:root {\n${declarations.join("\n")}\n}\n`;
+  return `/* Generated from agentic-design-system@${sourceRevision}; profile sha256 ${profileDigest}. Do not edit. */\n:root, :host {\n${declarations.join("\n")}\n}\n`;
 }
 
 async function main() {

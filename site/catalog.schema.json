@@ -99,7 +99,7 @@
           "const": "github.com/huijoohwee/agentic-design-system"
         },
         "coverage": {
-          "const": "Commerce, Base, and Graph candidate profiles are revision-pinned; Graph reuse is limited to four granted artifacts; consumer adoption and whole-repository parity are not claimed"
+          "const": "Commerce, Base, and Graph profiles plus the Design System shared UI icon-size profile are revision-pinned; Graph reuse remains limited to four granted artifacts; consumer projections are candidate pins and whole-repository parity is not claimed"
         },
         "keyContract": {
           "type": "object",
@@ -134,16 +134,16 @@
         },
         "owners": {
           "type": "array",
-          "minItems": 4,
-          "maxItems": 4,
+          "minItems": 5,
+          "maxItems": 5,
           "items": {
             "$ref": "#/$defs/owner"
           }
         },
         "profiles": {
           "type": "array",
-          "minItems": 3,
-          "maxItems": 3,
+          "minItems": 4,
+          "maxItems": 4,
           "items": {
             "$ref": "#/$defs/profile"
           }

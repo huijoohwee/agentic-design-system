@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import { renderCommerceCss, validateCommerceProfile } from "./commerce-profile.mjs";
 import { renderBaseCss, validateBaseProfile } from "./base-profile.mjs";
 import { renderGraphCss, validateGraphProfile } from "./graph-profile.mjs";
+import { renderSharedUiCss, validateSharedUiProfile } from "./design-system-icon-profile.mjs";
 import {
   getRegistryRecord,
   invokeRegistryTool,
@@ -17,7 +18,7 @@ import {
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const catalogPath = resolve(root, "site/catalog.json");
-const ownerIds = ["agentic-os", "agentic-commerce-os", "agentic-graph", "agentic-base"];
+const ownerIds = ["agentic-os", "agentic-commerce-os", "agentic-graph", "agentic-base", "agentic-design-system"];
 const keyPattern = /^[a-z0-9][a-z0-9.-]*(?::[a-z0-9][a-z0-9.-]*)*$/u;
 const variablePattern = /^--[a-z][a-z0-9-]*$/u;
 const sha = bytes => createHash("sha256").update(bytes).digest("hex");
@@ -86,6 +87,7 @@ async function loadRegistryContext() {
     if (profileRef.id === "commerce") return validateCommerceProfile(source);
     if (profileRef.id === "base") return validateBaseProfile(source);
     if (profileRef.id === "graph") return validateGraphProfile(source);
+    if (profileRef.id === "shared-ui") return validateSharedUiProfile(source);
     fail(`unsupported candidate profile ${profileRef.id}`);
   }));
   return validateRegistryContext(catalog, profiles);
@@ -255,8 +257,8 @@ async function runMcpStdio() {
 function assertRegistry(registry) {
   exactKeys(registry, ["schema", "registryId", "revision", "owner", "coverage", "keyContract", "owners", "profiles"], "registry");
   if (registry.schema !== "agentic-design-system/owner-registry/v1" || registry.registryId !== "agentic-design-system"
-    || registry.revision !== "0.4.0" || registry.owner !== "github.com/huijoohwee/agentic-design-system"
-    || registry.coverage !== "Commerce, Base, and Graph candidate profiles are revision-pinned; Graph reuse is limited to four granted artifacts; consumer adoption and whole-repository parity are not claimed") fail("identity or coverage");
+    || registry.revision !== "0.5.0" || registry.owner !== "github.com/huijoohwee/agentic-design-system"
+    || registry.coverage !== "Commerce, Base, and Graph profiles plus the Design System shared UI icon-size profile are revision-pinned; Graph reuse remains limited to four granted artifacts; consumer projections are candidate pins and whole-repository parity is not claimed") fail("identity or coverage");
   exactKeys(registry.keyContract, ["schema", "canonicalKeyPattern", "cssVariablePattern", "uniqueBy", "overridePolicy"], "key contract");
   if (registry.keyContract.schema !== "agentic-design-system/design-key/v1"
     || registry.keyContract.canonicalKeyPattern !== "^[a-z0-9][a-z0-9.-]*(?::[a-z0-9][a-z0-9.-]*)*$"
@@ -279,11 +281,12 @@ function assertRegistry(registry) {
         || !["policy", "native", "generated"].includes(source.kind) || !/^sha256:[a-f0-9]{64}$/u.test(source.digest)) fail(`source ${owner.id}:${source.path}`);
     }
   }
-  if (!Array.isArray(registry.profiles) || registry.profiles.length !== 3
-    || JSON.stringify(registry.profiles.map(profile => profile.id)) !== JSON.stringify(["commerce", "base", "graph"])) fail("profile inventory");
+  if (!Array.isArray(registry.profiles) || registry.profiles.length !== 4
+    || JSON.stringify(registry.profiles.map(profile => profile.id)) !== JSON.stringify(["commerce", "base", "graph", "shared-ui"])) fail("profile inventory");
   const commerce = registry.profiles[0];
   const base = registry.profiles[1];
   const graph = registry.profiles[2];
+  const sharedUi = registry.profiles[3];
   for (const profile of registry.profiles) {
     const keys = ["id", "name", "owner", "repository", "revision", "source", "digest", "scope", "status", "rights", "permissionEvidence", "licenseEvidence", "consumerPins"];
     exactKeys(profile, profile.projection ? [...keys, "projection"] : keys, `profile ${profile.id}`);
@@ -321,6 +324,16 @@ function assertRegistry(registry) {
     || graph.permissionEvidence !== "User grant 2026-10-29: public reuse of the exact four Graph artifacts listed here, with attribution, in this central MIT repository; no broader Graph source grant."
     || graph.licenseEvidence.length !== 1 || graph.consumerPins.length !== 0
     || graph.projection?.path !== "./vendor/graph-profile.css") fail("Graph exact-source grant binding");
+  if (sharedUi.id !== "shared-ui" || sharedUi.owner !== registry.owner || sharedUi.repository !== registry.owner
+    || sharedUi.revision !== "3224afd19c086e511dcfd892d82d12b68460b971" || sharedUi.source !== "./tokens/shared-ui-profile.json"
+    || sharedUi.digest !== "sha256:f335bd273298f267eddffdf3b3f344a69e31e965223e527e6f599b2947ac9856"
+    || sharedUi.rights !== "cleared" || sharedUi.scope.join(",") !== "shared-interface"
+    || sharedUi.permissionEvidence !== "User instruction on 2026-11-03: Agentic Design System owns shared compact and default icon sizes for Base, Graph, and related repositories."
+    || sharedUi.licenseEvidence.length !== 1 || sharedUi.consumerPins.length !== 0
+    || sharedUi.projection?.path !== "./vendor/shared-ui-profile.css") fail("shared UI icon-size profile binding");
+  const sharedUiOwner = registry.owners.find(owner => owner.id === "agentic-design-system");
+  if (!sharedUiOwner || sharedUiOwner.revision !== sharedUi.revision || sharedUiOwner.reuseGate !== "mit-verified"
+    || JSON.stringify(sharedUiOwner.sources) !== JSON.stringify([{ path: "site/tokens/shared-ui-profile.json", kind: "native", digest: sharedUi.digest }])) fail("shared UI owner source binding");
   return registry.profiles;
 }
 
@@ -347,7 +360,7 @@ async function assertCatalogSchema() {
     || keyContract?.cssVariablePattern?.const !== "^--[a-z][a-z0-9-]*$"
     || keyContract?.overridePolicy?.const !== "deny"
     || registry?.owners?.minItems !== ownerIds.length || registry.owners.maxItems !== ownerIds.length
-    || registry?.profiles?.minItems !== 3 || registry.profiles.maxItems !== 3
+    || registry?.profiles?.minItems !== 4 || registry.profiles.maxItems !== 4
     || profileSchema?.additionalProperties !== false
     || JSON.stringify(profileSchema?.required) !== JSON.stringify(profileRequired)
     || profileSchema?.properties?.rights?.enum?.join(",") !== "review-required,cleared,cleared-scoped,restricted"
@@ -404,6 +417,7 @@ export async function checkDesignRegistry() {
       profiles.push(validateCommerceProfile(bytes.toString("utf8")));
     } else if (ref.id === "base") profiles.push(validateBaseProfile(bytes.toString("utf8")));
     else if (ref.id === "graph") profiles.push(validateGraphProfile(bytes.toString("utf8")));
+    else if (ref.id === "shared-ui") profiles.push(validateSharedUiProfile(bytes.toString("utf8")));
     else fail(`unsupported profile ${ref.id}`);
   }
   const centralOwner = "github.com/huijoohwee/agentic-design-system";
@@ -419,12 +433,15 @@ export async function checkDesignRegistry() {
   const commerce = profiles.find(profile => profile.id === "commerce");
   const base = profiles.find(profile => profile.id === "base");
   const graph = profiles.find(profile => profile.id === "graph");
+  const sharedUi = profiles.find(profile => profile.id === "shared-ui");
   const baseRef = profileRefs.find(ref => ref.id === "base");
   const graphRef = profileRefs.find(ref => ref.id === "graph");
+  const sharedUiRef = profileRefs.find(ref => ref.id === "shared-ui");
   const commerceRef = profileRefs.find(ref => ref.id === "commerce");
   const baseProjection = Buffer.from(renderBaseCss(base, base.source.revision, sha(profileBytes.get("base"))));
   const graphProjection = Buffer.from(renderGraphCss(graph, sha(profileBytes.get("graph"))));
-  for (const [ref, projection] of [[baseRef, baseProjection], [graphRef, graphProjection]]) {
+  const sharedUiProjection = Buffer.from(renderSharedUiCss(sharedUi, sharedUiRef.revision, sha(profileBytes.get("shared-ui"))));
+  for (const [ref, projection] of [[baseRef, baseProjection], [graphRef, graphProjection], [sharedUiRef, sharedUiProjection]]) {
     const output = await readFile(resolve(root, "site", ref.projection.path.slice(2)));
     if (!output.equals(projection) || `sha256:${sha(output)}` !== ref.projection.digest) fail(`${ref.id} generated projection drift`);
   }
@@ -471,11 +488,11 @@ export async function checkDesignRegistry() {
   const declarations = await declarationsInSite(new Set(claims.map(claim => claim.cssVar)));
   assertNoOverrides(claims, declarations);
   console.log(`PASS design-owner-registry-check · ${catalog.registry.owners.length} source owners and ${profiles.length} digest-pinned candidate profiles.`);
-  console.log(`PASS design-singleton-enforcement-check · ${claims.length} globally unique keys and variables across three profiles; duplicate and override fixtures rejected; ${declarations.length} owner/projection declarations.`);
+  console.log(`PASS design-singleton-enforcement-check · ${claims.length} globally unique keys and variables across four profiles; duplicate and override fixtures rejected; ${declarations.length} owner/projection declarations.`);
   console.log("PASS design-agent-tool-contract-check · browser WebMCP and newline-delimited stdio MCP share read-only schemas and handlers.");
-  console.log("PASS design-generated-output-check · Base and Graph projections match their profile pins; Commerce CSS matches its consumer pin.");
+  console.log("PASS design-generated-output-check · Base, Graph, and shared UI projections match their profile pins; Commerce CSS matches its consumer pin.");
   console.log("PASS design-license-boundary-check · Commerce/Base MIT evidence and the exact four-file Graph grant are pinned; Graph source remains private outside that scope.");
-  console.log("Scope: three candidate profiles are central and globally unique; no consumer migration, full repository scan, or parity is claimed.");
+  console.log("Scope: four candidate profiles are central and globally unique; consumer projection pins are not an all-repository scan or parity claim.");
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
