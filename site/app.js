@@ -25,7 +25,7 @@ function assertCatalog(catalog) {
   if (catalog.$schema !== "./catalog.schema.json" || catalog.catalogId !== "agentic-design-system"
     || catalog.release.status !== "draft" || catalog.requestedPath !== "/agentic-design-system/"
     || !Array.isArray(catalog.records) || catalog.records.length !== 0
-    || !Array.isArray(catalog.registry?.profiles) || catalog.registry.profiles.length !== 3) {
+    || !Array.isArray(catalog.registry?.profiles) || catalog.registry.profiles.length !== 4) {
     throw new TypeError("The local catalog is incomplete or is not a draft");
   }
 }

@@ -1,19 +1,19 @@
 ---
 title: "Agentic Design System — Shared Ownership and Singleton Tokens"
 doc_type: "PRD-TAD-ADR-MVP-GTM"
-version: "0.9.16"
-revision: "0.9.16"
+version: "0.9.17"
+revision: "0.9.17"
 date: "2026-10-29"
-updated_date: "2026-10-30"
+updated_date: "2026-11-03"
 lang: "en-US"
 frontmatter_contract: "required"
 owner: "Design-system product function"
 continuity_id: "DESIGN-TOKEN-ADOPTION-001"
-prd_revision: "0.9.16"
-tad_revision: "0.9.16"
-adr_revision: "0.9.16"
-mvp_revision: "0.9.16"
-gtm_revision: "0.9.16"
+prd_revision: "0.9.17"
+tad_revision: "0.9.17"
+adr_revision: "0.9.17"
+mvp_revision: "0.9.17"
+gtm_revision: "0.9.17"
 local_rung: "dev-proven"
 delivered_rung: "undocumented"
 lane: "authoring"
@@ -36,9 +36,11 @@ runtime_readiness_policy: "fail-closed"
 
 # Agentic Design System — Shared Ownership and Singleton Tokens
 
-**Join:** `DESIGN-TOKEN-ADOPTION-001@0.9.16`, superseding `0.9.15` and its predecessor chain through `0.2.0`. This revision records that the central registry implementation is integrated on protected `main` at `bc1921bbcf56e1abb11fef2593917e5459d58df1` via PR #6. The selected Commerce workflow root is sequence 3 at its end boundary, digest `370e305e7121cabcb8622db98c438249cecb00934958d072a865c926039c8364`; it retains member archive `07a8f61cb189dd0fb65e6725ef3b3cb6245ec427b2dd47542706fba39f95b72d` and passed checks receipt `cc1dc035ab816b08bb825c03e26da79732ad6c5e01d9bd0531c9410ecf7ef45a`. It now has one exact member release target and two release references bound to the plan-backed no-deploy evidence digest `6c630b7a9d5d4422cd1196748241eac8eb414603c281e0ae79b39734d7c556a0`. AOS marks those deployment/runtime references `queued`, so the workflow remains incomplete (2 of 11 steps completed) and authority remains false; the record is not deployment or runtime proof. Six lifecycle phases remain missing, and the committed AOS delivery-disposition row remains pending until protected source integration. AOS END ADLC still blocks the Commerce 0.1.4 lane because it has not been published and integrated. The current Commerce checks phase passed in 142.6 seconds with 125.6 seconds waited-process CPU and 597,065,728 bytes maximum single-process RSS; token and cash cost remain unknown. Actual Chrome UI 200% zoom was verified manually; repeatable accessibility checks remain open. The three central profiles remain draft candidates and no consumer migration is claimed.
+**Join:** `DESIGN-TOKEN-ADOPTION-001@0.9.17`, superseding `0.9.16` and its predecessor chain through `0.2.0`. This revision adds one centrally owned shared icon-size profile and its first offline consumer projections while retaining draft status, explicit rights, and owner-specific rollback. The prior central registry integration remains at protected `main` commit `bc1921bbcf56e1abb11fef2593917e5459d58df1` via PR #6. Historical Commerce workflow and no-deploy evidence remain recorded below; they are not release or runtime authority for this change.
 
 **Change boundary:** the central registry implementation is integrated at `bc1921bbcf56e1abb11fef2593917e5459d58df1` through PR #6. Its predecessor code originated at `a1c56f8ba3c3b8892897fcdbf6d61ed09784b6b7`. This local successor pins AOS at `2bf74425791761c3253e8112a181ed496c1cdf91` as a dev-only dependency, the protected merge commit for PR #649, and records the current audit. The selected Commerce workflow ID is `workflow-commerce-token-plan-20261030-v5`, sequence 3, boundary `end`, manifest digest `370e305e7121cabcb8622db98c438249cecb00934958d072a865c926039c8364`. It binds plan 0.1.4 at Commerce commit `3e764ac4078aff85c5f60ef33eefde6be61ca8bf`, planning digest `706975e57af56068bb9720b67995a2f6803acc99bc2453a79711af8cb28f5aad`, member archive `07a8f61cb189dd0fb65e6725ef3b3cb6245ec427b2dd47542706fba39f95b72d`, and passed checks receipt `cc1dc035ab816b08bb825c03e26da79732ad6c5e01d9bd0531c9410ecf7ef45a`. `releaseTargets` contains the exact member ID; deployment and runtime references point to the immutable plan-backed no-deploy evidence `6c630b7a9d5d4422cd1196748241eac8eb414603c281e0ae79b39734d7c556a0`. The current importer classifies those references as queued production steps, leaving closure incomplete and authority false. This is not deployment/runtime evidence, and the separate AOS delivery-disposition row is deferred until protected source integration. Six lifecycle phases remain missing. The user granted public reuse of four exact Graph artifacts on 2026-10-29; that does not authorize other Graph sources or future revisions. No consumer migration, public release, or deployment is claimed.
+
+**0.9.17 bounded successor:** the user selected Agentic Design System as the canonical owner of two shared interface glyph dimensions: `shared-ui:icon.size.compact` (`--agentic-icon-size-compact: 0.75rem`) and `shared-ui:icon.size.default` (`--agentic-icon-size-default: 1rem`). Their value source is a single Design System profile; generated CSS files in Base, Graph, and Commerce are pinned projections with no duplicate literal values or runtime network fetch. Product owners retain icon artwork, hit-area sizing, component APIs, and behavior. Adoption is limited to the Base compact glyph slot, Graph compact/default glyph classes, and Commerce navigation/action glyphs where current computed sizes match these two roles; unrelated icon sizes remain native. Each consumer lane records the central profile/projection digests, replaces its prior editable size declaration, and retains an exact predecessor for rollback. The central profile stays a candidate and records consumer pins only after the corresponding committed consumer bytes exist. No deployment or public catalog release is in this scope.
 
 ## Codebase grounding record
 
@@ -97,6 +99,7 @@ The existing joined plan `DESIGN-TOKEN-ADOPTION-001@0.5.0` is the immediate pred
 | DS-08 | A consumer pin is rolled back; its prior exact revision and digest restore without deleting source history. | `design-rollback-check` | Rollback remains a consumer-owned operation with a separate receipt. |
 | DS-09 | A contributor runs `npm run dev`; the local UI loads at the printed loopback URL and its network log shows no external requests. | `design-site-browser-check` | Dependency-free local server; no production deploy. |
 | DS-10 | A machine client and read-only MCP/WebMCP transports read the same static registry as the browser; `/` sections, `#scope`, and `@owner` resolve to that record. | `design-catalog-contract-check` | No parallel registry or paid service; all transports join the same capability identity and handler. |
+| DS-11 | Base, Graph, and Commerce render eligible compact/default glyphs from the pinned shared-ui profile projection. | `shared-icon-projection-check` and live local browser inspection | Profile values exist once in the Design System source; consumer outputs contain only pinned projection bytes and preserve native hit areas and rollback pins. |
 
 The static JSON contract and `site/registry-query.js` are the shared headless source. Local stdio MCP is implemented with newline-delimited JSON-RPC; the browser registers the same read-only capability names, input schemas, and handler through feature-detected `document.modelContext.registerTool()`. The checker exercises initialization, listing, calls, failures, schema parity, and a real child-process stdio exchange. A browser without `document.modelContext` retains static search; native WebMCP execution remains capability-gated and could not be exercised in the current browser.
 
@@ -124,6 +127,7 @@ Initial segment hypothesis: small product teams maintaining browser interfaces a
 |---|---|---|
 | Lifecycle policy, source admission, and release evidence | Agentic OS | Consumers reference its current policy; product design data stays out of this repository. |
 | Shared design semantics, canonical keys, owner map, rights state, versioning | Agentic Design System | One record per candidate key and mode; immutable owner revision and digest. |
+| Shared compact/default interface glyph dimensions | Agentic Design System | Base, Graph, and Commerce map native compact/default glyph roles to the pinned offline projection; each consumer retains an exact predecessor pin. |
 | Commerce theme values | Agentic Design System candidate profile; Commerce remains the live consumer owner | Existing Commerce CSS digest is pinned; Commerce behavior and migration remain Commerce-owned. |
 | Graph theme values | Graph source; this repository holds a candidate snapshot of the four exactly granted artifacts | Graph's native runtime remains unchanged; the central projection has no Graph consumer pin or adoption receipt. |
 | Base data-view values and component behavior | Base source; this repository holds a candidate profile of its licensed values | Base's native runtime remains unchanged; the central projection has no Base consumer pin or adoption receipt. |
@@ -231,7 +235,7 @@ No revenue, market size, ROI, or time savings are claimed. Revenue and buyer evi
 
 ## C01–C16 coverage
 
-**Join:** `DESIGN-TOKEN-ADOPTION-001@0.9.16` · **Owner:** Design-system product function · **As of:** 2026-10-30. **0:** four source owners are grounded at exact revisions; drift pain and willingness to pay are not measured. **1:** resolve one key to one owner and pin in ≤5 minutes in a five-task pilot; observation not run.
+**Join:** `DESIGN-TOKEN-ADOPTION-001@0.9.17` · **Owner:** Design-system product function · **As of:** 2026-11-03. **0:** four existing product/governance owners are grounded at exact revisions; shared icon sizing now has one Design System owner candidate; drift pain and willingness to pay are not measured. **1:** resolve one key to one owner and pin in ≤5 minutes in a five-task pilot; observation not run.
 
 | Domain | Disposition | Evidence / gap | Owner and next check |
 |---|---|---|---|

@@ -19,6 +19,7 @@ const expectedFiles = [
   "scripts/check-public-release.mjs",
   "scripts/commerce-profile.mjs",
   "scripts/design-registry.mjs",
+  "scripts/design-system-icon-profile.mjs",
   "scripts/dev.mjs",
   "scripts/graph-profile.mjs",
   "site/THIRD-PARTY-NOTICES.txt",
@@ -32,8 +33,10 @@ const expectedFiles = [
   "site/tokens/base-profile.json",
   "site/tokens/commerce-profile.json",
   "site/tokens/graph-profile.json",
+  "site/tokens/shared-ui-profile.json",
   "site/vendor/base-profile.css",
   "site/vendor/graph-profile.css",
+  "site/vendor/shared-ui-profile.css",
 ].sort();
 const prohibitedPaths = [
   "registry",
