@@ -267,3 +267,7 @@ No revenue, market size, ROI, or time savings are claimed. Revenue and buyer evi
 - Predecessor plans `DESIGN-TOKEN-ADOPTION-001@0.3.0` and `@0.2.0` · exact path and revision in `parent`.
 - Local implementation audit and evidence are recorded in the MVP section above; predecessor source SHA is `a1c56f8ba3c3b8892897fcdbf6d61ed09784b6b7` and the original protected base is `9dd6c3a98621aaebdf2a36187d3aa9272c27fbee`.
 - Source commits, paths, and file digests in the Codebase Grounding Record; all are inspection evidence only.
+
+## Shared row and toolbar geometry — 2026-11-06
+
+The existing shared-ui profile v0.2.0 owns one responsive row metric: 38px on desktop and 54px for coarse pointers or widths up to 768px, matching the existing Graph compact toolbar surface. Base owns table cell/header geometry; Graph toolbar and table consumers use the same generated variables and Base metric adapter; Commerce consumes the exact offline artifact. Density inputs remain compatible and do not define competing heights. No renderer, service, dependency or separate token inventory is added. Consumers pin the exact source/projection and retain prior artifacts for rollback. Source/local integration only; production activation is not selected. Acceptance requires desktop/touch toolbar-header-row equality, sticky ancestor alignment, pivot, menus, editing and native consumer checks.

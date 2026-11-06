@@ -7,11 +7,13 @@ const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const profilePath = resolve(root, "site/tokens/shared-ui-profile.json");
 const outputPath = resolve(root, "site/vendor/shared-ui-profile.css");
 const TOKEN_KEY = /^[a-z][a-z0-9.-]{0,95}$/u;
-const CSS_VAR = /^--agentic-icon-size-[a-z0-9-]{1,48}$/u;
+const CSS_VAR = /^--agentic-(?:icon-size-[a-z0-9-]{1,48}|row-height(?:-touch)?)$/u;
 const DIMENSION = /^(?:0|[0-9]+(?:\.[0-9]+)?)(?:px|rem|em)$/u;
 const EXPECTED = Object.freeze([
   ["icon.size.compact", "--agentic-icon-size-compact"],
   ["icon.size.default", "--agentic-icon-size-default"],
+  ["surface.row-height", "--agentic-row-height"],
+  ["surface.row-height-touch", "--agentic-row-height-touch"],
 ]);
 const digest = bytes => createHash("sha256").update(bytes).digest("hex");
 const fail = message => { throw new Error(`Invalid shared UI profile: ${message}`); };
@@ -25,7 +27,7 @@ export function validateSharedUiProfile(source) {
   const profile = JSON.parse(source);
   exactKeys(profile, ["schema", "id", "version", "status", "scope", "tokens"], "root");
   if (profile.schema !== "agentic-design-system/shared-ui-profile/v1" || profile.id !== "shared-ui"
-    || profile.version !== "0.1.0" || profile.status !== "candidate") fail("identity");
+    || profile.version !== "0.2.0" || profile.status !== "candidate") fail("identity");
   exactKeys(profile.scope, ["repository", "surfaces"], "scope");
   if (profile.scope.repository !== "github.com/huijoohwee/agentic-design-system"
     || JSON.stringify(profile.scope.surfaces) !== JSON.stringify(["shared-interface"])) fail("scope");
@@ -40,14 +42,14 @@ export function validateSharedUiProfile(source) {
     keys.add(token.key);
     variables.add(token.cssVar);
   }
-  if (profile.tokens[0].value !== "0.75rem" || profile.tokens[1].value !== "1rem") fail("selected shared-size values");
+  if (profile.tokens[0].value !== "0.75rem" || profile.tokens[1].value !== "1rem" || profile.tokens[2].value !== "38px" || profile.tokens[3].value !== "54px") fail("selected shared-size values");
   return profile;
 }
 
 export function renderSharedUiCss(profile, sourceRevision, profileDigest) {
   if (!/^[a-f0-9]{40}$/u.test(sourceRevision ?? "") || !/^[a-f0-9]{64}$/u.test(profileDigest ?? "")) fail("projection binding");
   const declarations = profile.tokens.map(token => `  ${token.cssVar}: ${token.value};`);
-  return `/* Generated from agentic-design-system@${sourceRevision}; profile sha256 ${profileDigest}. Do not edit. */\n:root, :host {\n${declarations.join("\n")}\n}\n`;
+  return `/* Generated from agentic-design-system@${sourceRevision}; profile sha256 ${profileDigest}. Do not edit. */\n:root, :host {\n${declarations.join("\n")}\n}\n@media (pointer: coarse), (max-width: 768px) {\n  :root, :host { --agentic-row-height: var(--agentic-row-height-touch); }\n}\n`;
 }
 
 async function main() {
@@ -56,7 +58,7 @@ async function main() {
   const bytes = await readFile(profilePath);
   const profile = validateSharedUiProfile(bytes.toString("utf8"));
   if (args[0] === "--validate") {
-    console.log(`Shared UI profile valid: ${profile.tokens.length} canonical icon-size tokens.`);
+    console.log(`Shared UI profile valid: ${profile.tokens.length} canonical shared-size tokens.`);
     return;
   }
   const catalog = JSON.parse(await readFile(resolve(root, "site/catalog.json"), "utf8"));
@@ -66,7 +68,7 @@ async function main() {
   if (args[0] === "--check") {
     const output = await readFile(outputPath, "utf8");
     if (output !== css || `sha256:${digest(Buffer.from(output))}` !== ref.projection?.digest) fail("generated projection drift");
-    console.log(`Shared UI projection valid: ${profile.tokens.length} pinned icon-size tokens.`);
+    console.log(`Shared UI projection valid: ${profile.tokens.length} pinned shared-size tokens.`);
     return;
   }
   if (args[0] === "--write") {
