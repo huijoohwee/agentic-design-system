@@ -7,13 +7,70 @@ const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const profilePath = resolve(root, "site/tokens/shared-ui-profile.json");
 const outputPath = resolve(root, "site/vendor/shared-ui-profile.css");
 const TOKEN_KEY = /^[a-z][a-z0-9.-]{0,95}$/u;
-const CSS_VAR = /^--agentic-(?:icon-size-[a-z0-9-]{1,48}|row-height(?:-touch)?)$/u;
+const CSS_VAR = /^--agentic-[a-z0-9-]{1,64}$/u;
 const DIMENSION = /^(?:0|[0-9]+(?:\.[0-9]+)?)(?:px|rem|em)$/u;
+// Closed inventory: CSS values are validated before projection.
 const EXPECTED = Object.freeze([
-  ["icon.size.compact", "--agentic-icon-size-compact"],
-  ["icon.size.default", "--agentic-icon-size-default"],
-  ["surface.row-height", "--agentic-row-height"],
-  ["surface.row-height-touch", "--agentic-row-height-touch"],
+  [
+    "icon.size.compact",
+    "--agentic-icon-size-compact",
+    "dimension",
+    "0.75rem"
+  ],
+  [
+    "icon.size.default",
+    "--agentic-icon-size-default",
+    "dimension",
+    "1rem"
+  ],
+  [
+    "surface.row-height",
+    "--agentic-row-height",
+    "dimension",
+    "38px"
+  ],
+  [
+    "surface.row-height-touch",
+    "--agentic-row-height-touch",
+    "dimension",
+    "54px"
+  ],
+  [
+    "typography.body.size",
+    "--agentic-font-size-body",
+    "dimension",
+    "14px"
+  ],
+  [
+    "typography.body.line-height",
+    "--agentic-line-height-body",
+    "dimension",
+    "20px"
+  ],
+  [
+    "typography.family.sans",
+    "--agentic-font-sans",
+    "font-family",
+    "-apple-system, BlinkMacSystemFont, Segoe UI, Noto Sans, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji"
+  ],
+  [
+    "typography.family.mono",
+    "--agentic-font-mono",
+    "font-family",
+    "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace"
+  ],
+  [
+    "layout.ktv.columns",
+    "--agentic-ktv-columns",
+    "grid-template",
+    "minmax(0,1fr) minmax(3rem,4.75rem) minmax(0,1.45fr)"
+  ],
+  [
+    "layout.ktv.columns-narrow",
+    "--agentic-ktv-columns-narrow",
+    "grid-template",
+    "minmax(0,0.95fr) minmax(2.75rem,0.42fr) minmax(0,1.2fr)"
+  ]
 ]);
 const digest = bytes => createHash("sha256").update(bytes).digest("hex");
 const fail = message => { throw new Error(`Invalid shared UI profile: ${message}`); };
@@ -27,18 +84,18 @@ export function validateSharedUiProfile(source) {
   const profile = JSON.parse(source);
   exactKeys(profile, ["schema", "id", "version", "status", "scope", "tokens"], "root");
   if (profile.schema !== "agentic-design-system/shared-ui-profile/v1" || profile.id !== "shared-ui"
-    || profile.version !== "0.2.0" || profile.status !== "candidate") fail("identity");
+    || profile.version !== "0.3.0" || profile.status !== "candidate") fail("identity");
   exactKeys(profile.scope, ["repository", "surfaces"], "scope");
   if (profile.scope.repository !== "github.com/huijoohwee/agentic-design-system"
     || JSON.stringify(profile.scope.surfaces) !== JSON.stringify(["shared-interface"])) fail("scope");
   if (!Array.isArray(profile.tokens) || profile.tokens.length !== EXPECTED.length
-    || JSON.stringify(profile.tokens.map(token => [token?.key, token?.cssVar])) !== JSON.stringify(EXPECTED)) fail("token inventory or order");
+    || JSON.stringify(profile.tokens.map(token => [token?.key, token?.cssVar, token?.type, token?.value])) !== JSON.stringify(EXPECTED)) fail("token inventory or order");
   const keys = new Set();
   const variables = new Set();
   for (const token of profile.tokens) {
     exactKeys(token, ["key", "cssVar", "type", "value"], token.key ?? "token");
-    if (!TOKEN_KEY.test(token.key ?? "") || !CSS_VAR.test(token.cssVar ?? "") || token.type !== "dimension"
-      || !DIMENSION.test(token.value ?? "") || keys.has(token.key) || variables.has(token.cssVar)) fail(`invalid token ${token.key ?? ""}`);
+    if (!TOKEN_KEY.test(token.key ?? "") || !CSS_VAR.test(token.cssVar ?? "")
+      || (token.type === "dimension" && !DIMENSION.test(token.value ?? "")) || keys.has(token.key) || variables.has(token.cssVar)) fail(`invalid token ${token.key ?? ""}`);
     keys.add(token.key);
     variables.add(token.cssVar);
   }
@@ -49,7 +106,7 @@ export function validateSharedUiProfile(source) {
 export function renderSharedUiCss(profile, sourceRevision, profileDigest) {
   if (!/^[a-f0-9]{40}$/u.test(sourceRevision ?? "") || !/^[a-f0-9]{64}$/u.test(profileDigest ?? "")) fail("projection binding");
   const declarations = profile.tokens.map(token => `  ${token.cssVar}: ${token.value};`);
-  return `/* Generated from agentic-design-system@${sourceRevision}; profile sha256 ${profileDigest}. Do not edit. */\n:root, :host {\n${declarations.join("\n")}\n}\n@media (pointer: coarse), (max-width: 768px) {\n  :root, :host { --agentic-row-height: var(--agentic-row-height-touch); }\n}\n`;
+  return `/* Generated from agentic-design-system@${sourceRevision}; profile sha256 ${profileDigest}. Do not edit. */\n:root, :host {\n${declarations.join("\n")}\n}\n@media (max-width: 639px) {\n  :root, :host { --agentic-ktv-columns: var(--agentic-ktv-columns-narrow); }\n}\n@media (pointer: coarse), (max-width: 768px) {\n  :root, :host { --agentic-row-height: var(--agentic-row-height-touch); }\n}\n`;
 }
 
 async function main() {
@@ -58,7 +115,7 @@ async function main() {
   const bytes = await readFile(profilePath);
   const profile = validateSharedUiProfile(bytes.toString("utf8"));
   if (args[0] === "--validate") {
-    console.log(`Shared UI profile valid: ${profile.tokens.length} canonical shared-size tokens.`);
+    console.log(`Shared UI profile valid: ${profile.tokens.length} canonical shared UI tokens.`);
     return;
   }
   const catalog = JSON.parse(await readFile(resolve(root, "site/catalog.json"), "utf8"));
@@ -68,7 +125,7 @@ async function main() {
   if (args[0] === "--check") {
     const output = await readFile(outputPath, "utf8");
     if (output !== css || `sha256:${digest(Buffer.from(output))}` !== ref.projection?.digest) fail("generated projection drift");
-    console.log(`Shared UI projection valid: ${profile.tokens.length} pinned shared-size tokens.`);
+    console.log(`Shared UI projection valid: ${profile.tokens.length} pinned shared UI tokens.`);
     return;
   }
   if (args[0] === "--write") {

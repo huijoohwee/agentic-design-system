@@ -48,3 +48,5 @@ npm run check:design-system
 For a local read-only MCP client, run `npm run mcp`; the process speaks newline-delimited JSON-RPC
 over stdin/stdout and reads only the checked-in catalog. Browser WebMCP registration is a progressive
 enhancement; regular search remains available when a browser does not expose that API.
+
+The shared UI profile centrally owns body typography (14px/20px), font families, responsive KTV column tracks, icon sizes and row geometry. Consumers pin its generated projection; Graph retains the shared KTV React renderer.

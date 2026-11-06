@@ -1,7 +1,7 @@
 {
   "schema": "agentic-design-system/shared-ui-profile/v1",
   "id": "shared-ui",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "status": "candidate",
   "scope": {
     "repository": "github.com/huijoohwee/agentic-design-system",
@@ -33,6 +33,42 @@
       "cssVar": "--agentic-row-height-touch",
       "type": "dimension",
       "value": "54px"
+    },
+    {
+      "key": "typography.body.size",
+      "cssVar": "--agentic-font-size-body",
+      "type": "dimension",
+      "value": "14px"
+    },
+    {
+      "key": "typography.body.line-height",
+      "cssVar": "--agentic-line-height-body",
+      "type": "dimension",
+      "value": "20px"
+    },
+    {
+      "key": "typography.family.sans",
+      "cssVar": "--agentic-font-sans",
+      "type": "font-family",
+      "value": "-apple-system, BlinkMacSystemFont, Segoe UI, Noto Sans, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji"
+    },
+    {
+      "key": "typography.family.mono",
+      "cssVar": "--agentic-font-mono",
+      "type": "font-family",
+      "value": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace"
+    },
+    {
+      "key": "layout.ktv.columns",
+      "cssVar": "--agentic-ktv-columns",
+      "type": "grid-template",
+      "value": "minmax(0,1fr) minmax(3rem,4.75rem) minmax(0,1.45fr)"
+    },
+    {
+      "key": "layout.ktv.columns-narrow",
+      "cssVar": "--agentic-ktv-columns-narrow",
+      "type": "grid-template",
+      "value": "minmax(0,0.95fr) minmax(2.75rem,0.42fr) minmax(0,1.2fr)"
     }
   ]
 }
