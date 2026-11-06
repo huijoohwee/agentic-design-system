@@ -1,19 +1,19 @@
 ---
 title: "Agentic Design System — Shared Ownership and Singleton Tokens"
 doc_type: "PRD-TAD-ADR-MVP-GTM"
-version: "0.9.18"
-revision: "0.9.18"
+version: "0.9.19"
+revision: "0.9.19"
 date: "2026-10-29"
-updated_date: "2026-11-06"
+updated_date: "2026-11-07"
 lang: "en-US"
 frontmatter_contract: "required"
 owner: "Design-system product function"
 continuity_id: "DESIGN-TOKEN-ADOPTION-001"
-prd_revision: "0.9.18"
-tad_revision: "0.9.18"
-adr_revision: "0.9.18"
-mvp_revision: "0.9.18"
-gtm_revision: "0.9.18"
+prd_revision: "0.9.19"
+tad_revision: "0.9.19"
+adr_revision: "0.9.19"
+mvp_revision: "0.9.19"
+gtm_revision: "0.9.19"
 local_rung: "dev-proven"
 delivered_rung: "undocumented"
 lane: "authoring"
@@ -36,7 +36,7 @@ runtime_readiness_policy: "fail-closed"
 
 # Agentic Design System — Shared Ownership and Singleton Tokens
 
-**Join:** `DESIGN-TOKEN-ADOPTION-001@0.9.18`, superseding `0.9.17` and its predecessor chain through `0.2.0`. This revision extends the existing shared profile with responsive row/toolbar geometry and retains its glyph projections while retaining draft status, explicit rights, and owner-specific rollback. The prior central registry integration remains at protected `main` commit `bc1921bbcf56e1abb11fef2593917e5459d58df1` via PR #6. Historical Commerce workflow and no-deploy evidence remain recorded below; they are not release or runtime authority for this change.
+**Join:** `DESIGN-TOKEN-ADOPTION-001@0.9.19`, superseding `0.9.17` and its predecessor chain through `0.2.0`. This revision extends the existing shared profile with responsive row/toolbar geometry and retains its glyph projections while retaining draft status, explicit rights, and owner-specific rollback. The prior central registry integration remains at protected `main` commit `bc1921bbcf56e1abb11fef2593917e5459d58df1` via PR #6. Historical Commerce workflow and no-deploy evidence remain recorded below; they are not release or runtime authority for this change.
 
 **Change boundary:** the central registry implementation is integrated at `bc1921bbcf56e1abb11fef2593917e5459d58df1` through PR #6. Its predecessor code originated at `a1c56f8ba3c3b8892897fcdbf6d61ed09784b6b7`. This local successor pins AOS at `2bf74425791761c3253e8112a181ed496c1cdf91` as a dev-only dependency, the protected merge commit for PR #649, and records the current audit. The selected Commerce workflow ID is `workflow-commerce-token-plan-20261030-v5`, sequence 3, boundary `end`, manifest digest `370e305e7121cabcb8622db98c438249cecb00934958d072a865c926039c8364`. It binds plan 0.1.4 at Commerce commit `3e764ac4078aff85c5f60ef33eefde6be61ca8bf`, planning digest `706975e57af56068bb9720b67995a2f6803acc99bc2453a79711af8cb28f5aad`, member archive `07a8f61cb189dd0fb65e6725ef3b3cb6245ec427b2dd47542706fba39f95b72d`, and passed checks receipt `cc1dc035ab816b08bb825c03e26da79732ad6c5e01d9bd0531c9410ecf7ef45a`. `releaseTargets` contains the exact member ID; deployment and runtime references point to the immutable plan-backed no-deploy evidence `6c630b7a9d5d4422cd1196748241eac8eb414603c281e0ae79b39734d7c556a0`. The current importer classifies those references as queued production steps, leaving closure incomplete and authority false. This is not deployment/runtime evidence, and the separate AOS delivery-disposition row is deferred until protected source integration. Six lifecycle phases remain missing. The user granted public reuse of four exact Graph artifacts on 2026-10-29; that does not authorize other Graph sources or future revisions. No consumer migration, public release, or deployment is claimed.
 
@@ -271,3 +271,7 @@ No revenue, market size, ROI, or time savings are claimed. Revenue and buyer evi
 ## Shared row and toolbar geometry — 2026-11-06
 
 The existing shared-ui profile v0.2.0 owns one responsive row metric: 38px on desktop and 54px for coarse pointers or widths up to 768px, matching the existing Graph compact toolbar surface. Base owns table cell/header geometry; Graph toolbar and table consumers use the same generated variables and Base metric adapter; Commerce consumes the exact offline artifact. Density inputs remain compatible and do not define competing heights. No renderer, service, dependency or separate token inventory is added. Consumers pin the exact source/projection and retain prior artifacts for rollback. Source/local integration only; production activation is not selected. Acceptance requires desktop/touch toolbar-header-row equality, sticky ancestor alignment, pivot, menus, editing and native consumer checks.
+
+## Shared body typography and KTV alignment — 2026-11-07
+
+Shared-ui v0.3.0 extends the existing singleton profile with the Graph toolbar body role (14px/20px), existing sans/mono stacks, and the existing responsive three-column key/type/value tracks. Base owns panel/table CSS consumption; Graph retains its shared React KTV renderer and generated headless font metadata; Commerce consumes the same pinned offline artifacts. Body/help/field content uses this role; semantic headings and source-code fonts retain their purpose. Row heights remain 38px/54px. No font download, package, alternate renderer or network service is added. Candidate acceptance requires exact profile digests, native checks, live desktop/narrow field alignment and panel-tab inspection. Source/local delivery only; no production activation or whole-repository parity is inferred.

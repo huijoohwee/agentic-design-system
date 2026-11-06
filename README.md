@@ -7,7 +7,7 @@ attribution, permission evidence, and digest. The local ownership map pins the f
 repositories and keeps rights and adoption state explicit. External consumers remain source-mapped
 until their owners review a migration; no adoption or cross-repository parity is implied.
 
-Four candidate profiles hold 118 globally unique keys and CSS variables: Commerce has 36
+Four candidate profiles hold 124 globally unique keys and CSS variables: Commerce has 36
 product-scoped values, Base has 9 shared data-view values, Graph has 69 color, typography, and
 font values across light, dark, and black modes, and Design System owns two shared icon sizes and the desktop/touch row heights shared with the Graph toolbar.
 Profile bytes, source revisions, generated output,
@@ -48,3 +48,5 @@ npm run check:design-system
 For a local read-only MCP client, run `npm run mcp`; the process speaks newline-delimited JSON-RPC
 over stdin/stdout and reads only the checked-in catalog. Browser WebMCP registration is a progressive
 enhancement; regular search remains available when a browser does not expose that API.
+
+The shared UI profile centrally owns body typography (14px/20px), font families, responsive KTV column tracks, icon sizes and row geometry. Consumers pin its generated projection; Graph retains the shared KTV React renderer.

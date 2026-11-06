@@ -16,7 +16,7 @@
     "registryId": "agentic-design-system",
     "revision": "0.5.0",
     "owner": "github.com/huijoohwee/agentic-design-system",
-    "coverage": "Commerce, Base, and Graph profiles plus the Design System shared UI size profile are revision-pinned; Graph reuse remains limited to four granted artifacts; consumer projections are candidate pins and whole-repository parity is not claimed",
+    "coverage": "Commerce, Base, and Graph profiles plus the Design System shared UI profile are revision-pinned; Graph reuse remains limited to four granted artifacts; consumer projections are candidate pins and whole-repository parity is not claimed",
     "keyContract": {
       "schema": "agentic-design-system/design-key/v1",
       "canonicalKeyPattern": "^[a-z0-9][a-z0-9.-]*(?::[a-z0-9][a-z0-9.-]*)*$",
@@ -138,7 +138,7 @@
         "id": "agentic-design-system",
         "name": "Agentic Design System",
         "repository": "github.com/huijoohwee/agentic-design-system",
-        "revision": "26af2c05edec17808f84571478bf38fbff2c7bfb",
+        "revision": "250cb58c92abd8b8d024e881e329869fb69e8a9a",
         "scopes": [
           "shared-ui"
         ],
@@ -148,7 +148,7 @@
           {
             "path": "site/tokens/shared-ui-profile.json",
             "kind": "native",
-            "digest": "sha256:d2691e47750d52376fd68c5efdbaf38393808c39da8ad065815609bdd03eb8ee"
+            "digest": "sha256:9d9e775371a2da55ac7f5e484677e82453e61d503d9494696a6068eb2afcc32e"
           }
         ]
       }
@@ -260,18 +260,18 @@
       },
       {
         "id": "shared-ui",
-        "name": "Shared UI icon-size profile",
+        "name": "Shared UI profile",
         "owner": "github.com/huijoohwee/agentic-design-system",
         "repository": "github.com/huijoohwee/agentic-design-system",
-        "revision": "26af2c05edec17808f84571478bf38fbff2c7bfb",
+        "revision": "250cb58c92abd8b8d024e881e329869fb69e8a9a",
         "source": "./tokens/shared-ui-profile.json",
-        "digest": "sha256:d2691e47750d52376fd68c5efdbaf38393808c39da8ad065815609bdd03eb8ee",
+        "digest": "sha256:9d9e775371a2da55ac7f5e484677e82453e61d503d9494696a6068eb2afcc32e",
         "scope": [
           "shared-interface"
         ],
         "status": "candidate",
         "rights": "cleared",
-        "permissionEvidence": "User instructions on 2026-11-03 and 2026-11-06: Agentic Design System owns shared icon sizes and responsive row/toolbar heights for Base, Graph, Commerce, and related repositories.",
+        "permissionEvidence": "User instructions on 2026-11-03, 2026-11-06 and 2026-11-07: Agentic Design System owns shared icon sizes, responsive row/toolbar heights, body typography, font families and KTV column tracks for Base, Graph, Commerce, and related repositories.",
         "licenseEvidence": [
           {
             "repository": "github.com/huijoohwee/agentic-design-system",
@@ -283,7 +283,7 @@
         "consumerPins": [],
         "projection": {
           "path": "./vendor/shared-ui-profile.css",
-          "digest": "sha256:754ee45e1a07d46e68ab95cbf3c9b28257ad9c71ddec9cf825806c28dfaa4be9"
+          "digest": "sha256:a523df2fee73e476d31088fedb457e58054203ffc4fdd1e713fd96f8d1ae47d6"
         }
       }
     ]
