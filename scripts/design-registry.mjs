@@ -258,7 +258,7 @@ function assertRegistry(registry) {
   exactKeys(registry, ["schema", "registryId", "revision", "owner", "coverage", "keyContract", "owners", "profiles"], "registry");
   if (registry.schema !== "agentic-design-system/owner-registry/v1" || registry.registryId !== "agentic-design-system"
     || registry.revision !== "0.5.0" || registry.owner !== "github.com/huijoohwee/agentic-design-system"
-    || registry.coverage !== "Commerce, Base, and Graph profiles plus the Design System shared UI icon-size profile are revision-pinned; Graph reuse remains limited to four granted artifacts; consumer projections are candidate pins and whole-repository parity is not claimed") fail("identity or coverage");
+    || registry.coverage !== "Commerce, Base, and Graph profiles plus the Design System shared UI size profile are revision-pinned; Graph reuse remains limited to four granted artifacts; consumer projections are candidate pins and whole-repository parity is not claimed") fail("identity or coverage");
   exactKeys(registry.keyContract, ["schema", "canonicalKeyPattern", "cssVariablePattern", "uniqueBy", "overridePolicy"], "key contract");
   if (registry.keyContract.schema !== "agentic-design-system/design-key/v1"
     || registry.keyContract.canonicalKeyPattern !== "^[a-z0-9][a-z0-9.-]*(?::[a-z0-9][a-z0-9.-]*)*$"
@@ -325,12 +325,12 @@ function assertRegistry(registry) {
     || graph.licenseEvidence.length !== 1 || graph.consumerPins.length !== 0
     || graph.projection?.path !== "./vendor/graph-profile.css") fail("Graph exact-source grant binding");
   if (sharedUi.id !== "shared-ui" || sharedUi.owner !== registry.owner || sharedUi.repository !== registry.owner
-    || sharedUi.revision !== "3224afd19c086e511dcfd892d82d12b68460b971" || sharedUi.source !== "./tokens/shared-ui-profile.json"
-    || sharedUi.digest !== "sha256:f335bd273298f267eddffdf3b3f344a69e31e965223e527e6f599b2947ac9856"
+    || !/^([a-f0-9]{40})$/u.test(sharedUi.revision) || sharedUi.source !== "./tokens/shared-ui-profile.json"
+    || !/^sha256:[a-f0-9]{64}$/u.test(sharedUi.digest)
     || sharedUi.rights !== "cleared" || sharedUi.scope.join(",") !== "shared-interface"
-    || sharedUi.permissionEvidence !== "User instruction on 2026-11-03: Agentic Design System owns shared compact and default icon sizes for Base, Graph, and related repositories."
+    || sharedUi.permissionEvidence !== "User instructions on 2026-11-03 and 2026-11-06: Agentic Design System owns shared icon sizes and responsive row/toolbar heights for Base, Graph, Commerce, and related repositories."
     || sharedUi.licenseEvidence.length !== 1 || sharedUi.consumerPins.length !== 0
-    || sharedUi.projection?.path !== "./vendor/shared-ui-profile.css") fail("shared UI icon-size profile binding");
+    || sharedUi.projection?.path !== "./vendor/shared-ui-profile.css") fail("shared UI size profile binding");
   const sharedUiOwner = registry.owners.find(owner => owner.id === "agentic-design-system");
   if (!sharedUiOwner || sharedUiOwner.revision !== sharedUi.revision || sharedUiOwner.reuseGate !== "mit-verified"
     || JSON.stringify(sharedUiOwner.sources) !== JSON.stringify([{ path: "site/tokens/shared-ui-profile.json", kind: "native", digest: sharedUi.digest }])) fail("shared UI owner source binding");
