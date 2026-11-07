@@ -138,7 +138,7 @@
         "id": "agentic-design-system",
         "name": "Agentic Design System",
         "repository": "github.com/huijoohwee/agentic-design-system",
-        "revision": "949cfc9b10b53f2d2b3b11e112203a404453c26b",
+        "revision": "66c35a12465d9d9b53f83b39474ad514bee23946",
         "scopes": [
           "shared-ui"
         ],
@@ -148,7 +148,7 @@
           {
             "path": "site/tokens/shared-ui-profile.json",
             "kind": "native",
-            "digest": "sha256:890786fd9a27a998ba873d0fec6079b174acdf225e075c6379f4bb5355318a74"
+            "digest": "sha256:4830e6c273f8ab2f562c92caf919a169c09126ea0125b65fe852f7050f928c39"
           }
         ]
       }
@@ -263,9 +263,9 @@
         "name": "Shared UI profile",
         "owner": "github.com/huijoohwee/agentic-design-system",
         "repository": "github.com/huijoohwee/agentic-design-system",
-        "revision": "949cfc9b10b53f2d2b3b11e112203a404453c26b",
+        "revision": "66c35a12465d9d9b53f83b39474ad514bee23946",
         "source": "./tokens/shared-ui-profile.json",
-        "digest": "sha256:890786fd9a27a998ba873d0fec6079b174acdf225e075c6379f4bb5355318a74",
+        "digest": "sha256:4830e6c273f8ab2f562c92caf919a169c09126ea0125b65fe852f7050f928c39",
         "scope": [
           "shared-interface"
         ],
@@ -275,7 +275,7 @@
         "licenseEvidence": [
           {
             "repository": "github.com/huijoohwee/agentic-design-system",
-            "revision": "949cfc9b10b53f2d2b3b11e112203a404453c26b",
+            "revision": "66c35a12465d9d9b53f83b39474ad514bee23946",
             "path": "LICENSE",
             "digest": "sha256:b2e476300173b31043c1222c840b5cd3a8c234d50ffc5f44f104fcbf66fc5ffe"
           }
@@ -283,7 +283,7 @@
         "consumerPins": [],
         "projection": {
           "path": "./vendor/shared-ui-profile.css",
-          "digest": "sha256:450e07dca0142ba4ab400efa54cb370b0cc88831636def9b78d6517ff7747308"
+          "digest": "sha256:f688f8f0ed6b110055a54cb953957964cdf5753c39ad54cab6002b662b82a650"
         }
       }
     ]
