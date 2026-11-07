@@ -7,7 +7,7 @@ attribution, permission evidence, and digest. The local ownership map pins the f
 repositories and keeps rights and adoption state explicit. External consumers remain source-mapped
 until their owners review a migration; no adoption or cross-repository parity is implied.
 
-Four candidate profiles hold 133 globally unique keys and CSS variables: Commerce has 36
+Four candidate profiles hold 137 globally unique keys and CSS variables: Commerce has 36
 product-scoped values, Base has 9 shared data-view values, Graph has 69 color, typography, and
 font values across light, dark, and black modes, and Design System owns two shared icon sizes and the desktop/touch row heights shared with the Graph toolbar.
 Profile bytes, source revisions, generated output,
@@ -54,3 +54,5 @@ The shared UI profile centrally owns body typography (14px/20px), font families,
 KTV sizing adapts to the shared row container; the shared profile owns tracks, the stacking breakpoint and the default field-panel width. Consumer projections remain immutable local artifacts.
 
 Dropdowns and textboxes reuse the generated `agentic-form-control` utility; native fields opt in through `agentic-form-controls`. Shared geometry is 28px desktop and 48px on coarse pointers or viewports up to 768px, with 8px inline padding, a 6px radius and body typography. Focus color stays with the local theme; native select behavior, labels, validation and Graph menu behavior stay with their existing owners.
+
+Opened dropdown menus also reuse the generated shared surface, option, hover, selected, focus and touch styles. Base owns the neutral menu behavior and native/React adapters; this registry adds no runtime dependency on Base.

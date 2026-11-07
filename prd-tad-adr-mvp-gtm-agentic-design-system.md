@@ -1,19 +1,19 @@
 ---
 title: "Agentic Design System — Shared Ownership and Singleton Tokens"
 doc_type: "PRD-TAD-ADR-MVP-GTM"
-version: "0.9.22"
-revision: "0.9.22"
+version: "0.9.23"
+revision: "0.9.23"
 date: "2026-10-29"
 updated_date: "2026-11-07"
 lang: "en-US"
 frontmatter_contract: "required"
 owner: "Design-system product function"
 continuity_id: "DESIGN-TOKEN-ADOPTION-001"
-prd_revision: "0.9.22"
-tad_revision: "0.9.22"
-adr_revision: "0.9.22"
-mvp_revision: "0.9.22"
-gtm_revision: "0.9.22"
+prd_revision: "0.9.23"
+tad_revision: "0.9.23"
+adr_revision: "0.9.23"
+mvp_revision: "0.9.23"
+gtm_revision: "0.9.23"
 local_rung: "dev-proven"
 delivered_rung: "undocumented"
 lane: "authoring"
@@ -36,7 +36,7 @@ runtime_readiness_policy: "fail-closed"
 
 # Agentic Design System — Shared Ownership and Singleton Tokens
 
-**Join:** `DESIGN-TOKEN-ADOPTION-001@0.9.22`, superseding `0.9.17` and its predecessor chain through `0.2.0`. This revision extends the existing shared profile with responsive row/toolbar geometry and retains its glyph projections while retaining draft status, explicit rights, and owner-specific rollback. The prior central registry integration remains at protected `main` commit `bc1921bbcf56e1abb11fef2593917e5459d58df1` via PR #6. Historical Commerce workflow and no-deploy evidence remain recorded below; they are not release or runtime authority for this change.
+**Join:** `DESIGN-TOKEN-ADOPTION-001@0.9.23`, superseding `0.9.17` and its predecessor chain through `0.2.0`. This revision extends the existing shared profile with responsive row/toolbar geometry and retains its glyph projections while retaining draft status, explicit rights, and owner-specific rollback. The prior central registry integration remains at protected `main` commit `bc1921bbcf56e1abb11fef2593917e5459d58df1` via PR #6. Historical Commerce workflow and no-deploy evidence remain recorded below; they are not release or runtime authority for this change.
 
 **Change boundary:** the central registry implementation is integrated at `bc1921bbcf56e1abb11fef2593917e5459d58df1` through PR #6. Its predecessor code originated at `a1c56f8ba3c3b8892897fcdbf6d61ed09784b6b7`. This local successor pins AOS at `2bf74425791761c3253e8112a181ed496c1cdf91` as a dev-only dependency, the protected merge commit for PR #649, and records the current audit. The selected Commerce workflow ID is `workflow-commerce-token-plan-20261030-v5`, sequence 3, boundary `end`, manifest digest `370e305e7121cabcb8622db98c438249cecb00934958d072a865c926039c8364`. It binds plan 0.1.4 at Commerce commit `3e764ac4078aff85c5f60ef33eefde6be61ca8bf`, planning digest `706975e57af56068bb9720b67995a2f6803acc99bc2453a79711af8cb28f5aad`, member archive `07a8f61cb189dd0fb65e6725ef3b3cb6245ec427b2dd47542706fba39f95b72d`, and passed checks receipt `cc1dc035ab816b08bb825c03e26da79732ad6c5e01d9bd0531c9410ecf7ef45a`. `releaseTargets` contains the exact member ID; deployment and runtime references point to the immutable plan-backed no-deploy evidence `6c630b7a9d5d4422cd1196748241eac8eb414603c281e0ae79b39734d7c556a0`. The current importer classifies those references as queued production steps, leaving closure incomplete and authority false. This is not deployment/runtime evidence, and the separate AOS delivery-disposition row is deferred until protected source integration. Six lifecycle phases remain missing. The user granted public reuse of four exact Graph artifacts on 2026-10-29; that does not authorize other Graph sources or future revisions. No consumer migration, public release, or deployment is claimed.
 
@@ -283,3 +283,7 @@ The existing shared UI profile owns KTV track sizing, its container-width breakp
 ## Shared dropdown and textbox geometry
 
 Shared-ui v0.5.0 extends the existing singleton profile with control height (28px desktop / 48px touch), 8px inline padding, 6px radius and focus geometry. The generated utility and opt-in native field scope apply the same 14px/20px body role; hidden, file, selection, range and color inputs keep their own semantics. Textareas retain multiline resizing. Existing product themes own colors, Graph SemanticSelect/DropdownMenuSurface own keyboard menus, and native selects retain platform behavior. Base, Graph and Commerce pin the exact generated offline projection; no second control implementation, new dependency or hosted token fetch is introduced. Validate registry/CSP/unique-token checks, native consumer checks and canonical desktop/mobile control measurements. Source merge and local Dev evidence do not claim Production activation; recovery restores exact predecessor source/pins without touching origin data.
+
+## Shared opened dropdown menus
+
+The shared-ui v0.6.0 profile adds menu minimum width, viewport edge gap, surface padding and option gap. Its generated surface/option/hover/selected/focus CSS is the single presentation owner. Base owns the headless menu lifecycle, keyboard/typeahead, native form adapter and React adapter; Graph toolbar/field menus and Commerce consume it with exact offline pins. Preserve product labels, values, callbacks, validation, reset, grouped/disabled options, host overlays and data. Remove copied menu behavior and native popup variants from the adopted surfaces. Verify opened desktop/mobile menus and native consumer checks. Shared CSS is capped at 8000 bytes; no runtime network, dependency, storage migration or Production activation is introduced.
