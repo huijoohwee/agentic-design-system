@@ -39,13 +39,13 @@ const EXPECTED = Object.freeze([
     "typography.body.size",
     "--agentic-font-size-body",
     "dimension",
-    "14px"
+    "0.875rem"
   ],
   [
     "typography.body.line-height",
     "--agentic-line-height-body",
     "dimension",
-    "20px"
+    "1.25rem"
   ],
   [
     "typography.family.sans",
@@ -84,7 +84,7 @@ export function validateSharedUiProfile(source) {
   const profile = JSON.parse(source);
   exactKeys(profile, ["schema", "id", "version", "status", "scope", "tokens"], "root");
   if (profile.schema !== "agentic-design-system/shared-ui-profile/v1" || profile.id !== "shared-ui"
-    || profile.version !== "0.3.0" || profile.status !== "candidate") fail("identity");
+    || profile.version !== "0.3.1" || profile.status !== "candidate") fail("identity");
   exactKeys(profile.scope, ["repository", "surfaces"], "scope");
   if (profile.scope.repository !== "github.com/huijoohwee/agentic-design-system"
     || JSON.stringify(profile.scope.surfaces) !== JSON.stringify(["shared-interface"])) fail("scope");
