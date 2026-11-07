@@ -175,8 +175,8 @@ const notices = await readFile(resolve(root, "site/THIRD-PARTY-NOTICES.txt"), "u
 if (!notices.includes("MIT License\n")
   || !notices.includes("Commerce theme values\n---------------------\nSource: agentic-commerce-os@6ce3bc918717b97a738ac831dfb4fb3319a02fb6")
   || !notices.includes("Base shared data-view values\n---------------------------\nSource: agentic-base@a5d0f2d87d8c6871e9639f8224f5eaee056c5b6e")
-  || !notices.includes("Graph token and typography values\n-------------------------------\nSource: agentic-graph@bed770d91a9b3f1b663eee9637a472bf19b36361")
-  || !notices.includes("User grant 2026-10-29: public reuse of the exact four Graph artifacts listed here")) {
+  || !notices.includes("Graph token and typography values\n-------------------------------\nSource: agentic-graph@be87de5c3dcc66f58d2cd1b4d96e5920dd284a46")
+  || !notices.includes("User instructions 2026-11-07: centralize design token values and generated projections from the eight listed Graph token sources")) {
   fail("Third-party license notices are incomplete");
 }
 
