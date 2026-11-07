@@ -63,14 +63,16 @@ const EXPECTED = Object.freeze([
     "layout.ktv.columns",
     "--agentic-ktv-columns",
     "grid-template",
-    "minmax(0,1fr) minmax(3rem,4.75rem) minmax(0,1.45fr)"
+    "minmax(10.5rem,11rem) 2rem minmax(8.75rem,1fr)"
   ],
   [
     "layout.ktv.columns-narrow",
     "--agentic-ktv-columns-narrow",
     "grid-template",
-    "minmax(0,0.95fr) minmax(2.75rem,0.42fr) minmax(0,1.2fr)"
-  ]
+    "minmax(0,1fr) 2rem"
+  ],
+  ["layout.ktv.stack-breakpoint", "--agentic-ktv-stack-breakpoint", "dimension", "22.25rem"],
+  ["layout.ktv.panel-width", "--agentic-ktv-panel-width", "dimension", "26.25rem"]
 ]);
 const digest = bytes => createHash("sha256").update(bytes).digest("hex");
 const fail = message => { throw new Error(`Invalid shared UI profile: ${message}`); };
@@ -84,7 +86,7 @@ export function validateSharedUiProfile(source) {
   const profile = JSON.parse(source);
   exactKeys(profile, ["schema", "id", "version", "status", "scope", "tokens"], "root");
   if (profile.schema !== "agentic-design-system/shared-ui-profile/v1" || profile.id !== "shared-ui"
-    || profile.version !== "0.3.1" || profile.status !== "candidate") fail("identity");
+    || profile.version !== "0.4.0" || profile.status !== "candidate") fail("identity");
   exactKeys(profile.scope, ["repository", "surfaces"], "scope");
   if (profile.scope.repository !== "github.com/huijoohwee/agentic-design-system"
     || JSON.stringify(profile.scope.surfaces) !== JSON.stringify(["shared-interface"])) fail("scope");
@@ -106,7 +108,7 @@ export function validateSharedUiProfile(source) {
 export function renderSharedUiCss(profile, sourceRevision, profileDigest) {
   if (!/^[a-f0-9]{40}$/u.test(sourceRevision ?? "") || !/^[a-f0-9]{64}$/u.test(profileDigest ?? "")) fail("projection binding");
   const declarations = profile.tokens.map(token => `  ${token.cssVar}: ${token.value};`);
-  return `/* Generated from agentic-design-system@${sourceRevision}; profile sha256 ${profileDigest}. Do not edit. */\n:root, :host {\n${declarations.join("\n")}\n}\n@media (max-width: 639px) {\n  :root, :host { --agentic-ktv-columns: var(--agentic-ktv-columns-narrow); }\n}\n@media (pointer: coarse), (max-width: 768px) {\n  :root, :host { --agentic-row-height: var(--agentic-row-height-touch); }\n}\n`;
+  return `/* Generated from agentic-design-system@${sourceRevision}; profile sha256 ${profileDigest}. Do not edit. */\n:root, :host {\n${declarations.join("\n")}\n}\n.agentic-ktv-container { min-inline-size: 0; inline-size: 100%; container: agentic-ktv / inline-size; }\n@container agentic-ktv (width < ${profile.tokens.find(token => token.key === "layout.ktv.stack-breakpoint").value}) {\n  .agentic-ktv-row { grid-template-columns: var(--agentic-ktv-columns-narrow); }\n  .agentic-ktv-row > :last-child { grid-column: 1 / -1; }\n}\n@media (pointer: coarse), (max-width: 768px) {\n  :root, :host { --agentic-row-height: var(--agentic-row-height-touch); }\n}\n`;
 }
 
 async function main() {
