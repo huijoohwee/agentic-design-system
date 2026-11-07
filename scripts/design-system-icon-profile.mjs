@@ -14,76 +14,118 @@ const EXPECTED = Object.freeze([
   [
     "icon.size.compact",
     "--agentic-icon-size-compact",
-    "dimension",
-    "0.75rem"
+    "dimension"
   ],
   [
     "icon.size.default",
     "--agentic-icon-size-default",
-    "dimension",
-    "1rem"
+    "dimension"
   ],
   [
     "surface.row-height",
     "--agentic-row-height",
-    "dimension",
-    "38px"
+    "dimension"
   ],
   [
     "surface.row-height-touch",
     "--agentic-row-height-touch",
-    "dimension",
-    "54px"
+    "dimension"
   ],
   [
     "typography.body.size",
     "--agentic-font-size-body",
-    "dimension",
-    "0.875rem"
+    "dimension"
   ],
   [
     "typography.body.line-height",
     "--agentic-line-height-body",
-    "dimension",
-    "1.25rem"
+    "dimension"
   ],
   [
     "typography.family.sans",
     "--agentic-font-sans",
-    "font-family",
-    "-apple-system, BlinkMacSystemFont, Segoe UI, Noto Sans, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji"
+    "font-family"
   ],
   [
     "typography.family.mono",
     "--agentic-font-mono",
-    "font-family",
-    "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace"
+    "font-family"
   ],
   [
     "layout.ktv.columns",
     "--agentic-ktv-columns",
-    "grid-template",
-    "minmax(10.5rem,11rem) 2rem minmax(8.75rem,1fr)"
+    "grid-template"
   ],
   [
     "layout.ktv.columns-narrow",
     "--agentic-ktv-columns-narrow",
-    "grid-template",
-    "minmax(0,1fr) 2rem"
+    "grid-template"
   ],
-  ["layout.ktv.stack-breakpoint", "--agentic-ktv-stack-breakpoint", "dimension", "22.25rem"],
-  ["layout.ktv.panel-width", "--agentic-ktv-panel-width", "dimension", "26.25rem"],
-  ["control.height", "--agentic-control-height", "dimension", "28px"],
-  ["control.height-touch", "--agentic-control-height-touch", "dimension", "48px"],
-  ["control.padding-inline", "--agentic-control-padding-inline", "dimension", "0.5rem"],
-  ["control.padding-block", "--agentic-control-padding-block", "dimension", "0.25rem"],
-  ["control.radius", "--agentic-control-radius", "dimension", "0.375rem"],
-  ["control.focus-width", "--agentic-control-focus-width", "dimension", "2px"],
-  ["control.focus-offset", "--agentic-control-focus-offset", "dimension", "2px"],
-  ["menu.min-width", "--agentic-menu-min-width", "dimension", "14rem"],
-  ["menu.edge-gap", "--agentic-menu-edge-gap", "dimension", "0.5rem"],
-  ["menu.padding", "--agentic-menu-padding", "dimension", "0.25rem"],
-  ["menu.gap", "--agentic-menu-gap", "dimension", "0.25rem"]
+  [
+    "layout.ktv.stack-breakpoint",
+    "--agentic-ktv-stack-breakpoint",
+    "dimension"
+  ],
+  [
+    "layout.ktv.panel-width",
+    "--agentic-ktv-panel-width",
+    "dimension"
+  ],
+  [
+    "control.height",
+    "--agentic-control-height",
+    "dimension"
+  ],
+  [
+    "control.height-touch",
+    "--agentic-control-height-touch",
+    "dimension"
+  ],
+  [
+    "control.padding-inline",
+    "--agentic-control-padding-inline",
+    "dimension"
+  ],
+  [
+    "control.padding-block",
+    "--agentic-control-padding-block",
+    "dimension"
+  ],
+  [
+    "control.radius",
+    "--agentic-control-radius",
+    "dimension"
+  ],
+  [
+    "control.focus-width",
+    "--agentic-control-focus-width",
+    "dimension"
+  ],
+  [
+    "control.focus-offset",
+    "--agentic-control-focus-offset",
+    "dimension"
+  ],
+  [
+    "menu.min-width",
+    "--agentic-menu-min-width",
+    "dimension"
+  ],
+  [
+    "menu.edge-gap",
+    "--agentic-menu-edge-gap",
+    "dimension"
+  ],
+  [
+    "menu.padding",
+    "--agentic-menu-padding",
+    "dimension"
+  ],
+  [
+    "menu.gap",
+    "--agentic-menu-gap",
+    "dimension"
+  ]
 ]);
 const digest = bytes => createHash("sha256").update(bytes).digest("hex");
 const fail = message => { throw new Error(`Invalid shared UI profile: ${message}`); };
@@ -102,17 +144,20 @@ export function validateSharedUiProfile(source) {
   if (profile.scope.repository !== "github.com/huijoohwee/agentic-design-system"
     || JSON.stringify(profile.scope.surfaces) !== JSON.stringify(["shared-interface"])) fail("scope");
   if (!Array.isArray(profile.tokens) || profile.tokens.length !== EXPECTED.length
-    || JSON.stringify(profile.tokens.map(token => [token?.key, token?.cssVar, token?.type, token?.value])) !== JSON.stringify(EXPECTED)) fail("token inventory or order");
+    || JSON.stringify(profile.tokens.map(token => [token?.key, token?.cssVar, token?.type])) !== JSON.stringify(EXPECTED)) fail("token inventory or order");
   const keys = new Set();
   const variables = new Set();
   for (const token of profile.tokens) {
     exactKeys(token, ["key", "cssVar", "type", "value"], token.key ?? "token");
     if (!TOKEN_KEY.test(token.key ?? "") || !CSS_VAR.test(token.cssVar ?? "")
-      || (token.type === "dimension" && !DIMENSION.test(token.value ?? "")) || keys.has(token.key) || variables.has(token.cssVar)) fail(`invalid token ${token.key ?? ""}`);
+      || (typeof token.value !== "string" || token.value.length > 256
+        || token.type === "dimension" && !DIMENSION.test(token.value)
+        || token.type === "font-family" && !/^[A-Za-z0-9 ,._-]+$/u.test(token.value)
+        || token.type === "grid-template" && (!/^[A-Za-z0-9()., %-]+$/u.test(token.value) || /url|expression|\b(?:auto|none)\b/iu.test(token.value))) || keys.has(token.key) || variables.has(token.cssVar)) fail(`invalid token ${token.key ?? ""}`);
     keys.add(token.key);
     variables.add(token.cssVar);
   }
-  if (profile.tokens[0].value !== "0.75rem" || profile.tokens[1].value !== "1rem" || profile.tokens[2].value !== "38px" || profile.tokens[3].value !== "54px") fail("selected shared-size values");
+
   return profile;
 }
 

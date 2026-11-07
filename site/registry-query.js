@@ -95,7 +95,7 @@ export function validateRegistryContext(catalog, profiles) {
       || manifest.status !== "candidate" || !Array.isArray(manifest.scope)
       || !Array.isArray(manifest.consumerPins) || profile.id !== manifest.id
       || profile.status !== "candidate" || profile.schema !== `agentic-design-system/${manifest.id}-profile/v1`
-      || !Array.isArray(profile.tokens) || profile.tokens.length > 128) {
+      || !Array.isArray(profile.tokens) || profile.tokens.length > 256) {
       throw new TypeError("Candidate profile inventory is incomplete or duplicated");
     }
     profileIds.add(manifest.id);
