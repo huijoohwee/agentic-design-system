@@ -219,8 +219,8 @@
         "id": "base",
         "name": "Base shared data-view profile",
         "owner": "github.com/huijoohwee/agentic-design-system",
-        "repository": "github.com/huijoohwee/agentic-base",
-        "revision": "a5d0f2d87d8c6871e9639f8224f5eaee056c5b6e",
+        "repository": "github.com/huijoohwee/agentic-design-system",
+        "revision": "bc1921bbcf56e1abb11fef2593917e5459d58df1",
         "source": "./tokens/base-profile.json",
         "digest": "sha256:3c231b5a57ae6acac862a4ede882d24657d93e45b1bc7ea32d1799ef4b32e361",
         "scope": [
@@ -253,8 +253,8 @@
         "id": "graph",
         "name": "Graph token and typography profile",
         "owner": "github.com/huijoohwee/agentic-design-system",
-        "repository": "github.com/huijoohwee/agentic-graph",
-        "revision": "be87de5c3dcc66f58d2cd1b4d96e5920dd284a46",
+        "repository": "github.com/huijoohwee/agentic-design-system",
+        "revision": "64c2a190b42f64fbb6ad821dac2e901ada86d0b1",
         "source": "./tokens/graph-profile.json",
         "digest": "sha256:aae4fd536724e9f81783e3f580f2613f447e2fad25c09dfa60a01c5cc995674c",
         "scope": [
