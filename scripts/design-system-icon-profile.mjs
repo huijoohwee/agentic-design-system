@@ -79,7 +79,11 @@ const EXPECTED = Object.freeze([
   ["control.padding-block", "--agentic-control-padding-block", "dimension", "0.25rem"],
   ["control.radius", "--agentic-control-radius", "dimension", "0.375rem"],
   ["control.focus-width", "--agentic-control-focus-width", "dimension", "2px"],
-  ["control.focus-offset", "--agentic-control-focus-offset", "dimension", "2px"]
+  ["control.focus-offset", "--agentic-control-focus-offset", "dimension", "2px"],
+  ["menu.min-width", "--agentic-menu-min-width", "dimension", "14rem"],
+  ["menu.edge-gap", "--agentic-menu-edge-gap", "dimension", "0.5rem"],
+  ["menu.padding", "--agentic-menu-padding", "dimension", "0.25rem"],
+  ["menu.gap", "--agentic-menu-gap", "dimension", "0.25rem"]
 ]);
 const digest = bytes => createHash("sha256").update(bytes).digest("hex");
 const fail = message => { throw new Error(`Invalid shared UI profile: ${message}`); };
@@ -93,7 +97,7 @@ export function validateSharedUiProfile(source) {
   const profile = JSON.parse(source);
   exactKeys(profile, ["schema", "id", "version", "status", "scope", "tokens"], "root");
   if (profile.schema !== "agentic-design-system/shared-ui-profile/v1" || profile.id !== "shared-ui"
-    || profile.version !== "0.5.0" || profile.status !== "candidate") fail("identity");
+    || profile.version !== "0.6.0" || profile.status !== "candidate") fail("identity");
   exactKeys(profile.scope, ["repository", "surfaces"], "scope");
   if (profile.scope.repository !== "github.com/huijoohwee/agentic-design-system"
     || JSON.stringify(profile.scope.surfaces) !== JSON.stringify(["shared-interface"])) fail("scope");
@@ -142,6 +146,32 @@ textarea.agentic-form-control, .agentic-form-controls :where(textarea) {
 .agentic-form-control:disabled, .agentic-form-control[aria-disabled="true"], ${nativeField}:disabled {
   opacity: .5; cursor: not-allowed;
 }
+.agentic-menu {
+  box-sizing: border-box; margin: 0; padding: var(--agentic-menu-padding); list-style: none;
+  display: flex; flex-direction: column; gap: var(--agentic-menu-gap); min-inline-size: 0;
+  color: var(--agentic-base-text, var(--kg-text-primary, CanvasText));
+  background: var(--agentic-base-surface, var(--kg-panel-bg, Canvas));
+  border: 1px solid var(--agentic-base-border, var(--kg-border, ButtonBorder));
+  border-radius: var(--agentic-control-radius); box-shadow: var(--kg-shadow-overlay, 0 8px 24px rgb(0 0 0 / .12));
+  font: var(--agentic-font-size-body)/var(--agentic-line-height-body) var(--agentic-font-sans);
+  overflow: auto; overscroll-behavior: contain;
+}
+.agentic-menu > li { list-style: none; min-inline-size: 0; }
+.agentic-menu-option {
+  box-sizing: border-box; display: flex; align-items: center; gap: var(--agentic-control-padding-inline);
+  inline-size: 100%; text-align: start; cursor: pointer;
+  border: 1px solid transparent; color: inherit; background: transparent;
+}
+.agentic-menu-option:is(:hover, :focus-visible) { background: var(--agentic-base-hover, var(--kg-panel-action-bg-hover, color-mix(in srgb, Highlight 8%, Canvas))); }
+.agentic-menu-option:is([aria-checked="true"], [aria-selected="true"], [data-selected="true"], .agentic-menu-selected) {
+  color: var(--kg-accent, LinkText); background: var(--agentic-base-selected, var(--kg-accent-soft-bg, color-mix(in srgb, Highlight 12%, Canvas)));
+  border-color: var(--agentic-base-focus, var(--kg-accent, Highlight));
+}
+.agentic-menu-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; min-inline-size: 0; }
+.agentic-menu-mark { inline-size: var(--agentic-icon-size-default); flex: 0 0 auto; text-align: center; }
+.agentic-select-source { display: none !important; }
+.agentic-select-trigger { border: 1px solid var(--agentic-base-border, var(--kg-border, ButtonBorder)); background: var(--agentic-base-surface, var(--kg-panel-bg, Canvas)); color: inherit; display: inline-flex; align-items: center; gap: var(--agentic-control-padding-inline); inline-size: 100%; text-align: start; }
+.agentic-menu-popup { position: fixed; z-index: 2147483000; }
 @media (pointer: coarse), (max-width: 768px) {
   :root, :host { --agentic-row-height: var(--agentic-row-height-touch); --agentic-control-height: var(--agentic-control-height-touch); }
 }
