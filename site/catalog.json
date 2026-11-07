@@ -138,7 +138,7 @@
         "id": "agentic-design-system",
         "name": "Agentic Design System",
         "repository": "github.com/huijoohwee/agentic-design-system",
-        "revision": "c62a67978f4df85ae5f5681522ff7ae44d530f49",
+        "revision": "e7bdeb88762ee787872d96ae4a8fdfe0b7329934",
         "scopes": [
           "shared-ui"
         ],
@@ -148,7 +148,7 @@
           {
             "path": "site/tokens/shared-ui-profile.json",
             "kind": "native",
-            "digest": "sha256:50f41445e4e4bd06a82e25818d3020b60c788e801c24347af4de2b48587bfa65"
+            "digest": "sha256:8165a6d938440b4a9db217d200922868af769791fa9fdc0b9da54cc96eb3e81c"
           }
         ]
       }
@@ -263,9 +263,9 @@
         "name": "Shared UI profile",
         "owner": "github.com/huijoohwee/agentic-design-system",
         "repository": "github.com/huijoohwee/agentic-design-system",
-        "revision": "c62a67978f4df85ae5f5681522ff7ae44d530f49",
+        "revision": "e7bdeb88762ee787872d96ae4a8fdfe0b7329934",
         "source": "./tokens/shared-ui-profile.json",
-        "digest": "sha256:50f41445e4e4bd06a82e25818d3020b60c788e801c24347af4de2b48587bfa65",
+        "digest": "sha256:8165a6d938440b4a9db217d200922868af769791fa9fdc0b9da54cc96eb3e81c",
         "scope": [
           "shared-interface"
         ],
@@ -275,7 +275,7 @@
         "licenseEvidence": [
           {
             "repository": "github.com/huijoohwee/agentic-design-system",
-            "revision": "3224afd19c086e511dcfd892d82d12b68460b971",
+            "revision": "e7bdeb88762ee787872d96ae4a8fdfe0b7329934",
             "path": "LICENSE",
             "digest": "sha256:b2e476300173b31043c1222c840b5cd3a8c234d50ffc5f44f104fcbf66fc5ffe"
           }
@@ -283,7 +283,7 @@
         "consumerPins": [],
         "projection": {
           "path": "./vendor/shared-ui-profile.css",
-          "digest": "sha256:d3436f0f11cf6b014733f7c2681902df5e12052076b0aafba91ccdaf5668a77e"
+          "digest": "sha256:98495571917799edf4432bffbf5992ffc89ac9068d975f95c887b16ecc41cfbc"
         }
       }
     ]

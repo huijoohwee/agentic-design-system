@@ -1,7 +1,7 @@
 {
   "schema": "agentic-design-system/shared-ui-profile/v1",
   "id": "shared-ui",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "status": "candidate",
   "scope": {
     "repository": "github.com/huijoohwee/agentic-design-system",
@@ -62,13 +62,25 @@
       "key": "layout.ktv.columns",
       "cssVar": "--agentic-ktv-columns",
       "type": "grid-template",
-      "value": "minmax(0,1fr) minmax(3rem,4.75rem) minmax(0,1.45fr)"
+      "value": "minmax(10.5rem,11rem) 2rem minmax(8.75rem,1fr)"
     },
     {
       "key": "layout.ktv.columns-narrow",
       "cssVar": "--agentic-ktv-columns-narrow",
       "type": "grid-template",
-      "value": "minmax(0,0.95fr) minmax(2.75rem,0.42fr) minmax(0,1.2fr)"
+      "value": "minmax(0,1fr) 2rem"
+    },
+    {
+      "key": "layout.ktv.stack-breakpoint",
+      "cssVar": "--agentic-ktv-stack-breakpoint",
+      "type": "dimension",
+      "value": "22.25rem"
+    },
+    {
+      "key": "layout.ktv.panel-width",
+      "cssVar": "--agentic-ktv-panel-width",
+      "type": "dimension",
+      "value": "26.25rem"
     }
   ]
 }
