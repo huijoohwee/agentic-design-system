@@ -258,7 +258,7 @@ function assertRegistry(registry) {
   exactKeys(registry, ["schema", "registryId", "revision", "owner", "coverage", "keyContract", "owners", "profiles"], "registry");
   if (registry.schema !== "agentic-design-system/owner-registry/v1" || registry.registryId !== "agentic-design-system"
     || registry.revision !== "0.5.0" || registry.owner !== "github.com/huijoohwee/agentic-design-system"
-    || registry.coverage !== "Commerce, Base, and Graph profiles plus the Design System shared UI profile are revision-pinned; Graph reuse remains limited to four granted artifacts; consumer projections are candidate pins and whole-repository parity is not claimed") fail("identity or coverage");
+    || registry.coverage !== "Commerce, Base, Graph and shared UI token values have one Design System owner; source attribution is revision-pinned; generated consumer projections are verified separately and whole-repository parity is not claimed") fail("identity or coverage");
   exactKeys(registry.keyContract, ["schema", "canonicalKeyPattern", "cssVariablePattern", "uniqueBy", "overridePolicy"], "key contract");
   if (registry.keyContract.schema !== "agentic-design-system/design-key/v1"
     || registry.keyContract.canonicalKeyPattern !== "^[a-z0-9][a-z0-9.-]*(?::[a-z0-9][a-z0-9.-]*)*$"
@@ -312,16 +312,16 @@ function assertRegistry(registry) {
     repository: "github.com/huijoohwee/agentic-commerce-os", revision: "6ce3bc918717b97a738ac831dfb4fb3319a02fb6",
     path: "public/local-first/commerce-theme.css", digest: "sha256:c512ee76dc6160ff41e8bac9706b8e8d0b9e56f42b6c4b128594605e19c93474",
   }) || commerce.projection) fail("Commerce rights or consumer pin evidence");
-  if (base.id !== "base" || base.owner !== "github.com/huijoohwee/agentic-base" || base.repository !== base.owner
+  if (base.id !== "base" || base.owner !== registry.owner || base.repository !== "github.com/huijoohwee/agentic-base"
     || base.revision !== "a5d0f2d87d8c6871e9639f8224f5eaee056c5b6e" || base.source !== "./tokens/base-profile.json"
     || base.status !== "candidate" || base.rights !== "cleared" || base.scope.join(",") !== "shared-data-view"
     || base.permissionEvidence !== "User instruction on 2026-10-29 to centralize the named product repositories; Base MIT license is pinned to the source revision."
     || base.licenseEvidence.length !== 2 || base.consumerPins.length !== 0
     || base.projection?.path !== "./vendor/base-profile.css") fail("Base scoped profile binding");
-  if (graph.id !== "graph" || graph.owner !== "github.com/huijoohwee/agentic-graph" || graph.repository !== graph.owner
-    || graph.revision !== "bed770d91a9b3f1b663eee9637a472bf19b36361" || graph.source !== "./tokens/graph-profile.json"
+  if (graph.id !== "graph" || graph.owner !== registry.owner || graph.repository !== "github.com/huijoohwee/agentic-graph"
+    || graph.revision !== "be87de5c3dcc66f58d2cd1b4d96e5920dd284a46" || graph.source !== "./tokens/graph-profile.json"
     || graph.rights !== "cleared-scoped" || graph.scope.join(",") !== "graph-ui,application-typography"
-    || graph.permissionEvidence !== "User grant 2026-10-29: public reuse of the exact four Graph artifacts listed here, with attribution, in this central MIT repository; no broader Graph source grant."
+    || graph.permissionEvidence !== "User instructions 2026-11-07: centralize design token values and generated projections from the eight listed Graph token sources in Agentic Design System, with attribution; no broader Graph source grant."
     || graph.licenseEvidence.length !== 1 || graph.consumerPins.length !== 0
     || graph.projection?.path !== "./vendor/graph-profile.css") fail("Graph exact-source grant binding");
   if (sharedUi.id !== "shared-ui" || sharedUi.owner !== registry.owner || sharedUi.repository !== registry.owner

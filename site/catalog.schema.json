@@ -99,7 +99,7 @@
           "const": "github.com/huijoohwee/agentic-design-system"
         },
         "coverage": {
-          "const": "Commerce, Base, and Graph profiles plus the Design System shared UI icon-size profile are revision-pinned; Graph reuse remains limited to four granted artifacts; consumer projections are candidate pins and whole-repository parity is not claimed"
+          "const": "Commerce, Base, Graph and shared UI token values have one Design System owner; source attribution is revision-pinned; generated consumer projections are verified separately and whole-repository parity is not claimed"
         },
         "keyContract": {
           "type": "object",
