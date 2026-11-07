@@ -115,7 +115,8 @@ export function validateSharedUiProfile(source) {
 export function renderSharedUiCss(profile, sourceRevision, profileDigest) {
   if (!/^[a-f0-9]{40}$/u.test(sourceRevision ?? "") || !/^[a-f0-9]{64}$/u.test(profileDigest ?? "")) fail("projection binding");
   const declarations = profile.tokens.map(token => `  ${token.cssVar}: ${token.value};`);
-  const nativeField = '.agentic-form-controls :where(input:not([type="hidden"], [type="file"], [type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="button"], [type="submit"], [type="reset"], [type="image"], [hidden], .sr-only, .file-input), select, textarea)';
+  const input = 'input:not([type="hidden"], [type="file"], [type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="button"], [type="submit"], [type="reset"], [type="image"], [hidden], .sr-only, .file-input)';
+  const nativeField = `:is(.agentic-form-controls :where(${input}, select, textarea), .agentic-input-controls :where(${input}, select))`;
   const field = `.agentic-form-control, ${nativeField}`;
   return `/* Generated from agentic-design-system@${sourceRevision}; profile sha256 ${profileDigest}. Do not edit. */
 :root, :host {
