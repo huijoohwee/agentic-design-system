@@ -151,7 +151,7 @@ function ownerMatches(owner, { mode, term }) {
 function profileMatches(profile, manifest, { mode, term }) {
   if (mode === "section") return false;
   if (!term) return true;
-  if (mode === "owner") return includesTerm([manifest.owner, manifest.repository,
+  if (mode === "owner") return includesTerm([manifest.owner, manifest.repository, profile.scope?.repository ?? "",
     ...(manifest.consumerPins ?? []).map(pin => pin.repository)], term);
   if (mode === "scope") return includesTerm(manifest.scope, term);
   return includesTerm([profile.id, manifest.name, manifest.owner, manifest.repository, profile.status,

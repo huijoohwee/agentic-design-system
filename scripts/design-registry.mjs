@@ -312,14 +312,14 @@ function assertRegistry(registry) {
     repository: "github.com/huijoohwee/agentic-commerce-os", revision: "6ce3bc918717b97a738ac831dfb4fb3319a02fb6",
     path: "public/local-first/commerce-theme.css", digest: "sha256:c512ee76dc6160ff41e8bac9706b8e8d0b9e56f42b6c4b128594605e19c93474",
   }) || commerce.projection) fail("Commerce rights or consumer pin evidence");
-  if (base.id !== "base" || base.owner !== registry.owner || base.repository !== "github.com/huijoohwee/agentic-base"
-    || base.revision !== "a5d0f2d87d8c6871e9639f8224f5eaee056c5b6e" || base.source !== "./tokens/base-profile.json"
+  if (base.id !== "base" || base.owner !== registry.owner || base.repository !== registry.owner
+    || base.revision !== "bc1921bbcf56e1abb11fef2593917e5459d58df1" || base.source !== "./tokens/base-profile.json"
     || base.status !== "candidate" || base.rights !== "cleared" || base.scope.join(",") !== "shared-data-view"
     || base.permissionEvidence !== "User instruction on 2026-10-29 to centralize the named product repositories; Base MIT license is pinned to the source revision."
     || base.licenseEvidence.length !== 2 || base.consumerPins.length !== 0
     || base.projection?.path !== "./vendor/base-profile.css") fail("Base scoped profile binding");
-  if (graph.id !== "graph" || graph.owner !== registry.owner || graph.repository !== "github.com/huijoohwee/agentic-graph"
-    || graph.revision !== "be87de5c3dcc66f58d2cd1b4d96e5920dd284a46" || graph.source !== "./tokens/graph-profile.json"
+  if (graph.id !== "graph" || graph.owner !== registry.owner || graph.repository !== registry.owner
+    || graph.revision !== "64c2a190b42f64fbb6ad821dac2e901ada86d0b1" || graph.source !== "./tokens/graph-profile.json"
     || graph.rights !== "cleared-scoped" || graph.scope.join(",") !== "graph-ui,application-typography"
     || graph.permissionEvidence !== "User instructions 2026-11-07: centralize design token values and generated projections from the eight listed Graph token sources in Agentic Design System, with attribution; no broader Graph source grant."
     || graph.licenseEvidence.length !== 1 || graph.consumerPins.length !== 0
@@ -411,10 +411,10 @@ export async function checkDesignRegistry() {
     const bytes = await readFile(resolve(root, "site", ref.source.slice(2)));
     if (`sha256:${sha(bytes)}` !== ref.digest) fail(`${ref.id} profile digest drift`);
     profileBytes.set(ref.id, bytes);
-    if (ref.id === "commerce") {
+    if (["commerce", "base", "graph"].includes(ref.id)) {
       const pinned = execFileSync("git", ["show", `${ref.revision}:site/${ref.source.slice(2)}`], { cwd: root });
-      if (!pinned.equals(bytes)) fail("Commerce profile differs from its pinned central source revision");
-      profiles.push(validateCommerceProfile(bytes.toString("utf8")));
+      if (!pinned.equals(bytes)) fail(`${ref.id} profile differs from its pinned central source revision`);
+      profiles.push(({ commerce: validateCommerceProfile, base: validateBaseProfile, graph: validateGraphProfile })[ref.id](bytes.toString("utf8")));
     } else if (ref.id === "base") profiles.push(validateBaseProfile(bytes.toString("utf8")));
     else if (ref.id === "graph") profiles.push(validateGraphProfile(bytes.toString("utf8")));
     else if (ref.id === "shared-ui") profiles.push(validateSharedUiProfile(bytes.toString("utf8")));
@@ -473,7 +473,7 @@ export async function checkDesignRegistry() {
   const baseOwner = catalog.registry.owners.find(owner => owner.id === "agentic-base");
   if (baseOwner.reuseGate !== "mit-verified" || baseOwner.sources.some(source => source.kind === "copied")) fail("Base owner boundary drift");
   const baseLicense = base.license.digest;
-  if (baseRef.licenseEvidence.find(item => item.repository === baseRef.repository)?.digest !== baseLicense) fail("Base MIT evidence does not match its source pin");
+  if (baseRef.licenseEvidence.find(item => item.repository === "github.com/huijoohwee/agentic-base")?.digest !== baseLicense) fail("Base MIT evidence does not match its source pin");
   const baseStart = "Source: agentic-base@a5d0f2d87d8c6871e9639f8224f5eaee056c5b6e\n";
   const commerceStart = "Commerce theme values\n---------------------\n";
   const baseIndex = notices.indexOf(baseStart);
