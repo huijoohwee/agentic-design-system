@@ -1,4 +1,4 @@
-/* Generated from agentic-design-system Graph profile; origin agentic-graph@be87de5c3dcc66f58d2cd1b4d96e5920dd284a46; profile sha256 c3eba51bddc5e4ee4f7a32216c999a85fe844f7f79c1cece47634a5154c2891b. Do not edit. */
+/* Generated from agentic-design-system Graph profile; origin agentic-graph@be87de5c3dcc66f58d2cd1b4d96e5920dd284a46; profile sha256 aae4fd536724e9f81783e3f580f2613f447e2fad25c09dfa60a01c5cc995674c. Do not edit. */
 :root {
   --kg-font-sans: var(--agentic-font-sans);
   --kg-font-mono: var(--agentic-font-mono);
@@ -73,8 +73,8 @@
   --kg-default-glyph-size: var(--agentic-icon-size-default);
   --gap: 0.5rem;
   --padding: 0.5rem;
-  --toolbar-gap: 0.75rem;
-  --toolbar-padding: 0.25rem 0.5rem;
+  --toolbar-gap: 0.5rem;
+  --toolbar-padding: 0.5rem 0.75rem;
   --kg-toolbar-compact-pad-y: 0.25rem;
   --kg-toolbar-compact-pad-x: 0.5rem;
   --kg-toolbar-compact-padding: var(--kg-toolbar-compact-pad-y) var(--kg-toolbar-compact-pad-x);
@@ -131,50 +131,12 @@
   --kg-transition-group-label: opacity var(--kg-motion-fast) var(--kg-motion-ease);
   --kg-transition-group-chevron: stroke-width var(--kg-motion-fast) var(--kg-motion-ease), opacity var(--kg-motion-fast) var(--kg-motion-ease);
   --kg-transition-group-resize-dot: stroke-width var(--kg-motion-fast) var(--kg-motion-ease), fill-opacity var(--kg-motion-fast) var(--kg-motion-ease);
-  --kg-inline-chip-shell-extra: 2rem;
   --kg-surface-border-width: 1px;
   --kg-shadow-raised: 0 1px 2px rgb(0 0 0 / 0.04);
   --kg-shadow-overlay: 0 8px 24px rgb(0 0 0 / 0.12);
   --kg-surface-border: var(--kg-surface-border-width) solid var(--kg-border);
   --kg-resize-separator-thickness: 8px;
   --kg-overlay-max-height: calc(100dvh - var(--kg-safe-top) - var(--kg-safe-bottom) - 1rem);
-  --kg-toolbar-area-action-row-gap: 0.25rem;
-  --kg-toolbar-settings-panel-body-padding-inline: 0.75rem;
-  --kg-toolbar-settings-panel-body-padding-block: 0.5rem;
-  --kg-responsive-selection-control-size: 0.75rem;
-  --kg-graph-data-table-floating-panel-width: 24rem;
-  --kg-graph-data-table-floating-panel-max-height: 20rem;
-  --kg-graph-data-table-input-height: 2rem;
-  --kg-graph-data-table-panel-scroll-stack-gap: 0.75rem;
-  --kg-graph-data-table-cell-text-max-width: 10rem;
-  --kg-markdown-geo-panel-frame-height: 26.25rem;
-  --kg-markdown-safe-html-embed-height: 13.75rem;
-  --kg-graph-fields-editor-height: 8.75rem;
-  --kg-graph-fields-editor-min-height: 6rem;
-  --kg-graph-fields-field-input-height: 2.25rem;
-  --kg-schema-editor-serialization-editor-height: 7.5rem;
-  --kg-schema-editor-serialization-editor-min-height: 5.75rem;
-  --kg-panel-code-editor-frame-min-height: 8.75rem;
-  --kg-graph-rag-workflow-token-max-width: 6.25rem;
-  --kg-responsive-viewport-scroll-panel-max-height: 60vh;
-  --kg-document-version-gitgraph-viewport-min-height: 4rem;
-  --kg-document-version-gitgraph-viewport-max-height: 8rem;
-  --kg-responsive-panel-flex-input-min-width: 7rem;
-  --kg-responsive-control-row-gap: 0.5rem;
-  --kg-responsive-control-value-row-gap: 0.25rem;
-  --kg-responsive-text-action-button-min-width: 2.5rem;
-  --kg-responsive-panel-field-gap: 0.5rem;
-  --kg-responsive-panel-field-label-width: 40%;
-  --kg-responsive-panel-header-secondary-max-width: 65%;
-  --kg-flow-manager-table-cell-text-max-width: 10rem;
-  --kg-flow-manager-registry-table-cell-padding-block: 1.5rem;
-  --kg-data-view-menu-panel-width: 11.25rem;
-  --kg-toolbar-dropdown-width: 24rem;
-  --kg-toolbar-dropdown-inline-clearance: 2rem;
-  --kg-design-system-nav-width: 13.75rem;
-  --kg-design-system-tokens-filter-width: 17.5rem;
-  --kg-design-system-tokens-detail-width: 20rem;
-  --kg-design-system-token-detail-label-width: 7.5rem;
 }
 :root[data-theme='dark'] {
   --kg-panel-bg-hover: rgba(11, 18, 32, 0.85);
@@ -241,6 +203,8 @@
   --kg-kanban-card-bg: #0a0a0a;
   --kg-kanban-card-bg-hover: rgba(23, 23, 23, 0.9);
   --kg-kanban-cell-bg: rgba(13, 13, 13, 0.9);
+  --kg-kanban-card-shadow: 0 1px 2px rgba(0,0,0,0.35);
+  --kg-kanban-card-shadow-hover: 0 12px 30px rgba(0,0,0,0.50);
   --app-bg: #000000;
   --island-bg: #111111;
   --panel-bg: #0a0a0a;

@@ -256,7 +256,7 @@
         "repository": "github.com/huijoohwee/agentic-graph",
         "revision": "be87de5c3dcc66f58d2cd1b4d96e5920dd284a46",
         "source": "./tokens/graph-profile.json",
-        "digest": "sha256:c3eba51bddc5e4ee4f7a32216c999a85fe844f7f79c1cece47634a5154c2891b",
+        "digest": "sha256:aae4fd536724e9f81783e3f580f2613f447e2fad25c09dfa60a01c5cc995674c",
         "scope": [
           "graph-ui",
           "application-typography"
@@ -275,7 +275,7 @@
         "consumerPins": [],
         "projection": {
           "path": "./vendor/graph-profile.css",
-          "digest": "sha256:120209cbb435a0808ee55dd8a938c385d1e28ce0d2b57221837a8e3d12702ea8"
+          "digest": "sha256:e7927753addf721a633416c6055c5aa52ff5c294f0a00d9c8fd44061233dae06"
         }
       },
       {
