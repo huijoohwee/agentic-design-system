@@ -97,7 +97,7 @@ export function renderBaseCss(profile, sourceRevision, profileDigest) {
         : token.value;
       return `  ${token.cssVar}: ${value};`;
     });
-  return `/* Generated from agentic-base@${sourceRevision}; profile sha256 ${profileDigest}. Do not edit. */\n:root {\n${rows.join("\n")}\n}\n`;
+  return `/* Generated from agentic-base@${sourceRevision}; profile sha256 ${profileDigest}. Do not edit. */\n:root, :host {\n${rows.join("\n")}\n}\n`;
 }
 
 async function main() {

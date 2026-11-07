@@ -434,6 +434,18 @@ export async function checkDesignRegistry() {
   const base = profiles.find(profile => profile.id === "base");
   const graph = profiles.find(profile => profile.id === "graph");
   const sharedUi = profiles.find(profile => profile.id === "shared-ui");
+  // Values have one editable owner. Validators reject unsafe grammar, not a second default table.
+  const changedUi = structuredClone(sharedUi);
+  changedUi.tokens.find(token => token.key === "typography.body.size").value = "0.9375rem";
+  validateSharedUiProfile(JSON.stringify(changedUi));
+  const rejectsUi = mutate => {
+    const candidate = structuredClone(sharedUi); mutate(candidate);
+    try { validateSharedUiProfile(JSON.stringify(candidate)); } catch { return; }
+    fail("shared UI unsafe or unknown value accepted");
+  };
+  rejectsUi(value => { value.tokens[0].value = "auto"; });
+  rejectsUi(value => { value.tokens.find(token => token.type === "font-family").value = "serif; color:red"; });
+  rejectsUi(value => { value.tokens.find(token => token.type === "grid-template").value = "url(https://example.invalid)"; });
   const baseRef = profileRefs.find(ref => ref.id === "base");
   const graphRef = profileRefs.find(ref => ref.id === "graph");
   const sharedUiRef = profileRefs.find(ref => ref.id === "shared-ui");

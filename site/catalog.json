@@ -226,7 +226,7 @@
         "consumerPins": [],
         "projection": {
           "path": "./vendor/base-profile.css",
-          "digest": "sha256:3e4fe01378e8e6ce347c74205659a0b0bdaa04759a2fe1f17c4060702bce6345"
+          "digest": "sha256:923af27658e239274481c810beb9e7107cdd7998087b51e2b8845238a01f65b2"
         }
       },
       {
