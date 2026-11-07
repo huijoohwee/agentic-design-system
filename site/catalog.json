@@ -138,7 +138,7 @@
         "id": "agentic-design-system",
         "name": "Agentic Design System",
         "repository": "github.com/huijoohwee/agentic-design-system",
-        "revision": "250cb58c92abd8b8d024e881e329869fb69e8a9a",
+        "revision": "c62a67978f4df85ae5f5681522ff7ae44d530f49",
         "scopes": [
           "shared-ui"
         ],
@@ -148,7 +148,7 @@
           {
             "path": "site/tokens/shared-ui-profile.json",
             "kind": "native",
-            "digest": "sha256:9d9e775371a2da55ac7f5e484677e82453e61d503d9494696a6068eb2afcc32e"
+            "digest": "sha256:50f41445e4e4bd06a82e25818d3020b60c788e801c24347af4de2b48587bfa65"
           }
         ]
       }
@@ -263,9 +263,9 @@
         "name": "Shared UI profile",
         "owner": "github.com/huijoohwee/agentic-design-system",
         "repository": "github.com/huijoohwee/agentic-design-system",
-        "revision": "250cb58c92abd8b8d024e881e329869fb69e8a9a",
+        "revision": "c62a67978f4df85ae5f5681522ff7ae44d530f49",
         "source": "./tokens/shared-ui-profile.json",
-        "digest": "sha256:9d9e775371a2da55ac7f5e484677e82453e61d503d9494696a6068eb2afcc32e",
+        "digest": "sha256:50f41445e4e4bd06a82e25818d3020b60c788e801c24347af4de2b48587bfa65",
         "scope": [
           "shared-interface"
         ],
@@ -283,7 +283,7 @@
         "consumerPins": [],
         "projection": {
           "path": "./vendor/shared-ui-profile.css",
-          "digest": "sha256:a523df2fee73e476d31088fedb457e58054203ffc4fdd1e713fd96f8d1ae47d6"
+          "digest": "sha256:d3436f0f11cf6b014733f7c2681902df5e12052076b0aafba91ccdaf5668a77e"
         }
       }
     ]
