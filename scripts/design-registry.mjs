@@ -328,7 +328,7 @@ function assertRegistry(registry) {
     || !/^([a-f0-9]{40})$/u.test(sharedUi.revision) || sharedUi.source !== "./tokens/shared-ui-profile.json"
     || !/^sha256:[a-f0-9]{64}$/u.test(sharedUi.digest)
     || sharedUi.rights !== "cleared" || sharedUi.scope.join(",") !== "shared-interface"
-    || sharedUi.permissionEvidence !== "User instructions on 2026-11-03, 2026-11-06 and 2026-11-07: Agentic Design System owns shared icon sizes, responsive row/toolbar heights, body typography, font families, KTV tracks and responsive dropdown/textbox geometry for Base, Graph, Commerce, and related repositories."
+    || sharedUi.permissionEvidence !== "User instructions on 2026-11-03, 2026-11-06 and 2026-11-07: Agentic Design System owns shared icon sizes, responsive row/toolbar heights, body typography, font families, KTV tracks and responsive dropdown/textbox geometry for Base, Graph, Commerce, and related repositories. User instruction on 2026-11-08 covers the shared Mission dashboard layout."
     || sharedUi.licenseEvidence.length !== 1 || sharedUi.consumerPins.length !== 0
     || sharedUi.projection?.path !== "./vendor/shared-ui-profile.css") fail("shared UI profile binding");
   const sharedUiOwner = registry.owners.find(owner => owner.id === "agentic-design-system");

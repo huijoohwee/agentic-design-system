@@ -19,6 +19,7 @@ const expectedFiles = [
   "scripts/base-profile.mjs",
   "scripts/check-public-release.mjs",
   "scripts/commerce-profile.mjs",
+  "scripts/dashboard-layout-css.mjs",
   "scripts/design-registry.mjs",
   "scripts/design-system-icon-profile.mjs",
   "scripts/dev.mjs",
