@@ -7,11 +7,14 @@ export function isColumnLayout(value) {
     !!value.columns && Object.getPrototypeOf(value.columns) === Object.prototype &&
     Object.keys(value.columns).length <= 32 && Object.entries(value.columns).every(([k, n]) => isLayoutKey(k) && isColumnCount(n));
 }
+const authoredColumns = new WeakMap();
 export function applyDashboardColumns(root, layout) {
   if (!isColumnLayout(layout)) throw Error('Invalid dashboard layout');
   for (const element of root.querySelectorAll('[data-dashboard-columns-for]')) {
     const count = layout.columns[element.dataset.dashboardColumnsFor];
-    if (isColumnCount(count)) element.dataset.columns = String(count);
+    if (!authoredColumns.has(element)) authoredColumns.set(element, element.dataset.columns);
+    const columns = isColumnCount(count) ? String(count) : authoredColumns.get(element);
+    if (element.dataset.columns !== columns) element.dataset.columns = columns;
   }
 }
 // Mount only after the host verifies its editor. Persist before reflecting success.
@@ -25,8 +28,8 @@ export function createDashboardColumnEditor({ views, layout, save, onSaved, end 
     label.append(field); form.append(label);
   };
   select('Dashboard', view, views.map(item => [item.key, item.label]));
-  select('Columns', columns, allowedColumns.map(n => [String(n), String(n)]));
-  const current = () => { columns.value = String(layout.columns[view.value] ?? views.find(item => item.key === view.value).columns); };
+  select('Columns', columns, [['', 'Dashboard default'], ...allowedColumns.map(n => [String(n), String(n)])]);
+  const current = () => { columns.value = String(layout.columns[view.value] ?? ''); };
   view.addEventListener('change', current); current();
   const submit = el('button', 'Save layout'), close = el('button', 'Exit edit mode');
   submit.type = 'submit'; close.type = 'button'; close.onclick = end;
@@ -35,7 +38,7 @@ export function createDashboardColumnEditor({ views, layout, save, onSaved, end 
     event.preventDefault(); if (submit.disabled) return;
     submit.disabled = view.disabled = columns.disabled = true;
     try {
-      const next = await save({view: view.value, columns: Number(columns.value), revision: layout.revision});
+      const next = await save({view: view.value, columns: columns.value === '' ? null : Number(columns.value), revision: layout.revision});
       if (!isColumnLayout(next)) throw Error('Invalid dashboard layout');
       layout = next; onSaved(next); current(); status.textContent = 'Layout saved.';
     } catch (error) { status.textContent = error.message; }

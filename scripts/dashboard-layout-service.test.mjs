@@ -18,5 +18,7 @@ test('only authenticated editors can save, stale revisions never overwrite, read
     const receipts=await Promise.all([write({authorization:auth}),write({authorization:auth})]);assert.deepEqual(receipts.map(r=>r.status).sort(),[200,409]);
     assert.deepEqual(await (await fetch(url)).json(),{revision:1,columns:{housing:2},authoring:true});
     assert.deepEqual(JSON.parse(await readFile(join(dir,'layout.json'),'utf8')),{revision:1,columns:{housing:2}});
+    const reset=await fetch(url,{method:'PUT',headers:{authorization:auth,'content-type':'application/json'},body:JSON.stringify({view:'housing',columns:null,revision:1})});
+    assert.deepEqual(await reset.json(),{revision:2,columns:{}});
   } finally {await new Promise(resolve=>service.close(resolve));await rm(dir,{recursive:true});}
 });

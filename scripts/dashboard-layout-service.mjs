@@ -33,11 +33,12 @@ export function createLayoutService(directory, enabled) {
       const chunks=[]; let length=0;
       for await (const chunk of req) { length+=chunk.length; if(length>512) return send(413,{error:'too_large'}); chunks.push(chunk); }
       let input; try {input=JSON.parse(Buffer.concat(chunks).toString());} catch {return send(400,{error:'invalid_layout'});}
-      if (!input || Object.keys(input).sort().join()!=='columns,revision,view' || !isLayoutKey(input.view) || !isColumnCount(input.columns) || !Number.isSafeInteger(input.revision)) return send(400,{error:'invalid_layout'});
+      if (!input || Object.keys(input).sort().join()!=='columns,revision,view' || !isLayoutKey(input.view) || (input.columns!==null && !isColumnCount(input.columns)) || !Number.isSafeInteger(input.revision)) return send(400,{error:'invalid_layout'});
       let fd; try {fd=openSync(lock,'wx',0o600);} catch(e){if(e.code==='EEXIST')return send(409,{error:'layout_busy'});throw e;}
       try {
         const layout=read(); if(layout.revision!==input.revision)return send(409,{error:'stale_revision'});
         const next={revision:layout.revision+1,columns:{...layout.columns,[input.view]:input.columns}};
+        if(input.columns===null)delete next.columns[input.view];
         if(!isColumnLayout(next))return send(400,{error:'layout_limit'});
         writeFileSync(record+'.tmp', JSON.stringify(next), {mode:0o600}); renameSync(record+'.tmp',record);
         return send(200,next);
