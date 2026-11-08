@@ -158,7 +158,7 @@
         "id": "agentic-design-system",
         "name": "Agentic Design System",
         "repository": "github.com/huijoohwee/agentic-design-system",
-        "revision": "66c35a12465d9d9b53f83b39474ad514bee23946",
+        "revision": "51bf1fcaa6b5610f174dd428363482114d888364",
         "scopes": [
           "shared-ui"
         ],
@@ -168,7 +168,7 @@
           {
             "path": "site/tokens/shared-ui-profile.json",
             "kind": "native",
-            "digest": "sha256:4830e6c273f8ab2f562c92caf919a169c09126ea0125b65fe852f7050f928c39"
+            "digest": "sha256:6f73913636991d71c1e29d51ee3b7ea71011047c9a7a9e6b1ee7c517b0c8893b"
           }
         ]
       }
@@ -283,9 +283,9 @@
         "name": "Shared UI profile",
         "owner": "github.com/huijoohwee/agentic-design-system",
         "repository": "github.com/huijoohwee/agentic-design-system",
-        "revision": "66c35a12465d9d9b53f83b39474ad514bee23946",
+        "revision": "51bf1fcaa6b5610f174dd428363482114d888364",
         "source": "./tokens/shared-ui-profile.json",
-        "digest": "sha256:4830e6c273f8ab2f562c92caf919a169c09126ea0125b65fe852f7050f928c39",
+        "digest": "sha256:6f73913636991d71c1e29d51ee3b7ea71011047c9a7a9e6b1ee7c517b0c8893b",
         "scope": [
           "shared-interface"
         ],
@@ -295,7 +295,7 @@
         "licenseEvidence": [
           {
             "repository": "github.com/huijoohwee/agentic-design-system",
-            "revision": "66c35a12465d9d9b53f83b39474ad514bee23946",
+            "revision": "51bf1fcaa6b5610f174dd428363482114d888364",
             "path": "LICENSE",
             "digest": "sha256:b2e476300173b31043c1222c840b5cd3a8c234d50ffc5f44f104fcbf66fc5ffe"
           }
@@ -303,7 +303,7 @@
         "consumerPins": [],
         "projection": {
           "path": "./vendor/shared-ui-profile.css",
-          "digest": "sha256:eef7e110f89035a1aefac4a503eb994c830241e7eb57481ed50960af951c7044"
+          "digest": "sha256:1a54a6b83fe9cb270834c3e6c5356775b671f346f3e6acaf93fca7a75ea7f992"
         }
       }
     ]

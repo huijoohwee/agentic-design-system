@@ -56,3 +56,5 @@ KTV sizing adapts to the shared row container; the shared profile owns tracks, t
 Dropdowns and textboxes reuse the generated `agentic-form-control` utility; native fields opt in through `agentic-form-controls`. Shared geometry is 28px desktop and 48px on coarse pointers or viewports up to 768px, with 8px inline padding, a 6px radius and body typography. Focus color stays with the local theme; native select behavior, labels, validation and Graph menu behavior stay with their existing owners.
 
 Opened dropdown menus also reuse the generated shared surface, option, hover, selected, focus and touch styles. Base owns the neutral menu behavior and native/React adapters; this registry adds no runtime dependency on Base.
+
+Icon presentation uses the same shared profile: stroke width, control padding, pills, badge chips and text consume central roles. Consumer settings show these roles read-only; saved local appearance classes cannot replace the owner. Glyph scale and animation remain explicit user preferences.

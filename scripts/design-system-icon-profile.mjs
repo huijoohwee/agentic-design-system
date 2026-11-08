@@ -21,6 +21,7 @@ const EXPECTED = Object.freeze([
     "--agentic-icon-size-default",
     "dimension"
   ],
+  ["icon.stroke-width", "--agentic-icon-stroke-width", "number"],
   [
     "surface.row-height",
     "--agentic-row-height",
@@ -139,7 +140,7 @@ export function validateSharedUiProfile(source) {
   const profile = JSON.parse(source);
   exactKeys(profile, ["schema", "id", "version", "status", "scope", "tokens"], "root");
   if (profile.schema !== "agentic-design-system/shared-ui-profile/v1" || profile.id !== "shared-ui"
-    || profile.version !== "0.6.0" || profile.status !== "candidate") fail("identity");
+    || profile.version !== "0.7.0" || profile.status !== "candidate") fail("identity");
   exactKeys(profile.scope, ["repository", "surfaces"], "scope");
   if (profile.scope.repository !== "github.com/huijoohwee/agentic-design-system"
     || JSON.stringify(profile.scope.surfaces) !== JSON.stringify(["shared-interface"])) fail("scope");
@@ -152,6 +153,7 @@ export function validateSharedUiProfile(source) {
     if (!TOKEN_KEY.test(token.key ?? "") || !CSS_VAR.test(token.cssVar ?? "")
       || (typeof token.value !== "string" || token.value.length > 256
         || token.type === "dimension" && !DIMENSION.test(token.value)
+        || token.type === "number" && (!/^[0-9]+(?:\.[0-9]+)?$/u.test(token.value) || Number(token.value) < 0.5 || Number(token.value) > 4)
         || token.type === "font-family" && !/^[A-Za-z0-9 ,._-]+$/u.test(token.value)
         || token.type === "grid-template" && (!/^[A-Za-z0-9()., %-]+$/u.test(token.value) || /url|expression|\b(?:auto|none)\b/iu.test(token.value))) || keys.has(token.key) || variables.has(token.cssVar)) fail(`invalid token ${token.key ?? ""}`);
     keys.add(token.key);
@@ -179,7 +181,13 @@ ${declarations.join("\n")}
 .agentic-ktv-type { justify-content: center; }
 .agentic-ktv-value { justify-content: end; align-self: stretch; gap: var(--agentic-control-padding-block); }
 .agentic-ktv-value > * { min-inline-size: 0; max-inline-size: 100%; }
-.agentic-icon { display: block; flex: 0 0 auto; inline-size: var(--agentic-icon-size-default); block-size: var(--agentic-icon-size-default); }
+.agentic-icon { display: block; flex: 0 0 auto; inline-size: var(--agentic-icon-size-default); block-size: var(--agentic-icon-size-default); stroke-width: var(--agentic-icon-stroke-width); }
+.agentic-icon-compact { inline-size: var(--agentic-icon-size-compact); block-size: var(--agentic-icon-size-compact); }
+.agentic-icon-color { color: var(--agentic-base-muted, var(--kg-text-secondary, CanvasText)); }
+.agentic-icon-hover:is(:hover, :focus-visible) { background: var(--agentic-base-hover, var(--kg-panel-action-bg-hover, Canvas)); }
+.agentic-icon-padding { padding: var(--agentic-control-padding-block); }
+.agentic-icon-pill, .agentic-icon-badge { display: inline-flex; align-items: center; justify-content: center; gap: var(--agentic-control-padding-block); min-inline-size: 0; max-inline-size: 100%; box-sizing: border-box; min-block-size: var(--agentic-control-height); padding: 0 var(--agentic-control-padding-inline); border: 1px solid var(--agentic-base-border, var(--kg-border, ButtonBorder)); border-radius: var(--agentic-control-radius); white-space: nowrap; }
+.agentic-icon-text, .agentic-icon-pill, .agentic-icon-badge { font: var(--agentic-font-size-body)/var(--agentic-line-height-body) var(--agentic-font-sans); }
 @container agentic-ktv (width < ${profile.tokens.find(token => token.key === "layout.ktv.stack-breakpoint").value}) {
   .agentic-ktv-row { grid-template-columns: var(--agentic-ktv-columns-narrow); }
   .agentic-ktv-row > :last-child { grid-column: 1 / -1; }
