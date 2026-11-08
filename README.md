@@ -7,14 +7,16 @@ attribution, permission evidence, and digest. The local ownership map pins the f
 repositories and keeps rights and adoption state explicit. External consumers remain source-mapped
 until their owners review a migration; no adoption or cross-repository parity is implied.
 
-Four candidate profiles hold 137 globally unique keys and CSS variables: Commerce has 36
-product-scoped values, Base has 9 shared data-view values, Graph has 69 color, typography, and
-font values across light, dark, and black modes, and Design System owns two shared icon sizes and the desktop/touch row heights shared with the Graph toolbar.
-Profile bytes, source revisions, generated output,
-rights, and consumer pins are checked independently. The exact Graph grant covers only its four
-pinned token/typography files; the repository-wide private classification remains in force. No
-consumer migration or whole-repository parity is claimed. Component behavior and icon artwork stay
-with their native product owners; no copied Base component runtime is shipped.
+Four candidate profiles centrally own Commerce, Base, Graph and shared interface tokens.
+Profile bytes, source revisions, generated output, rights and consumer pins are checked independently.
+The Graph grant covers its eight pinned token sources; the private classification remains in force
+outside that scope. Consumers use immutable projections and native component behavior. Base owns the
+shared KTV renderer and dropdown adapters; this registry supplies no copied component runtime.
+
+The central Icon Library owns the verified artwork inventory. Shared interface roles own glyph size,
+stroke, typography, responsive row/control geometry and icon presentation. Local appearance settings
+show these roles read-only; glyph-scale and animation preferences stay explicit. Checks prove the
+registered profiles and listed consumer pins, rather than whole-repository parity.
 
 ## Private archive
 
