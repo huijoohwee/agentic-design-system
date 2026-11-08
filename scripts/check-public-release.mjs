@@ -29,7 +29,7 @@ const expectedFiles = [
   "site/catalog.json",
   "site/catalog.schema.json",
   "site/favicon.svg",
-  "site/floating-panel.css", "site/toolbar.css",
+  "site/floating-panel.css", "site/toolbar.css", "site/toolbar-icons.js",
   "site/index.html",
   "site/icons.json",
   "site/registry.css",
