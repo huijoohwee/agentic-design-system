@@ -10,6 +10,9 @@ const TOKEN_KEY = /^[a-z][a-z0-9.-]{0,95}$/u;
 const CSS_VAR = /^--agentic-[a-z0-9-]{1,64}$/u;
 const DIMENSION = /^(?:0|[0-9]+(?:\.[0-9]+)?)(?:px|rem|em)$/u;
 // Closed inventory: CSS values are validated before projection.
+const channel = String.raw`(?:0|[1-9][0-9]{0,2})(?:\.[0-9]+)?`;
+const oklch = String.raw`oklch\(${channel}% ${channel} ${channel}(?: / 0\.[0-9]+)?\)`;
+const THEMED_COLOR = new RegExp(String.raw`^light-dark\(${oklch}, ${oklch}\)$`, "u");
 const EXPECTED = Object.freeze([
   [
     "icon.size.compact",
@@ -126,7 +129,9 @@ const EXPECTED = Object.freeze([
     "menu.gap",
     "--agentic-menu-gap",
     "dimension"
-  ]
+  ],
+  ["control.selected.foreground", "--agentic-control-selected-foreground", "themed-color"],
+  ["control.selected.background", "--agentic-control-selected-background", "themed-color"]
 ]);
 const digest = bytes => createHash("sha256").update(bytes).digest("hex");
 const fail = message => { throw new Error(`Invalid shared UI profile: ${message}`); };
@@ -140,7 +145,7 @@ export function validateSharedUiProfile(source) {
   const profile = JSON.parse(source);
   exactKeys(profile, ["schema", "id", "version", "status", "scope", "tokens"], "root");
   if (profile.schema !== "agentic-design-system/shared-ui-profile/v1" || profile.id !== "shared-ui"
-    || profile.version !== "0.7.0" || profile.status !== "candidate") fail("identity");
+    || profile.version !== "0.8.0" || profile.status !== "candidate") fail("identity");
   exactKeys(profile.scope, ["repository", "surfaces"], "scope");
   if (profile.scope.repository !== "github.com/huijoohwee/agentic-design-system"
     || JSON.stringify(profile.scope.surfaces) !== JSON.stringify(["shared-interface"])) fail("scope");
@@ -154,6 +159,7 @@ export function validateSharedUiProfile(source) {
       || (typeof token.value !== "string" || token.value.length > 256
         || token.type === "dimension" && !DIMENSION.test(token.value)
         || token.type === "number" && (!/^[0-9]+(?:\.[0-9]+)?$/u.test(token.value) || Number(token.value) < 0.5 || Number(token.value) > 4)
+        || token.type === "themed-color" && !THEMED_COLOR.test(token.value)
         || token.type === "font-family" && !/^[A-Za-z0-9 ,._-]+$/u.test(token.value)
         || token.type === "grid-template" && (!/^[A-Za-z0-9()., %-]+$/u.test(token.value) || /url|expression|\b(?:auto|none)\b/iu.test(token.value))) || keys.has(token.key) || variables.has(token.cssVar)) fail(`invalid token ${token.key ?? ""}`);
     keys.add(token.key);
@@ -165,6 +171,7 @@ export function validateSharedUiProfile(source) {
 
 export function renderSharedUiCss(profile, sourceRevision, profileDigest) {
   if (!/^[a-f0-9]{40}$/u.test(sourceRevision ?? "") || !/^[a-f0-9]{64}$/u.test(profileDigest ?? "")) fail("projection binding");
+  const selected = ':is(.agentic-control-selected, .agentic-toggle-group > button[aria-pressed="true"])';
   const declarations = profile.tokens.map(token => `  ${token.cssVar}: ${token.value};`);
   const input = 'input:not([type="hidden"], [type="file"], [type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="button"], [type="submit"], [type="reset"], [type="image"], [hidden], .sr-only, .file-input)';
   const nativeField = `:is(.agentic-form-controls :where(${input}, select, textarea), .agentic-input-controls :where(${input}, select))`;
@@ -187,11 +194,11 @@ ${declarations.join("\n")}
   background: transparent; color: inherit; font: inherit; white-space: nowrap; cursor: pointer;
 }
 .agentic-toggle-group > button:where(:enabled:hover) { background: var(--agentic-base-hover, var(--kg-panel-action-bg-hover, color-mix(in srgb, currentColor 6%, transparent))); }
-.agentic-toggle-group > button[aria-pressed="true"] { background: color-mix(in srgb, currentColor 15%, transparent); }
+${selected} { color: var(--agentic-control-selected-foreground); background-color: var(--agentic-control-selected-background); }
 .agentic-toggle-group > button:focus-visible { outline: var(--agentic-control-focus-width) solid var(--agentic-control-focus, Highlight); outline-offset: calc(-1 * var(--agentic-control-focus-width)); }
 .agentic-toggle-group > button:disabled { opacity: .5; cursor: not-allowed; }
 @media (forced-colors: active) {
-  .agentic-toggle-group > button[aria-pressed="true"] { color: HighlightText; background: Highlight; forced-color-adjust: none; }
+  ${selected} { color: HighlightText; background: Highlight; forced-color-adjust: none; }
 }
 .agentic-checkbox-group {
   display: inline-flex; align-items: center; gap: var(--agentic-control-padding-block);
