@@ -61,4 +61,6 @@ Opened dropdown menus also reuse the generated shared surface, option, hover, se
 
 Icon presentation uses the same shared profile: stroke width, control padding, pills, badge chips and text consume central roles. Consumer settings show these roles read-only; saved local appearance classes cannot replace the owner. Glyph scale and animation remain explicit user preferences.
 
+[Toolbar](site/toolbar.css) owns the compact navigation surface, action states and sticky dock. Use an accessible name on the navigation element and the shared `agentic-toolbar-item` class for links and buttons. A dock sits below an open FloatingPanel. Graph retains its canvas placement.
+
 FloatingPanel presentation is owned by [the portable shell](site/floating-panel.css). The existing Base class names are its markup contract: surface, inner column, header, scroll body, and close control. Base supplies the React adapter for Graph; native HTML consumers pin the same stylesheet. Use the optional dock for side placement, or let the host position the shell. Hosts own open/close, focus, drag, and domain actions. See **Components → Preview FloatingPanel** in the registry.
