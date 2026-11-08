@@ -18,6 +18,13 @@ export function applyDashboardColumns(root, layout) {
     else if (element.dataset.columns !== columns) element.dataset.columns = columns;
   }
 }
+export function dashboardEditorActions(...buttons) {
+  const actions = document.createElement('div');
+  actions.className = 'agentic-dashboard-actions';
+  for (const button of buttons) button.classList.add('agentic-form-control');
+  actions.append(...buttons);
+  return actions;
+}
 // Mount only after the host verifies its editor. Persist before reflecting success.
 export function createDashboardColumnEditor({ views, layout, save, onSaved, end }) {
   if (!isColumnLayout(layout)) throw Error('Invalid dashboard layout');
@@ -40,7 +47,7 @@ export function createDashboardColumnEditor({ views, layout, save, onSaved, end 
   view.addEventListener('change', current); current();
   const submit = el('button', 'Save layout'), close = el('button', 'Exit edit mode');
   submit.type = 'submit'; close.type = 'button'; close.onclick = end;
-  status.setAttribute('role', 'status'); form.append(submit, close, status);
+  status.setAttribute('role', 'status'); form.append(dashboardEditorActions(submit, close), status);
   form.onsubmit = async event => {
     event.preventDefault(); if (submit.disabled) return;
     submit.disabled = view.disabled = columns.disabled = true;
