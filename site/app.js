@@ -171,7 +171,7 @@ function renderNavigation(catalog, profiles) {
   catalogNavigation.replaceChildren();
   for (const route of routes) {
     const link = document.createElement("a");
-    link.className = "agentic-icon-pill";
+    link.className = "agentic-toolbar-item";
     link.href = route.href;
     link.textContent = route.label;
     catalogNavigation.append(link);
@@ -182,7 +182,6 @@ function renderNavigation(catalog, profiles) {
 function updateSectionSelection() {
   for (const link of catalogNavigation.querySelectorAll("a")) {
     const selected = link.hash === location.hash;
-    link.classList.toggle("agentic-control-selected", selected);
     if (selected) link.setAttribute("aria-current", "location");
     else link.removeAttribute("aria-current");
   }
@@ -257,7 +256,7 @@ loadRegistry().catch(error => {
 });
 
 async function prepareOfflineRegistry() {
-  const registration = await navigator.serviceWorker.register("./sw.js?v=registry-panel-1", {
+  const registration = await navigator.serviceWorker.register("./sw.js?v=registry-toolbar-1", {
     scope: "./", updateViaCache: "none",
   });
   const worker = registration.installing ?? registration.waiting ?? registration.active;

@@ -29,7 +29,7 @@ const expectedFiles = [
   "site/catalog.json",
   "site/catalog.schema.json",
   "site/favicon.svg",
-  "site/floating-panel.css",
+  "site/floating-panel.css", "site/toolbar.css",
   "site/index.html",
   "site/icons.json",
   "site/registry.css",
@@ -171,7 +171,7 @@ const registryCss = await readFile(resolve(root, "site/registry.css"), "utf8");
 for (const asset of ["graph-profile", "commerce-theme", "shared-ui-profile"]) {
   if (!registryHtml.includes(`<link rel="stylesheet" href="./vendor/${asset}.css">`)) fail(`Registry must load its pinned ${asset} stylesheet`);
 }
-if (/<style\b|\sstyle\s*=/iu.test(registryHtml) || /(?:^|[;{])\s*(?:--[\w-]+|grid-template-columns|border-radius)\s*:|\.agentic-(?:base-floating-panel|floating-panel|dashboard|control|toggle|icon|form|panel|ktv)\b|#[0-9a-f]{3,8}\b|\b(?:rgba?|hsla?|oklch)\(/iu.test(registryCss)) {
+if (/<style\b|\sstyle\s*=/iu.test(registryHtml) || /(?:^|[;{])\s*(?:--[\w-]+|grid-template-columns|border-radius)\s*:|\.agentic-(?:toolbar|base-floating-panel|floating-panel|dashboard|control|toggle|icon|form|panel|ktv)\b|#[0-9a-f]{3,8}\b|\b(?:rgba?|hsla?|oklch)\(/iu.test(registryCss)) {
   fail("Registry styling must consume the generated palette and dashboard classes without overrides");
 }
 assertCspFailClosedFixtures();

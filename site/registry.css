@@ -22,8 +22,6 @@ input[type=search] {
 }
 #search-help { margin-block-start: var(--commerce-space-xs); }
 #search-status { margin-block: var(--commerce-space-sm); }
-#catalog-navigation a { text-decoration: none; }
-:where(#catalog-navigation) a:not([aria-current]) { color: var(--kg-text-secondary); }
 details { overflow-wrap: anywhere; }
 summary { min-block-size: var(--agentic-control-height); align-content: center; cursor: pointer; }
 footer a { display: inline-flex; min-block-size: var(--agentic-control-height); align-items: center; }
