@@ -15,7 +15,7 @@ if (!/^(?:0|[1-9][0-9]{0,4})$/u.test(portText) || Number(portText) > 65535) {
 }
 
 const files = new Set([
-  "icons.json", "index.html", "registry.css", "app.js", "registry-query.js", "sw.js", "favicon.svg", "catalog.json", "catalog.schema.json", "THIRD-PARTY-NOTICES.txt",
+  "icons.json", "index.html", "floating-panel.css", "registry.css", "app.js", "registry-query.js", "sw.js", "favicon.svg", "catalog.json", "catalog.schema.json", "THIRD-PARTY-NOTICES.txt",
   "tokens/commerce-profile.json", "tokens/base-profile.json", "tokens/graph-profile.json", "tokens/shared-ui-profile.json",
   "vendor/commerce-theme.css", "vendor/base-profile.css", "vendor/graph-profile.css", "vendor/shared-ui-profile.css",
 ]);

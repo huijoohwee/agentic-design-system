@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="./vendor/graph-profile.css">
   <link rel="stylesheet" href="./vendor/commerce-theme.css">
   <link rel="stylesheet" href="./vendor/shared-ui-profile.css">
+  <link rel="stylesheet" href="./floating-panel.css">
   <link rel="stylesheet" href="./registry.css">
 </head>
 <body class="agentic-form-controls">
@@ -41,7 +42,7 @@
         <article class="agentic-dashboard-card" id="profiles" tabindex="-1"><h3>Profiles</h3><p class="agentic-dashboard-description">Inspect profile identity, rights evidence, and consumer pins.</p></article>
         <article class="agentic-dashboard-card" id="guidelines" tabindex="-1"><h3>Guidelines</h3><p class="agentic-dashboard-description">Each key has one owner. Duplicate definitions and overrides fail validation.</p></article>
         <article class="agentic-dashboard-card" id="accessibility" tabindex="-1"><h3>Accessibility</h3><p class="agentic-dashboard-description">Use the keyboard to search, navigate sections, and expand token values.</p></article>
-        <article class="agentic-dashboard-card" id="components" tabindex="-1"><h3>Components</h3><p class="agentic-dashboard-description">Product repositories own their component behavior and APIs.</p></article>
+        <article class="agentic-dashboard-card" id="components" tabindex="-1"><h3>Components</h3><p class="agentic-dashboard-description">Product repositories own their component behavior and APIs.</p><button type="button" class="agentic-icon-pill" popovertarget="panel-preview">Preview FloatingPanel</button></article>
         <article class="agentic-dashboard-card" id="examples" tabindex="-1"><h3>Examples</h3><p class="agentic-dashboard-description">Search for dashboard.card-gap to inspect the spacing used by these cards.</p></article>
         <article class="agentic-dashboard-card" id="releases" tabindex="-1"><h3>Releases</h3><p class="agentic-dashboard-description">Public records require an owner, grant, source digest, and review evidence.</p></article>
       </div>
@@ -53,6 +54,17 @@
       <a href="./THIRD-PARTY-NOTICES.txt">Third-party notices</a>
     </footer>
   </main>
-  <script type="module" src="./app.js?v=mission-registry-1"></script>
+  <div id="panel-preview" class="agentic-floating-panel-dock" popover>
+    <aside class="agentic-base-floating-panel" aria-labelledby="panel-title">
+      <div class="agentic-base-floating-panel-inner agentic-base-floating-panel-expanded">
+        <header class="agentic-base-floating-panel-header">
+          <h2 class="agentic-floating-panel-title" id="panel-title">FloatingPanel</h2>
+          <button type="button" class="agentic-base-floating-panel-close" popovertarget="panel-preview" popovertargetaction="hide" aria-label="Close FloatingPanel" autofocus><svg class="agentic-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+        </header>
+        <section class="agentic-floating-panel-body"><p>The header stays in place while the content scrolls. Graph’s tool panel and the Workspace Pack Console use this shell.</p></section>
+      </div>
+    </aside>
+  </div>
+  <script type="module" src="./app.js?v=registry-panel-1"></script>
 </body>
 </html>

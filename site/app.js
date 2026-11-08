@@ -257,7 +257,7 @@ loadRegistry().catch(error => {
 });
 
 async function prepareOfflineRegistry() {
-  const registration = await navigator.serviceWorker.register("./sw.js?v=mission-registry-1", {
+  const registration = await navigator.serviceWorker.register("./sw.js?v=registry-panel-1", {
     scope: "./", updateViaCache: "none",
   });
   const worker = registration.installing ?? registration.waiting ?? registration.active;
