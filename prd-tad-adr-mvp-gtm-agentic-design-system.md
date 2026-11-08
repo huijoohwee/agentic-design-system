@@ -1,19 +1,19 @@
 ---
 title: "Agentic Design System — Shared Ownership and Singleton Tokens"
 doc_type: "PRD-TAD-ADR-MVP-GTM"
-version: "0.9.26"
-revision: "0.9.26"
+version: "0.9.27"
+revision: "0.9.27"
 date: "2026-10-29"
-updated_date: "2026-11-07"
+updated_date: "2026-11-08"
 lang: "en-US"
 frontmatter_contract: "required"
 owner: "Design-system product function"
 continuity_id: "DESIGN-TOKEN-ADOPTION-001"
-prd_revision: "0.9.26"
-tad_revision: "0.9.26"
-adr_revision: "0.9.26"
-mvp_revision: "0.9.26"
-gtm_revision: "0.9.26"
+prd_revision: "0.9.27"
+tad_revision: "0.9.27"
+adr_revision: "0.9.27"
+mvp_revision: "0.9.27"
+gtm_revision: "0.9.27"
 local_rung: "dev-proven"
 delivered_rung: "undocumented"
 lane: "authoring"
@@ -36,7 +36,7 @@ runtime_readiness_policy: "fail-closed"
 
 # Agentic Design System — Shared Ownership and Singleton Tokens
 
-**Join:** `DESIGN-TOKEN-ADOPTION-001@0.9.26`, superseding `0.9.17` and its predecessor chain through `0.2.0`. This revision extends the existing shared profile with responsive row/toolbar geometry and retains its glyph projections while retaining draft status, explicit rights, and owner-specific rollback. The prior central registry integration remains at protected `main` commit `bc1921bbcf56e1abb11fef2593917e5459d58df1` via PR #6. Historical Commerce workflow and no-deploy evidence remain recorded below; they are not release or runtime authority for this change.
+**Join:** `DESIGN-TOKEN-ADOPTION-001@0.9.27`, superseding `0.9.17` and its predecessor chain through `0.2.0`. This revision extends the existing shared profile with responsive row/toolbar geometry and retains its glyph projections while retaining draft status, explicit rights, and owner-specific rollback. The prior central registry integration remains at protected `main` commit `bc1921bbcf56e1abb11fef2593917e5459d58df1` via PR #6. Historical Commerce workflow and no-deploy evidence remain recorded below; they are not release or runtime authority for this change.
 
 **Change boundary:** the central registry implementation is integrated at `bc1921bbcf56e1abb11fef2593917e5459d58df1` through PR #6. Its predecessor code originated at `a1c56f8ba3c3b8892897fcdbf6d61ed09784b6b7`. This local successor pins AOS at `2bf74425791761c3253e8112a181ed496c1cdf91` as a dev-only dependency, the protected merge commit for PR #649, and records the current audit. The selected Commerce workflow ID is `workflow-commerce-token-plan-20261030-v5`, sequence 3, boundary `end`, manifest digest `370e305e7121cabcb8622db98c438249cecb00934958d072a865c926039c8364`. It binds plan 0.1.4 at Commerce commit `3e764ac4078aff85c5f60ef33eefde6be61ca8bf`, planning digest `706975e57af56068bb9720b67995a2f6803acc99bc2453a79711af8cb28f5aad`, member archive `07a8f61cb189dd0fb65e6725ef3b3cb6245ec427b2dd47542706fba39f95b72d`, and passed checks receipt `cc1dc035ab816b08bb825c03e26da79732ad6c5e01d9bd0531c9410ecf7ef45a`. `releaseTargets` contains the exact member ID; deployment and runtime references point to the immutable plan-backed no-deploy evidence `6c630b7a9d5d4422cd1196748241eac8eb414603c281e0ae79b39734d7c556a0`. The current importer classifies those references as queued production steps, leaving closure incomplete and authority false. This is not deployment/runtime evidence, and the separate AOS delivery-disposition row is deferred until protected source integration. Six lifecycle phases remain missing. The user granted public reuse of four exact Graph artifacts on 2026-10-29; that does not authorize other Graph sources or future revisions. No consumer migration, public release, or deployment is claimed.
 
@@ -295,3 +295,7 @@ Shared UI validation binds the closed key/type inventory and safe CSS grammar; d
 Graph adoption uses 137 centrally authored shared/root roles, including theme, responsive aliases and reduced motion. Graph retains behavior and metadata APIs; its pinned JSON/CSS projections contain no editable defaults. Eight exact token-source hashes retain attribution. Base registered defaults likewise originate here. Consumers must reject projection drift and local registered declarations; rollback restores pins and assets together.
 
 Profile source links bind exact Design System commits containing the registered JSON, separately from the retained Graph/Base origin evidence. Validation compares all three product profile byte streams with those central Git objects; the browser displays a resolvable central source rather than an origin repository that never contained the profile file.
+
+### Shared KTV/icon ownership (0.9.27)
+
+The existing shared profile also projects the KTV row/cell layout, typography and responsive tracks. A central, validated SVG library owns 61 reusable Lucide 0.562.0 glyphs with retained ISC/MIT notices, exact digest and offline catalog preview. Base owns one framework/native rendering utility; Graph retains product semantic aliases and help metadata as adapters. Consumers pin this owner rather than duplicate artwork or CSS. Unsafe SVG attributes, duplicate artwork and stale projection bytes fail. Rollback restores producer pins and generated assets together; no user state is migrated. Source/local verification remains separate from Production.

@@ -3,6 +3,7 @@ import { execFileSync } from "node:child_process";
 import { readFile, readdir, stat } from "node:fs/promises";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { validateIconLibrary } from "./design-system-icon-profile.mjs";
 import { checkDesignRegistry } from "./design-registry.mjs";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
@@ -28,6 +29,7 @@ const expectedFiles = [
   "site/catalog.schema.json",
   "site/favicon.svg",
   "site/index.html",
+  "site/icons.json",
   "site/registry-query.js",
   "site/sw.js",
   "site/tokens/base-profile.json",
@@ -181,3 +183,8 @@ if (!notices.includes("MIT License\n")
 }
 
 console.log(`Public release checks passed for ${expectedFiles.length} files.`);
+
+const iconBytes = await readFile(resolve(root, "site/icons.json"));
+validateIconLibrary(iconBytes.toString("utf8"));
+const iconManifest = JSON.parse(await readFile(resolve(root, "site/catalog.json"), "utf8")).iconLibrary;
+if (iconManifest?.digest !== `sha256:${createHash("sha256").update(iconBytes).digest("hex")}`) fail("Central icon digest drift");

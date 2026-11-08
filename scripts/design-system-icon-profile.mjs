@@ -172,6 +172,14 @@ export function renderSharedUiCss(profile, sourceRevision, profileDigest) {
 ${declarations.join("\n")}
 }
 .agentic-ktv-container { min-inline-size: 0; inline-size: 100%; container: agentic-ktv / inline-size; }
+.agentic-ktv-row { display: grid; grid-template-columns: var(--agentic-ktv-columns); gap: 0 var(--agentic-control-padding-inline); min-inline-size: 0; max-inline-size: 100%; inline-size: 100%; align-items: center; padding-block: var(--agentic-control-padding-block); font: var(--agentic-font-size-body)/var(--agentic-line-height-body) var(--agentic-font-sans); }
+.agentic-ktv-row[data-align="start"] { align-items: start; }
+.agentic-ktv-row > :is(dt, dd) { display: flex; align-items: center; min-inline-size: 0; max-inline-size: 100%; margin: 0; padding-inline: var(--agentic-control-padding-inline); overflow: hidden; }
+.agentic-ktv-key { white-space: nowrap; text-overflow: ellipsis; }
+.agentic-ktv-type { justify-content: center; }
+.agentic-ktv-value { justify-content: end; align-self: stretch; gap: var(--agentic-control-padding-block); }
+.agentic-ktv-value > * { min-inline-size: 0; max-inline-size: 100%; }
+.agentic-icon { display: block; flex: 0 0 auto; inline-size: var(--agentic-icon-size-default); block-size: var(--agentic-icon-size-default); }
 @container agentic-ktv (width < ${profile.tokens.find(token => token.key === "layout.ktv.stack-breakpoint").value}) {
   .agentic-ktv-row { grid-template-columns: var(--agentic-ktv-columns-narrow); }
   .agentic-ktv-row > :last-child { grid-column: 1 / -1; }
@@ -225,7 +233,37 @@ textarea.agentic-form-control, .agentic-form-controls :where(textarea) {
 
 }
 
+export function validateIconLibrary(source) {
+  const library = JSON.parse(source);
+  exactKeys(library, ["schema", "version", "owner", "source", "viewBox", "icons"], "icon library");
+  if (library.schema !== "agentic-design-system/icon-library/v1" || library.version !== "1.0.0"
+    || library.owner !== "github.com/huijoohwee/agentic-design-system" || library.viewBox !== "0 0 24 24") fail("icon identity");
+  exactKeys(library.source, ["package", "version", "license", "licenseSha256"], "icon source");
+  if (library.source.package !== "lucide-react" || library.source.version !== "0.562.0"
+    || library.source.license !== "ISC AND MIT" || !/^[a-f0-9]{64}$/u.test(library.source.licenseSha256)) fail("icon rights");
+  if (!library.icons || typeof library.icons !== "object" || Array.isArray(library.icons)
+    || Object.keys(library.icons).length < 1 || Object.keys(library.icons).length > 128) fail("icon inventory");
+  const geometries = new Set();
+  for (const [name, nodes] of Object.entries(library.icons)) {
+    if (!/^[A-Z][A-Za-z0-9]{0,47}$/u.test(name) || !Array.isArray(nodes) || !nodes.length || nodes.length > 32) fail("icon name/nodes");
+    const geometry = JSON.stringify(nodes);
+    if (geometries.has(geometry)) fail(`duplicate icon artwork: ${name}`);
+    geometries.add(geometry);
+    for (const node of nodes) {
+      if (!Array.isArray(node) || node.length !== 2 || !["path", "line", "polyline", "polygon", "circle", "ellipse", "rect"].includes(node[0])) fail("icon node");
+      if (!node[1] || typeof node[1] !== "object" || Array.isArray(node[1]) || !Object.keys(node[1]).length) fail("icon attributes");
+      for (const [key, value] of Object.entries(node[1])) {
+        if (!["d", "points", "x", "y", "x1", "x2", "y1", "y2", "cx", "cy", "r", "rx", "ry", "width", "height", "fill"].includes(key)
+          || typeof value !== "string" || !value.length || value.length > 2048
+          || !(key === "fill" ? /^(?:none|currentColor)$/u : key === "d" ? /^[MmLlHhVvCcSsQqTtAaZz0-9., +eE-]+$/u : /^[0-9., +eE-]+$/u).test(value)) fail(`unsafe icon attribute: ${name}.${key}`);
+      }
+    }
+  }
+  return library;
+}
+
 async function main() {
+  validateIconLibrary(await readFile(resolve(root, "site/icons.json"), "utf8"));
   const args = process.argv.slice(2);
   if (args.length > 1 || args.some(arg => !["--validate", "--check", "--write"].includes(arg))) fail("usage: node scripts/shared-ui-profile.mjs [--validate|--check|--write]");
   const bytes = await readFile(profilePath);
