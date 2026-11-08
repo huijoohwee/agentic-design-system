@@ -5,6 +5,14 @@ export function dashboardLayoutCss(profile) {
   const medium = value('dashboard.breakpoint.medium')
   const wide = value('dashboard.breakpoint.wide')
   return `
+:where(.agentic-dashboard-layout, .agentic-dashboard-board) {
+  --agentic-base-dashboard-panel-bg: var(--kg-panel-bg, var(--agentic-base-surface, Canvas));
+  --agentic-base-dashboard-metric-bg: var(--agentic-base-dashboard-panel-bg);
+  --agentic-base-dashboard-border: var(--kg-border, var(--agentic-base-border, ButtonBorder));
+  --agentic-base-dashboard-text-primary: var(--kg-text-primary, var(--agentic-base-text-primary, CanvasText));
+  --agentic-base-dashboard-text-secondary: var(--kg-text-secondary, var(--agentic-base-text-secondary, CanvasText));
+  --agentic-base-dashboard-text-tertiary: var(--kg-text-tertiary, var(--agentic-base-text-tertiary, GrayText));
+}
 .agentic-dashboard-layout {
   box-sizing: border-box; display: grid; align-content: start; grid-template-columns: minmax(0, 1fr);
   container: agentic-dashboard / inline-size; gap: var(--agentic-dashboard-section-gap);
