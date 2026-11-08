@@ -43,24 +43,49 @@ function addMetadata(container, fields) {
   container.append(metadata);
 }
 
-function renderOwner(owner) {
-  const article = document.createElement("div");
+function catalogCard(kind, name, accent, description) {
+  const card = document.createElement("li");
+  card.className = "agentic-dashboard-card";
+  card.setAttribute("role", "listitem");
+  card.dataset.accent = accent;
+  const eyebrow = document.createElement("p");
+  eyebrow.className = "agentic-dashboard-eyebrow";
+  eyebrow.textContent = kind;
   const heading = document.createElement("h3");
-  const detail = document.createElement("p");
+  heading.textContent = name;
+  card.append(eyebrow, heading);
+  if (description) {
+    const detail = document.createElement("p");
+    detail.className = "agentic-dashboard-description";
+    detail.textContent = description;
+    card.append(detail);
+  }
+  return card;
+}
+
+function addDisclosure(card, label) {
+  const disclosure = document.createElement("details");
+  const summary = document.createElement("summary");
+  summary.textContent = label;
+  disclosure.append(summary);
+  card.append(disclosure);
+  return disclosure;
+}
+
+function renderOwner(owner) {
+  const card = catalogCard("Source owner", owner.name, "primary", owner.role);
+  const evidence = addDisclosure(card, "Source and reuse evidence");
+  addMetadata(evidence, [["Repository", owner.repository], ["Scope", owner.scopes.join(", ")],
+    ["Pinned revision", owner.revision], ["Reuse gate", owner.reuseGate]]);
   const sources = document.createElement("ul");
-  article.className = "catalog-card";
-  article.setAttribute("role", "listitem");
   sources.className = "catalog-evidence";
-  heading.textContent = owner.name;
-  detail.textContent = `${owner.role} Repository-wide reuse gate: ${owner.reuseGate}.`;
-  addMetadata(article, [["Repository", owner.repository], ["Scope", owner.scopes.join(", ")], ["Pinned revision", owner.revision]]);
   for (const source of owner.sources) {
     const item = document.createElement("li");
     item.textContent = `${source.kind}: ${source.path} · ${source.digest}`;
     sources.append(item);
   }
-  article.append(heading, detail, sources);
-  return article;
+  evidence.append(sources);
+  return card;
 }
 
 function tokenValue(token) {
@@ -70,22 +95,17 @@ function tokenValue(token) {
   return token.value;
 }
 
-function renderProfile(profile) {
-  const article = document.createElement("div");
-  const heading = document.createElement("h3");
-  const detail = document.createElement("p");
-  const disclosure = document.createElement("details");
-  const summary = document.createElement("summary");
+function renderProfile(profile, searching) {
+  const card = catalogCard("Token profile", profile.name, "secondary",
+    `${profile.status} · ${profile.rights} reuse · ${profile.scope.join(", ")}`);
+  const disclosure = addDisclosure(card, `${profile.tokens.length} candidate keys · inspect values`);
+  disclosure.open = searching && profile.tokens.length <= 10;
   const list = document.createElement("ul");
-  article.className = "catalog-card";
-  article.setAttribute("role", "listitem");
   list.className = "catalog-evidence";
-  heading.textContent = profile.name;
-  detail.textContent = `${profile.status} profile · ${profile.rights} reuse · no cross-repository adoption claimed.`;
   const pins = profile.consumerPins.length
     ? profile.consumerPins.map(pin => `${pin.repository}@${pin.revision}:${pin.path} · ${pin.digest}`).join("; ")
     : "No consumer adoption pin; candidate values only.";
-  addMetadata(article, [
+  addMetadata(disclosure, [
     ["Owner", profile.owner], ["Scope", profile.scope.join(", ")],
     ["Source", `${profile.repository}@${profile.revision}:${profile.source}`], ["Profile digest", profile.digest],
     ["Rights", profile.rights], ["Permission", profile.permissionEvidence],
@@ -93,43 +113,28 @@ function renderProfile(profile) {
     ["Consumer pins", pins],
     ...(profile.projection ? [["Generated projection", `${profile.projection.path} · ${profile.projection.digest}`]] : []),
   ]);
-  summary.textContent = `${profile.tokens.length} candidate keys · inspect values`;
-  disclosure.open = profile.tokens.length <= 10;
   for (const token of profile.tokens) {
     const item = document.createElement("li");
     item.textContent = `${token.canonicalKey} · ${token.cssVar} · ${token.type} · ${tokenValue(token)}`;
     list.append(item);
   }
-  disclosure.append(summary, list);
-  article.append(heading, detail, disclosure);
-  return article;
+  disclosure.querySelector("summary").after(list);
+  return card;
 }
 
 function renderRecord(record) {
-  const article = document.createElement("div");
-  const heading = document.createElement("h3");
-  const detail = document.createElement("p");
-  article.className = "catalog-card";
-  article.setAttribute("role", "listitem");
-  heading.textContent = `${record.name} · @${record.id.replace(/^catalog:/u, "")}`;
-  detail.textContent = record.summary;
-  addMetadata(article, [["Canonical key", record.canonicalKey], ["Owner", record.owner]]);
-  article.append(heading, detail);
-  return article;
+  const card = catalogCard("Catalog record", `${record.name} · @${record.id.replace(/^catalog:/u, "")}`, "success", record.summary);
+  addMetadata(card, [["Canonical key", record.canonicalKey], ["Owner", record.owner]]);
+  return card;
 }
 
 function renderSection(section) {
-  const article = document.createElement("div");
-  const heading = document.createElement("h3");
+  const card = catalogCard("Section", section.label, "neutral");
   const link = document.createElement("a");
-  article.className = "catalog-card";
-  article.setAttribute("role", "listitem");
-  heading.textContent = `${section.label} section`;
-  link.className = "catalog-section-link";
   link.href = section.href;
   link.textContent = `Open ${section.label}`;
-  article.append(heading, link);
-  return article;
+  card.append(link);
+  return card;
 }
 
 function renderCatalog(query = "") {
@@ -147,7 +152,7 @@ function renderCatalog(query = "") {
   grid.replaceChildren();
   for (const row of result.results) {
     if (row.kind === "owner") grid.append(renderOwner(row));
-    else if (row.kind === "profile") grid.append(renderProfile(row));
+    else if (row.kind === "profile") grid.append(renderProfile(row, Boolean(query.trim())));
     else if (row.kind === "record") grid.append(renderRecord(row));
     else if (row.kind === "section") grid.append(renderSection(row));
   }
@@ -166,11 +171,24 @@ function renderNavigation(catalog, profiles) {
   catalogNavigation.replaceChildren();
   for (const route of routes) {
     const link = document.createElement("a");
+    link.className = "agentic-icon-pill";
     link.href = route.href;
     link.textContent = route.label;
     catalogNavigation.append(link);
   }
+  updateSectionSelection();
 }
+
+function updateSectionSelection() {
+  for (const link of catalogNavigation.querySelectorAll("a")) {
+    const selected = link.hash === location.hash;
+    link.classList.toggle("agentic-control-selected", selected);
+    if (selected) link.setAttribute("aria-current", "location");
+    else link.removeAttribute("aria-current");
+  }
+}
+
+window.addEventListener("hashchange", updateSectionSelection);
 
 async function sha256(bytes) {
   const digest = await crypto.subtle.digest("SHA-256", bytes);
@@ -201,14 +219,14 @@ async function loadRegistry() {
   const iconBytes = await iconResponse.arrayBuffer();
   if (await sha256(iconBytes) !== catalog.iconLibrary.digest) throw new Error("Central icon digest mismatch");
   const library = JSON.parse(new TextDecoder().decode(iconBytes));
-  const iconSection = document.createElement("section"); iconSection.setAttribute("aria-label", "Shared Icon Library");
+  const iconSection = document.createElement("section"); iconSection.setAttribute("aria-label", "Shared Icon Library"); iconSection.className = "agentic-dashboard-card";
   const iconHeading = document.createElement("h2"); iconHeading.textContent = "Shared Icon Library"; iconSection.append(iconHeading);
   for (const [name, nodes] of Object.entries(library.icons)) {
     const row = document.createElement("dl"); row.className = "agentic-ktv-row";
     const key = document.createElement("dt"); key.className = "agentic-ktv-key"; key.textContent = name;
     const type = document.createElement("dd"); type.className = "agentic-ktv-type";
     const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    for (const [attribute, value] of Object.entries({ viewBox: library.viewBox, fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round", role: "img", "aria-label": name, class: "agentic-icon" })) icon.setAttribute(attribute, value);
+    for (const [attribute, value] of Object.entries({ viewBox: library.viewBox, fill: "none", stroke: "currentColor", "stroke-linecap": "round", "stroke-linejoin": "round", role: "img", "aria-label": name, class: "agentic-icon" })) icon.setAttribute(attribute, value);
     for (const [tag, attributes] of nodes) { const node = document.createElementNS(icon.namespaceURI, tag); for (const [attribute, value] of Object.entries(attributes)) node.setAttribute(attribute, value); icon.append(node); }
     type.append(icon); const value = document.createElement("dd"); value.className = "agentic-ktv-value"; value.textContent = "Shared SVG";
     row.append(key, type, value); const container = document.createElement("section"); container.className = "agentic-ktv-container"; container.append(row); iconSection.append(container);
@@ -238,9 +256,26 @@ loadRegistry().catch(error => {
   searchStatus.textContent = "The local registry did not satisfy its ownership, digest, or singleton contract.";
 });
 
+async function prepareOfflineRegistry() {
+  const registration = await navigator.serviceWorker.register("./sw.js?v=mission-registry-1", {
+    scope: "./", updateViaCache: "none",
+  });
+  const worker = registration.installing ?? registration.waiting ?? registration.active;
+  if (!worker) throw new Error("Offline cache has no registered worker");
+  await new Promise((resolve, reject) => {
+    const check = () => {
+      if (worker.state !== "activated" && worker.state !== "redundant") return;
+      worker.removeEventListener("statechange", check);
+      if (worker.state === "activated") resolve();
+      else reject(new Error("Offline cache installation failed"));
+    };
+    worker.addEventListener("statechange", check);
+    check();
+  });
+}
+
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-  navigator.serviceWorker.register("./sw.js", { scope: "./" })
-    .then(() => navigator.serviceWorker.ready)
+  prepareOfflineRegistry()
     .then(() => { offlineStatus.textContent = "Offline cache is ready for this site."; })
     .catch(() => { offlineStatus.textContent = "Offline caching is unavailable in this browser."; });
 }

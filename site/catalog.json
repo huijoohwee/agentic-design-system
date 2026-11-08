@@ -181,6 +181,10 @@
         "repository": "github.com/huijoohwee/agentic-design-system",
         "revision": "c18253b35e8bcc0bed548cfb717ec31909422dbe",
         "source": "./tokens/commerce-profile.json",
+        "projection": {
+          "path": "./vendor/commerce-theme.css",
+          "digest": "sha256:c512ee76dc6160ff41e8bac9706b8e8d0b9e56f42b6c4b128594605e19c93474"
+        },
         "digest": "sha256:000adeb267d0d0ff9527e1227faefcd5fd2c15faee463fa70173204783ea7c9e",
         "scope": [
           "commerce",
