@@ -14,7 +14,8 @@ export function applyDashboardColumns(root, layout) {
     const count = layout.columns[element.dataset.dashboardColumnsFor];
     if (!authoredColumns.has(element)) authoredColumns.set(element, element.dataset.columns);
     const columns = isColumnCount(count) ? String(count) : authoredColumns.get(element);
-    if (element.dataset.columns !== columns) element.dataset.columns = columns;
+    if (columns === undefined) delete element.dataset.columns;
+    else if (element.dataset.columns !== columns) element.dataset.columns = columns;
   }
 }
 // Mount only after the host verifies its editor. Persist before reflecting success.
@@ -29,7 +30,13 @@ export function createDashboardColumnEditor({ views, layout, save, onSaved, end 
   };
   select('Dashboard', view, views.map(item => [item.key, item.label]));
   select('Columns', columns, [['', 'Dashboard default'], ...allowedColumns.map(n => [String(n), String(n)])]);
-  const current = () => { columns.value = String(layout.columns[view.value] ?? ''); };
+  const current = () => {
+    const value = String(layout.columns[view.value] ?? '');
+    if (columns.value !== value) {
+      columns.value = value;
+      columns.dispatchEvent(new Event('change', {bubbles:true}));
+    }
+  };
   view.addEventListener('change', current); current();
   const submit = el('button', 'Save layout'), close = el('button', 'Exit edit mode');
   submit.type = 'submit'; close.type = 'button'; close.onclick = end;
