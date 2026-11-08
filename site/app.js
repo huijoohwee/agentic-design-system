@@ -20,7 +20,7 @@ function exactKeys(value, keys, label) {
 }
 
 function assertCatalog(catalog) {
-  exactKeys(catalog, ["$schema", "catalogId", "schemaVersion", "release", "requestedPath", "records", "registry"], "Catalog");
+  exactKeys(catalog, ["$schema", "catalogId", "schemaVersion", "release", "requestedPath", "records", "registry", "iconLibrary"], "Catalog");
   exactKeys(catalog.release, ["version", "status", "sourceRevision", "manifestDigest", "predecessor"], "Release");
   if (catalog.$schema !== "./catalog.schema.json" || catalog.catalogId !== "agentic-design-system"
     || catalog.release.status !== "draft" || catalog.requestedPath !== "/agentic-design-system/"
@@ -196,6 +196,24 @@ async function loadRegistry() {
   const tokenCount = profiles.reduce((total, profile) => total + profile.tokens.length, 0);
   document.querySelector("#release-summary").textContent = `${catalog.registry.owners.length} source owners · ${profileCount} pinned candidate profiles · ${tokenCount} globally unique keys/variables · draft catalog; no consumer migrations claimed.`;
   renderCatalog(search.value);
+  const iconResponse = await fetch(new URL(catalog.iconLibrary.path, catalogUrl), { cache: "no-cache" });
+  if (!iconResponse.ok) throw new Error("Central icon library is unavailable");
+  const iconBytes = await iconResponse.arrayBuffer();
+  if (await sha256(iconBytes) !== catalog.iconLibrary.digest) throw new Error("Central icon digest mismatch");
+  const library = JSON.parse(new TextDecoder().decode(iconBytes));
+  const iconSection = document.createElement("section"); iconSection.setAttribute("aria-label", "Shared Icon Library");
+  const iconHeading = document.createElement("h2"); iconHeading.textContent = "Shared Icon Library"; iconSection.append(iconHeading);
+  for (const [name, nodes] of Object.entries(library.icons)) {
+    const row = document.createElement("dl"); row.className = "agentic-ktv-row";
+    const key = document.createElement("dt"); key.className = "agentic-ktv-key"; key.textContent = name;
+    const type = document.createElement("dd"); type.className = "agentic-ktv-type";
+    const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    for (const [attribute, value] of Object.entries({ viewBox: library.viewBox, fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round", role: "img", "aria-label": name, class: "agentic-icon" })) icon.setAttribute(attribute, value);
+    for (const [tag, attributes] of nodes) { const node = document.createElementNS(icon.namespaceURI, tag); for (const [attribute, value] of Object.entries(attributes)) node.setAttribute(attribute, value); icon.append(node); }
+    type.append(icon); const value = document.createElement("dd"); value.className = "agentic-ktv-value"; value.textContent = "Shared SVG";
+    row.append(key, type, value); const container = document.createElement("section"); container.className = "agentic-ktv-container"; container.append(row); iconSection.append(container);
+  }
+  sectionIndex.after(iconSection);
   sectionIndex.hidden = false;
   sectionIndex.removeAttribute("aria-busy");
   revealLateContent();

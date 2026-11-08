@@ -343,7 +343,7 @@ async function assertCatalogSchema() {
   catch { fail("catalog schema is not valid JSON"); }
   const rootFields = ["$schema", "$id", "title", "type", "additionalProperties", "required", "properties", "$defs", "allOf"];
   exactKeys(schema, rootFields, "catalog schema");
-  const required = ["$schema", "catalogId", "schemaVersion", "release", "requestedPath", "records", "registry"];
+  const required = ["$schema", "catalogId", "schemaVersion", "release", "requestedPath", "records", "registry", "iconLibrary"];
   const registry = schema.properties?.registry?.properties;
   const keyContract = registry?.keyContract?.properties;
   const profileSchema = schema.$defs?.profile;
@@ -401,7 +401,7 @@ export async function checkDesignRegistry() {
   await assertCatalogSchema();
   const catalogBytes = await readFile(catalogPath);
   const catalog = JSON.parse(catalogBytes.toString("utf8"));
-  exactKeys(catalog, ["$schema", "catalogId", "schemaVersion", "release", "requestedPath", "records", "registry"], "catalog root");
+  exactKeys(catalog, ["$schema", "catalogId", "schemaVersion", "release", "requestedPath", "records", "registry", "iconLibrary"], "catalog root");
   if (catalog.$schema !== "./catalog.schema.json" || catalog.release?.status !== "draft" || catalog.records.length !== 0) fail("public release must remain draft and empty");
   const profileRefs = assertRegistry(catalog.registry);
   assertFailClosedChecks();

@@ -11,7 +11,8 @@
     "release",
     "requestedPath",
     "records",
-    "registry"
+    "registry",
+    "iconLibrary"
   ],
   "properties": {
     "$schema": {
@@ -260,6 +261,31 @@
               "minLength": 1
             }
           }
+        }
+      }
+    },
+    "iconLibrary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "path",
+        "version",
+        "digest"
+      ],
+      "properties": {
+        "schema": {
+          "const": "agentic-design-system/icon-library/v1"
+        },
+        "path": {
+          "const": "icons.json"
+        },
+        "version": {
+          "const": "1.0.0"
+        },
+        "digest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
         }
       }
     }

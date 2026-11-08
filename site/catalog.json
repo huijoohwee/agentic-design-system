@@ -303,9 +303,15 @@
         "consumerPins": [],
         "projection": {
           "path": "./vendor/shared-ui-profile.css",
-          "digest": "sha256:c5f812ba8ffe32927004bb4ed790e6382ac3d6ff77f7d378279eca7e854c2d8f"
+          "digest": "sha256:eef7e110f89035a1aefac4a503eb994c830241e7eb57481ed50960af951c7044"
         }
       }
     ]
+  },
+  "iconLibrary": {
+    "schema": "agentic-design-system/icon-library/v1",
+    "path": "icons.json",
+    "version": "1.0.0",
+    "digest": "sha256:52ab0c590ab71329f16d101e493f8dc21c455c918d52431c790a1477fcb357a1"
   }
 }
