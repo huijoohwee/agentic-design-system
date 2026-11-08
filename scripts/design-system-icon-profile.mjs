@@ -186,7 +186,7 @@ ${declarations.join("\n")}
   margin: 0; padding: 0 var(--agentic-control-padding-inline); border: 0; border-radius: 0;
   background: transparent; color: inherit; font: inherit; white-space: nowrap; cursor: pointer;
 }
-.agentic-toggle-group > button:enabled:hover { background: var(--agentic-base-hover, var(--kg-panel-action-bg-hover, color-mix(in srgb, currentColor 6%, transparent))); }
+.agentic-toggle-group > button:where(:enabled:hover) { background: var(--agentic-base-hover, var(--kg-panel-action-bg-hover, color-mix(in srgb, currentColor 6%, transparent))); }
 .agentic-toggle-group > button[aria-pressed="true"] { background: color-mix(in srgb, currentColor 15%, transparent); }
 .agentic-toggle-group > button:focus-visible { outline: var(--agentic-control-focus-width) solid var(--agentic-control-focus, Highlight); outline-offset: calc(-1 * var(--agentic-control-focus-width)); }
 .agentic-toggle-group > button:disabled { opacity: .5; cursor: not-allowed; }
