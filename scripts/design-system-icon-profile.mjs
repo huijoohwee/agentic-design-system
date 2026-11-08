@@ -3,6 +3,8 @@ import { readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { dashboardLayoutCss } from "./dashboard-layout-css.mjs";
+
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const profilePath = resolve(root, "site/tokens/shared-ui-profile.json");
 const outputPath = resolve(root, "site/vendor/shared-ui-profile.css");
@@ -131,7 +133,18 @@ const EXPECTED = Object.freeze([
     "dimension"
   ],
   ["control.selected.foreground", "--agentic-control-selected-foreground", "themed-color"],
-  ["control.selected.background", "--agentic-control-selected-background", "themed-color"]
+  ["control.selected.background", "--agentic-control-selected-background", "themed-color"],
+  ["dashboard.card-gap", "--agentic-dashboard-card-gap", "dimension"],
+  ["dashboard.section-gap", "--agentic-dashboard-section-gap", "dimension"],
+  ["dashboard.inset", "--agentic-dashboard-inset", "dimension"],
+  ["dashboard.max-width", "--agentic-dashboard-max-width", "dimension"],
+  ["dashboard.hero-height", "--agentic-dashboard-hero-height", "dimension"],
+  ["dashboard.hero-height-wide", "--agentic-dashboard-hero-height-wide", "dimension"],
+  ["dashboard.breakpoint.medium", "--agentic-dashboard-breakpoint-medium", "dimension"],
+  ["dashboard.breakpoint.wide", "--agentic-dashboard-breakpoint-wide", "dimension"],
+  ["dashboard.primary", "--agentic-dashboard-primary", "themed-color"],
+  ["dashboard.secondary", "--agentic-dashboard-secondary", "themed-color"],
+  ["dashboard.success", "--agentic-dashboard-success", "themed-color"]
 ]);
 const digest = bytes => createHash("sha256").update(bytes).digest("hex");
 const fail = message => { throw new Error(`Invalid shared UI profile: ${message}`); };
@@ -145,7 +158,7 @@ export function validateSharedUiProfile(source) {
   const profile = JSON.parse(source);
   exactKeys(profile, ["schema", "id", "version", "status", "scope", "tokens"], "root");
   if (profile.schema !== "agentic-design-system/shared-ui-profile/v1" || profile.id !== "shared-ui"
-    || profile.version !== "0.8.0" || profile.status !== "candidate") fail("identity");
+    || profile.version !== "0.9.0" || profile.status !== "candidate") fail("identity");
   exactKeys(profile.scope, ["repository", "surfaces"], "scope");
   if (profile.scope.repository !== "github.com/huijoohwee/agentic-design-system"
     || JSON.stringify(profile.scope.surfaces) !== JSON.stringify(["shared-interface"])) fail("scope");
@@ -284,6 +297,7 @@ textarea.agentic-form-control, .agentic-form-controls :where(textarea) {
 .agentic-select-source { display: none !important; }
 .agentic-select-trigger { border: 1px solid var(--agentic-base-border, var(--kg-border, ButtonBorder)); background: var(--agentic-base-surface, var(--kg-panel-bg, Canvas)); color: inherit; display: inline-flex; align-items: center; gap: var(--agentic-control-padding-inline); inline-size: 100%; text-align: start; }
 .agentic-menu-popup { position: fixed; z-index: 2147483000; }
+${dashboardLayoutCss(profile)}
 @media (pointer: coarse), (max-width: 768px) {
   :root, :host { --agentic-row-height: var(--agentic-row-height-touch); --agentic-control-height: var(--agentic-control-height-touch); }
 }
