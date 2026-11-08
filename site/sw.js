@@ -1,8 +1,8 @@
-const CACHE_NAME = "agentic-design-system-v0.5.0-draft-registry-r12";
+const CACHE_NAME = "agentic-design-system-v0.5.0-draft-registry-r20";
 const CORE_FILES = [
-  "./", "./app.js?v=20261030-cumulative-layout", "./registry-query.js?v=c104158", "./catalog.json", "./catalog.schema.json",
+  "./", "./registry.css", "./floating-panel.css", "./toolbar.css", "./toolbar-icons.js", "./dashboard-columns.js", "./app.js?v=registry-toolbar-1", "./registry-query.js?v=c104158", "./catalog.json", "./catalog.schema.json",
   "./icons.json", "./tokens/commerce-profile.json", "./tokens/base-profile.json", "./tokens/graph-profile.json", "./tokens/shared-ui-profile.json",
-  "./vendor/base-profile.css", "./vendor/graph-profile.css", "./vendor/shared-ui-profile.css", "./THIRD-PARTY-NOTICES.txt", "./favicon.svg",
+  "./vendor/commerce-theme.css", "./vendor/base-profile.css", "./vendor/graph-profile.css", "./vendor/shared-ui-profile.css", "./THIRD-PARTY-NOTICES.txt", "./favicon.svg",
 ];
 const CACHEABLE_FILES = CORE_FILES;
 

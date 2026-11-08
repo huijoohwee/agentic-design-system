@@ -3,6 +3,8 @@ import { readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { dashboardLayoutCss } from "./dashboard-layout-css.mjs";
+
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const profilePath = resolve(root, "site/tokens/shared-ui-profile.json");
 const outputPath = resolve(root, "site/vendor/shared-ui-profile.css");
@@ -10,6 +12,9 @@ const TOKEN_KEY = /^[a-z][a-z0-9.-]{0,95}$/u;
 const CSS_VAR = /^--agentic-[a-z0-9-]{1,64}$/u;
 const DIMENSION = /^(?:0|[0-9]+(?:\.[0-9]+)?)(?:px|rem|em)$/u;
 // Closed inventory: CSS values are validated before projection.
+const channel = String.raw`(?:0|[1-9][0-9]{0,2})(?:\.[0-9]+)?`;
+const oklch = String.raw`oklch\(${channel}% ${channel} ${channel}(?: / 0\.[0-9]+)?\)`;
+const THEMED_COLOR = new RegExp(String.raw`^light-dark\(${oklch}, ${oklch}\)$`, "u");
 const EXPECTED = Object.freeze([
   [
     "icon.size.compact",
@@ -126,7 +131,20 @@ const EXPECTED = Object.freeze([
     "menu.gap",
     "--agentic-menu-gap",
     "dimension"
-  ]
+  ],
+  ["control.selected.foreground", "--agentic-control-selected-foreground", "themed-color"],
+  ["control.selected.background", "--agentic-control-selected-background", "themed-color"],
+  ["dashboard.card-gap", "--agentic-dashboard-card-gap", "dimension"],
+  ["dashboard.section-gap", "--agentic-dashboard-section-gap", "dimension"],
+  ["dashboard.inset", "--agentic-dashboard-inset", "dimension"],
+  ["dashboard.max-width", "--agentic-dashboard-max-width", "dimension"],
+  ["dashboard.hero-height", "--agentic-dashboard-hero-height", "dimension"],
+  ["dashboard.hero-height-wide", "--agentic-dashboard-hero-height-wide", "dimension"],
+  ["dashboard.breakpoint.medium", "--agentic-dashboard-breakpoint-medium", "dimension"],
+  ["dashboard.breakpoint.wide", "--agentic-dashboard-breakpoint-wide", "dimension"],
+  ["dashboard.primary", "--agentic-dashboard-primary", "themed-color"],
+  ["dashboard.secondary", "--agentic-dashboard-secondary", "themed-color"],
+  ["dashboard.success", "--agentic-dashboard-success", "themed-color"]
 ]);
 const digest = bytes => createHash("sha256").update(bytes).digest("hex");
 const fail = message => { throw new Error(`Invalid shared UI profile: ${message}`); };
@@ -140,7 +158,7 @@ export function validateSharedUiProfile(source) {
   const profile = JSON.parse(source);
   exactKeys(profile, ["schema", "id", "version", "status", "scope", "tokens"], "root");
   if (profile.schema !== "agentic-design-system/shared-ui-profile/v1" || profile.id !== "shared-ui"
-    || profile.version !== "0.7.0" || profile.status !== "candidate") fail("identity");
+    || profile.version !== "0.9.0" || profile.status !== "candidate") fail("identity");
   exactKeys(profile.scope, ["repository", "surfaces"], "scope");
   if (profile.scope.repository !== "github.com/huijoohwee/agentic-design-system"
     || JSON.stringify(profile.scope.surfaces) !== JSON.stringify(["shared-interface"])) fail("scope");
@@ -154,6 +172,7 @@ export function validateSharedUiProfile(source) {
       || (typeof token.value !== "string" || token.value.length > 256
         || token.type === "dimension" && !DIMENSION.test(token.value)
         || token.type === "number" && (!/^[0-9]+(?:\.[0-9]+)?$/u.test(token.value) || Number(token.value) < 0.5 || Number(token.value) > 4)
+        || token.type === "themed-color" && !THEMED_COLOR.test(token.value)
         || token.type === "font-family" && !/^[A-Za-z0-9 ,._-]+$/u.test(token.value)
         || token.type === "grid-template" && (!/^[A-Za-z0-9()., %-]+$/u.test(token.value) || /url|expression|\b(?:auto|none)\b/iu.test(token.value))) || keys.has(token.key) || variables.has(token.cssVar)) fail(`invalid token ${token.key ?? ""}`);
     keys.add(token.key);
@@ -165,6 +184,7 @@ export function validateSharedUiProfile(source) {
 
 export function renderSharedUiCss(profile, sourceRevision, profileDigest) {
   if (!/^[a-f0-9]{40}$/u.test(sourceRevision ?? "") || !/^[a-f0-9]{64}$/u.test(profileDigest ?? "")) fail("projection binding");
+  const selected = ':is(.agentic-control-selected, .agentic-toggle-group > button[aria-pressed="true"])';
   const declarations = profile.tokens.map(token => `  ${token.cssVar}: ${token.value};`);
   const input = 'input:not([type="hidden"], [type="file"], [type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="button"], [type="submit"], [type="reset"], [type="image"], [hidden], .sr-only, .file-input)';
   const nativeField = `:is(.agentic-form-controls :where(${input}, select, textarea), .agentic-input-controls :where(${input}, select))`;
@@ -172,6 +192,42 @@ export function renderSharedUiCss(profile, sourceRevision, profileDigest) {
   return `/* Generated from agentic-design-system@${sourceRevision}; profile sha256 ${profileDigest}. Do not edit. */
 :root, :host {
 ${declarations.join("\n")}
+}
+.agentic-toggle-group {
+  box-sizing: border-box; display: inline-flex; align-items: stretch;
+  min-inline-size: 0; max-inline-size: 100%; block-size: var(--agentic-control-height); overflow-x: auto;
+  scrollbar-width: none; border: 1px solid var(--agentic-base-border, var(--kg-border, ButtonBorder));
+  border-radius: var(--agentic-control-radius); background: var(--agentic-base-surface, var(--kg-panel-bg, Canvas));
+  color: var(--agentic-base-muted, var(--kg-text-secondary, CanvasText));
+  font: 500 var(--kg-text-xs, .75rem)/var(--kg-text-xs-line, 1rem) var(--agentic-font-sans);
+}
+.agentic-toggle-group > button {
+  display: inline-flex; flex: none; align-items: center; justify-content: center; gap: var(--agentic-control-padding-block);
+  margin: 0; padding: 0 var(--agentic-control-padding-inline); border: 0; border-radius: 0;
+  background: transparent; color: inherit; font: inherit; white-space: nowrap; cursor: pointer;
+}
+.agentic-toggle-group > button:where(:enabled:hover) { background: var(--agentic-base-hover, var(--kg-panel-action-bg-hover, color-mix(in srgb, currentColor 6%, transparent))); }
+${selected} { color: var(--agentic-control-selected-foreground); background-color: var(--agentic-control-selected-background); }
+.agentic-toggle-group > button:focus-visible { outline: var(--agentic-control-focus-width) solid var(--agentic-control-focus, Highlight); outline-offset: calc(-1 * var(--agentic-control-focus-width)); }
+.agentic-toggle-group > button:disabled { opacity: .5; cursor: not-allowed; }
+@media (forced-colors: active) {
+  ${selected} { color: HighlightText; background: Highlight; forced-color-adjust: none; }
+}
+.agentic-checkbox-group {
+  display: inline-flex; align-items: center; gap: var(--agentic-control-padding-block);
+  min-inline-size: 0; max-inline-size: 100%; overflow-x: auto;
+  margin: 0; padding: 0; border: 0;
+  font: var(--agentic-font-size-body)/var(--agentic-line-height-body) var(--agentic-font-sans);
+}
+.agentic-checkbox-group > label {
+  display: inline-flex; flex: none; align-items: center; gap: var(--agentic-control-padding-block);
+  box-sizing: border-box; min-block-size: var(--agentic-control-height); padding-inline: var(--agentic-control-padding-block);
+  margin: 0; white-space: nowrap; font: inherit; cursor: pointer;
+}
+.agentic-checkbox-group > label:has(:disabled) { opacity: .5; cursor: not-allowed; }
+.agentic-checkbox-group > label > input[type="checkbox"] {
+  flex: none; inline-size: var(--agentic-icon-size-default); block-size: var(--agentic-icon-size-default);
+  min-inline-size: 0; min-block-size: 0; margin: 0; padding: 0; cursor: inherit;
 }
 .agentic-panel-section { box-sizing: border-box; min-inline-size: 0; max-inline-size: 100%; padding-inline: calc(var(--agentic-control-padding-inline) + var(--agentic-control-padding-block)); }
 .agentic-panel-section-header { box-sizing: border-box; display: flex; min-inline-size: 0; max-inline-size: 100%; min-block-size: var(--agentic-row-height); align-items: center; justify-content: space-between; gap: var(--agentic-control-padding-block); padding-inline: var(--agentic-control-padding-inline); font: var(--agentic-font-size-body)/var(--agentic-line-height-body) var(--agentic-font-sans); }
@@ -241,6 +297,7 @@ textarea.agentic-form-control, .agentic-form-controls :where(textarea) {
 .agentic-select-source { display: none !important; }
 .agentic-select-trigger { border: 1px solid var(--agentic-base-border, var(--kg-border, ButtonBorder)); background: var(--agentic-base-surface, var(--kg-panel-bg, Canvas)); color: inherit; display: inline-flex; align-items: center; gap: var(--agentic-control-padding-inline); inline-size: 100%; text-align: start; }
 .agentic-menu-popup { position: fixed; z-index: 2147483000; }
+${dashboardLayoutCss(profile)}
 @media (pointer: coarse), (max-width: 768px) {
   :root, :host { --agentic-row-height: var(--agentic-row-height-touch); --agentic-control-height: var(--agentic-control-height-touch); }
 }

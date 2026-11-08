@@ -19,6 +19,7 @@ const expectedFiles = [
   "scripts/base-profile.mjs",
   "scripts/check-public-release.mjs",
   "scripts/commerce-profile.mjs",
+  "scripts/dashboard-layout-css.mjs", "scripts/dashboard-layout-service.mjs", "scripts/dashboard-layout-service.test.mjs",
   "scripts/design-registry.mjs",
   "scripts/design-system-icon-profile.mjs",
   "scripts/dev.mjs",
@@ -28,8 +29,10 @@ const expectedFiles = [
   "site/catalog.json",
   "site/catalog.schema.json",
   "site/favicon.svg",
+  "site/floating-panel.css", "site/toolbar.css", "site/toolbar-icons.js", "site/dashboard-columns.js",
   "site/index.html",
   "site/icons.json",
+  "site/registry.css",
   "site/registry-query.js",
   "site/sw.js",
   "site/tokens/base-profile.json",
@@ -37,6 +40,7 @@ const expectedFiles = [
   "site/tokens/graph-profile.json",
   "site/tokens/shared-ui-profile.json",
   "site/vendor/base-profile.css",
+  "site/vendor/commerce-theme.css",
   "site/vendor/graph-profile.css",
   "site/vendor/shared-ui-profile.css",
 ].sort();
@@ -161,7 +165,15 @@ if (profile.schema !== "agentic-os/repository-profile/v1"
 }
 
 const catalog = JSON.parse(await readFile(resolve(root, "site/catalog.json"), "utf8"));
-verifyContentSecurityPolicy(await readFile(resolve(root, "site/index.html"), "utf8"));
+const registryHtml = await readFile(resolve(root, "site/index.html"), "utf8");
+verifyContentSecurityPolicy(registryHtml);
+const registryCss = await readFile(resolve(root, "site/registry.css"), "utf8");
+for (const asset of ["graph-profile", "commerce-theme", "shared-ui-profile"]) {
+  if (!registryHtml.includes(`<link rel="stylesheet" href="./vendor/${asset}.css">`)) fail(`Registry must load its pinned ${asset} stylesheet`);
+}
+if (/<style\b|\sstyle\s*=/iu.test(registryHtml) || /(?:^|[;{])\s*(?:--[\w-]+|grid-template-columns|border-radius)\s*:|\.agentic-(?:toolbar|base-floating-panel|floating-panel|dashboard|control|toggle|icon|form|panel|ktv)\b|#[0-9a-f]{3,8}\b|\b(?:rgba?|hsla?|oklch)\(/iu.test(registryCss)) {
+  fail("Registry styling must consume the generated palette and dashboard classes without overrides");
+}
 assertCspFailClosedFixtures();
 if (catalog.$schema !== "./catalog.schema.json" || catalog.catalogId !== "agentic-design-system"
   || catalog.requestedPath !== "/agentic-design-system/" || !/^\d+\.\d+\.\d+$/u.test(catalog.schemaVersion)

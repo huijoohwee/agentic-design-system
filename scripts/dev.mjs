@@ -1,3 +1,5 @@
+import { createLayoutService } from './dashboard-layout-service.mjs';
+import { homedir } from 'node:os';
 import { constants } from "node:fs";
 import { open } from "node:fs/promises";
 import { createServer } from "node:http";
@@ -15,9 +17,9 @@ if (!/^(?:0|[1-9][0-9]{0,4})$/u.test(portText) || Number(portText) > 65535) {
 }
 
 const files = new Set([
-  "icons.json", "index.html", "app.js", "registry-query.js", "sw.js", "favicon.svg", "catalog.json", "catalog.schema.json", "THIRD-PARTY-NOTICES.txt",
+  "icons.json", "index.html", "floating-panel.css", "toolbar.css", "toolbar-icons.js", "dashboard-columns.js", "registry.css", "app.js", "registry-query.js", "sw.js", "favicon.svg", "catalog.json", "catalog.schema.json", "THIRD-PARTY-NOTICES.txt",
   "tokens/commerce-profile.json", "tokens/base-profile.json", "tokens/graph-profile.json", "tokens/shared-ui-profile.json",
-  "vendor/base-profile.css", "vendor/graph-profile.css", "vendor/shared-ui-profile.css",
+  "vendor/commerce-theme.css", "vendor/base-profile.css", "vendor/graph-profile.css", "vendor/shared-ui-profile.css",
 ]);
 const types = new Map([
   [".css", "text/css; charset=utf-8"], [".html", "text/html; charset=utf-8"],
@@ -39,7 +41,10 @@ async function readPublicFile(relativePath) {
   }
 }
 
+const stateDir = resolve(process.env.DESIGN_LAYOUT_STATE_DIR || resolve(homedir(), '.local/state/agentic-design-system/dashboard'));
+const layoutService = createLayoutService(stateDir, process.env.DESIGN_LAYOUT_ADMIN === '1');
 const server = createServer(async (request, response) => {
+  if (['/dashboard-layout','/dashboard-layout/session'].includes(request.url)) return layoutService(request,response);
   if (!["GET", "HEAD"].includes(request.method ?? "")) {
     response.writeHead(405, { Allow: "GET, HEAD", "Cache-Control": "no-store" }).end();
     return;

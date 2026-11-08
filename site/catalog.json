@@ -158,7 +158,7 @@
         "id": "agentic-design-system",
         "name": "Agentic Design System",
         "repository": "github.com/huijoohwee/agentic-design-system",
-        "revision": "51bf1fcaa6b5610f174dd428363482114d888364",
+        "revision": "f73934c884a6ae8d1c7d0521408014dde20a6c2d",
         "scopes": [
           "shared-ui"
         ],
@@ -168,7 +168,7 @@
           {
             "path": "site/tokens/shared-ui-profile.json",
             "kind": "native",
-            "digest": "sha256:6f73913636991d71c1e29d51ee3b7ea71011047c9a7a9e6b1ee7c517b0c8893b"
+            "digest": "sha256:535938ec2d0ee316adab606bb888348a491d5d860a2b9ca4ffd7d88c4310f822"
           }
         ]
       }
@@ -181,6 +181,10 @@
         "repository": "github.com/huijoohwee/agentic-design-system",
         "revision": "c18253b35e8bcc0bed548cfb717ec31909422dbe",
         "source": "./tokens/commerce-profile.json",
+        "projection": {
+          "path": "./vendor/commerce-theme.css",
+          "digest": "sha256:c512ee76dc6160ff41e8bac9706b8e8d0b9e56f42b6c4b128594605e19c93474"
+        },
         "digest": "sha256:000adeb267d0d0ff9527e1227faefcd5fd2c15faee463fa70173204783ea7c9e",
         "scope": [
           "commerce",
@@ -283,15 +287,15 @@
         "name": "Shared UI profile",
         "owner": "github.com/huijoohwee/agentic-design-system",
         "repository": "github.com/huijoohwee/agentic-design-system",
-        "revision": "51bf1fcaa6b5610f174dd428363482114d888364",
+        "revision": "f73934c884a6ae8d1c7d0521408014dde20a6c2d",
         "source": "./tokens/shared-ui-profile.json",
-        "digest": "sha256:6f73913636991d71c1e29d51ee3b7ea71011047c9a7a9e6b1ee7c517b0c8893b",
+        "digest": "sha256:535938ec2d0ee316adab606bb888348a491d5d860a2b9ca4ffd7d88c4310f822",
         "scope": [
           "shared-interface"
         ],
         "status": "candidate",
         "rights": "cleared",
-        "permissionEvidence": "User instructions on 2026-11-03, 2026-11-06 and 2026-11-07: Agentic Design System owns shared icon sizes, responsive row/toolbar heights, body typography, font families, KTV tracks and responsive dropdown/textbox geometry for Base, Graph, Commerce, and related repositories.",
+        "permissionEvidence": "User instructions on 2026-11-03, 2026-11-06 and 2026-11-07: Agentic Design System owns shared icon sizes, responsive row/toolbar heights, body typography, font families, KTV tracks and responsive dropdown/textbox geometry for Base, Graph, Commerce, and related repositories. User instruction on 2026-11-08 covers the shared Mission dashboard layout.",
         "licenseEvidence": [
           {
             "repository": "github.com/huijoohwee/agentic-design-system",
@@ -303,7 +307,7 @@
         "consumerPins": [],
         "projection": {
           "path": "./vendor/shared-ui-profile.css",
-          "digest": "sha256:c22658f24562fb5e8d9a2f0c106c14711033cdda3bf37dc74469331be9858dc8"
+          "digest": "sha256:ae12d3e40d91c926e5d522e35f3254d97c030596524e861b31b72835ab21f424"
         }
       }
     ]

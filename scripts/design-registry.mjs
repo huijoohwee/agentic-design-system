@@ -303,6 +303,7 @@ function assertRegistry(registry) {
   if (commerce.id !== "commerce" || commerce.owner !== registry.owner || commerce.repository !== registry.owner
     || commerce.revision !== "c18253b35e8bcc0bed548cfb717ec31909422dbe" || commerce.source !== "./tokens/commerce-profile.json"
     || commerce.digest !== "sha256:000adeb267d0d0ff9527e1227faefcd5fd2c15faee463fa70173204783ea7c9e"
+    || commerce.projection?.path !== "./vendor/commerce-theme.css"
     || commerce.rights !== "cleared" || commerce.permissionEvidence !== "User instruction on 2026-10-29 to centralize the named product repositories in Agentic Design System."
     || JSON.stringify(commerce.scope) !== JSON.stringify(["commerce", "shop", "vendor", "admin", "sme-business-pack"])) fail("Commerce candidate profile binding");
   if (JSON.stringify(commerce.licenseEvidence) !== JSON.stringify([
@@ -311,7 +312,7 @@ function assertRegistry(registry) {
   ]) || commerce.consumerPins.length !== 1 || JSON.stringify(commerce.consumerPins[0]) !== JSON.stringify({
     repository: "github.com/huijoohwee/agentic-commerce-os", revision: "6ce3bc918717b97a738ac831dfb4fb3319a02fb6",
     path: "public/local-first/commerce-theme.css", digest: "sha256:c512ee76dc6160ff41e8bac9706b8e8d0b9e56f42b6c4b128594605e19c93474",
-  }) || commerce.projection) fail("Commerce rights or consumer pin evidence");
+  }) || commerce.projection.digest !== commerce.consumerPins[0].digest) fail("Commerce rights or consumer pin evidence");
   if (base.id !== "base" || base.owner !== registry.owner || base.repository !== registry.owner
     || base.revision !== "bc1921bbcf56e1abb11fef2593917e5459d58df1" || base.source !== "./tokens/base-profile.json"
     || base.status !== "candidate" || base.rights !== "cleared" || base.scope.join(",") !== "shared-data-view"
@@ -328,7 +329,7 @@ function assertRegistry(registry) {
     || !/^([a-f0-9]{40})$/u.test(sharedUi.revision) || sharedUi.source !== "./tokens/shared-ui-profile.json"
     || !/^sha256:[a-f0-9]{64}$/u.test(sharedUi.digest)
     || sharedUi.rights !== "cleared" || sharedUi.scope.join(",") !== "shared-interface"
-    || sharedUi.permissionEvidence !== "User instructions on 2026-11-03, 2026-11-06 and 2026-11-07: Agentic Design System owns shared icon sizes, responsive row/toolbar heights, body typography, font families, KTV tracks and responsive dropdown/textbox geometry for Base, Graph, Commerce, and related repositories."
+    || sharedUi.permissionEvidence !== "User instructions on 2026-11-03, 2026-11-06 and 2026-11-07: Agentic Design System owns shared icon sizes, responsive row/toolbar heights, body typography, font families, KTV tracks and responsive dropdown/textbox geometry for Base, Graph, Commerce, and related repositories. User instruction on 2026-11-08 covers the shared Mission dashboard layout."
     || sharedUi.licenseEvidence.length !== 1 || sharedUi.consumerPins.length !== 0
     || sharedUi.projection?.path !== "./vendor/shared-ui-profile.css") fail("shared UI profile binding");
   const sharedUiOwner = registry.owners.find(owner => owner.id === "agentic-design-system");
@@ -450,14 +451,14 @@ export async function checkDesignRegistry() {
   const graphRef = profileRefs.find(ref => ref.id === "graph");
   const sharedUiRef = profileRefs.find(ref => ref.id === "shared-ui");
   const commerceRef = profileRefs.find(ref => ref.id === "commerce");
+  const commerceProjection = Buffer.from(renderCommerceCss(commerce, commerceRef.revision, sha(profileBytes.get("commerce"))));
   const baseProjection = Buffer.from(renderBaseCss(base, base.source.revision, sha(profileBytes.get("base"))));
   const graphProjection = Buffer.from(renderGraphCss(graph, sha(profileBytes.get("graph"))));
   const sharedUiProjection = Buffer.from(renderSharedUiCss(sharedUi, sharedUiRef.revision, sha(profileBytes.get("shared-ui"))));
-  for (const [ref, projection] of [[baseRef, baseProjection], [graphRef, graphProjection], [sharedUiRef, sharedUiProjection]]) {
+  for (const [ref, projection] of [[commerceRef, commerceProjection], [baseRef, baseProjection], [graphRef, graphProjection], [sharedUiRef, sharedUiProjection]]) {
     const output = await readFile(resolve(root, "site", ref.projection.path.slice(2)));
     if (!output.equals(projection) || `sha256:${sha(output)}` !== ref.projection.digest) fail(`${ref.id} generated projection drift`);
   }
-  const commerceProjection = Buffer.from(renderCommerceCss(commerce, commerceRef.revision, sha(profileBytes.get("commerce"))));
   if (`sha256:${sha(commerceProjection)}` !== commerceRef.consumerPins[0].digest) fail("Commerce generated consumer projection pin drift");
   const notices = await readFile(resolve(root, "site/THIRD-PARTY-NOTICES.txt"), "utf8");
   const graphOwner = catalog.registry.owners.find(owner => owner.id === "agentic-graph");
@@ -502,7 +503,7 @@ export async function checkDesignRegistry() {
   console.log(`PASS design-owner-registry-check · ${catalog.registry.owners.length} source owners and ${profiles.length} digest-pinned candidate profiles.`);
   console.log(`PASS design-singleton-enforcement-check · ${claims.length} globally unique keys and variables across four profiles; duplicate and override fixtures rejected; ${declarations.length} owner/projection declarations.`);
   console.log("PASS design-agent-tool-contract-check · browser WebMCP and newline-delimited stdio MCP share read-only schemas and handlers.");
-  console.log("PASS design-generated-output-check · Base, Graph, and shared UI projections match their profile pins; Commerce CSS matches its consumer pin.");
+  console.log("PASS design-generated-output-check · All four projections match their profile pins; Commerce CSS also matches its consumer pin.");
   console.log("PASS design-license-boundary-check · Commerce/Base MIT evidence and the eight-source Graph token grant are pinned; Graph source remains private outside that scope.");
   console.log("Scope: four candidate profiles are central and globally unique; consumer projection pins are not an all-repository scan or parity claim.");
 }
