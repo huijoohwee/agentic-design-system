@@ -122,7 +122,7 @@
       "key": "control.border",
       "cssVar": "--agentic-control-border",
       "type": "border",
-      "value": "1px solid var(--agentic-base-border, var(--kg-border, var(--commerce-control-border, ButtonBorder)))"
+      "value": "1px solid var(--agentic-base-border, var(--commerce-control-border, var(--kg-border, ButtonBorder)))"
     },
     {
       "key": "control.focus-width",
