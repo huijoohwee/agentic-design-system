@@ -5,6 +5,7 @@ import { open } from "node:fs/promises";
 import { createServer } from "node:http";
 import { extname, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
+import { prepareLocalDevHtml } from "./dev-csp.mjs";
 
 const site = resolve(fileURLToPath(new URL("../site", import.meta.url)));
 const host = "127.0.0.1";
@@ -26,7 +27,6 @@ const types = new Map([
   [".js", "text/javascript; charset=utf-8"], [".json", "application/json; charset=utf-8"],
   [".txt", "text/plain; charset=utf-8"], [".svg", "image/svg+xml"],
 ]);
-
 async function readPublicFile(relativePath) {
   if (!files.has(relativePath)) return null;
   const path = resolve(site, relativePath);
@@ -58,19 +58,26 @@ const server = createServer(async (request, response) => {
   }
   const relativePath = pathname === "/" ? "index.html" : pathname.replace(/^\//u, "");
   try {
-    const body = await readPublicFile(relativePath);
+    let body = await readPublicFile(relativePath);
     if (!body) {
       response.writeHead(404, { "Cache-Control": "no-store" }).end("Not found");
       return;
     }
-    response.writeHead(200, {
+    const headers = {
       "Content-Length": body.byteLength,
       "Content-Type": types.get(extname(relativePath)) ?? "application/octet-stream",
       "Cache-Control": "no-store",
       "X-Content-Type-Options": "nosniff",
       "Referrer-Policy": "no-referrer",
       "Cross-Origin-Resource-Policy": "same-origin",
-    });
+    };
+    const devHtml = prepareLocalDevHtml(relativePath, headers["Content-Type"], body);
+    if (devHtml) {
+      body = devHtml.body;
+      headers["Content-Length"] = body.byteLength;
+      headers["Content-Security-Policy-Report-Only"] = devHtml.reportOnlyPolicy;
+    }
+    response.writeHead(200, headers);
     response.end(request.method === "HEAD" ? undefined : body);
   } catch (error) {
     const status = error.code === "ENOENT" ? 404 : 500;

@@ -5,6 +5,7 @@ import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { validateIconLibrary } from "./design-system-icon-profile.mjs";
 import { checkDesignRegistry } from "./design-registry.mjs";
+import { prepareLocalDevHtml } from "./dev-csp.mjs";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const expectedFiles = [
@@ -22,7 +23,7 @@ const expectedFiles = [
   "scripts/dashboard-layout-css.mjs", "scripts/dashboard-layout-service.mjs", "scripts/dashboard-layout-service.test.mjs",
   "scripts/design-registry.mjs",
   "scripts/design-system-icon-profile.mjs",
-  "scripts/dev.mjs",
+  "scripts/dev-csp.mjs", "scripts/dev.mjs",
   "scripts/graph-profile.mjs",
   "site/THIRD-PARTY-NOTICES.txt",
   "site/app.js",
@@ -107,6 +108,26 @@ function assertCspFailClosedFixtures() {
   mustReject(`<meta http-equiv="Content-Security-Policy" content="${unsafeStylePolicy}">`, 'unsafe inline styles');
 }
 
+function assertLocalDevCspFixtures(indexHtml) {
+  const match = indexHtml.match(/<meta\s+http-equiv="Content-Security-Policy"\s+content="([^"]+)"\s*>/iu);
+  if (!match) fail("Local Dev CSP fixture requires the production policy source");
+  const dev = prepareLocalDevHtml("index.html", "text/html; charset=utf-8", Buffer.from(indexHtml));
+  if (!dev || dev.reportOnlyPolicy !== `${match[1]}; style-src-elem 'self' 'unsafe-inline'`
+    || /<meta\s+http-equiv="Content-Security-Policy"/iu.test(dev.body.toString("utf8"))) {
+    fail("Local Dev must derive one report-only annotation exception from the strict static CSP");
+  }
+  if (prepareLocalDevHtml("registry.css", "text/css; charset=utf-8", Buffer.from("body {}")) !== null
+    || prepareLocalDevHtml("index.html", "text/css; charset=utf-8", Buffer.from(indexHtml)) !== null) {
+    fail("Local annotation CSP exception must be limited to the local HTML response");
+  }
+  const mustReject = (html, label) => {
+    try { prepareLocalDevHtml("index.html", "text/html; charset=utf-8", Buffer.from(html)); } catch { return; }
+    fail(`Local Dev CSP accepted ${label}`);
+  };
+  mustReject(indexHtml.replace(match[1], `${match[1]}; style-src-elem 'self'`), "an overlapping style-src-elem directive");
+  mustReject(indexHtml.replace(match[1], match[1].replace("style-src 'self'", "style-src 'self' 'unsafe-inline'")), "an unsafe production base policy");
+}
+
 function stableJson(value) {
   if (Array.isArray(value)) return `[${value.map(stableJson).join(",")}]`;
   if (value && typeof value === "object") {
@@ -172,6 +193,7 @@ if (profile.schema !== "agentic-os/repository-profile/v1"
 const catalog = JSON.parse(await readFile(resolve(root, "site/catalog.json"), "utf8"));
 const registryHtml = await readFile(resolve(root, "site/index.html"), "utf8");
 verifyContentSecurityPolicy(registryHtml);
+assertLocalDevCspFixtures(registryHtml.toString("utf8"));
 const registryCss = await readFile(resolve(root, "site/registry.css"), "utf8");
 for (const asset of ["graph-profile", "commerce-theme", "shared-ui-profile"]) {
   if (!registryHtml.includes(`<link rel="stylesheet" href="./vendor/${asset}.css">`)) fail(`Registry must load its pinned ${asset} stylesheet`);
