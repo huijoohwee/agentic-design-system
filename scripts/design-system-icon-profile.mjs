@@ -11,6 +11,7 @@ const outputPath = resolve(root, "site/vendor/shared-ui-profile.css");
 const TOKEN_KEY = /^[a-z][a-z0-9.-]{0,95}$/u;
 const CSS_VAR = /^--agentic-[a-z0-9-]{1,64}$/u;
 const DIMENSION = /^(?:0|[0-9]+(?:\.[0-9]+)?)(?:px|rem|em)$/u;
+const BORDER = /^1px solid var\(--agentic-base-border, var\(--kg-border, var\(--commerce-control-border, ButtonBorder\)\)\)$/u;
 // Closed inventory: CSS values are validated before projection.
 const channel = String.raw`(?:0|[1-9][0-9]{0,2})(?:\.[0-9]+)?`;
 const oklch = String.raw`oklch\(${channel}% ${channel} ${channel}(?: / 0\.[0-9]+)?\)`;
@@ -103,6 +104,11 @@ const EXPECTED = Object.freeze([
     "dimension"
   ],
   [
+    "control.border",
+    "--agentic-control-border",
+    "border"
+  ],
+  [
     "control.focus-width",
     "--agentic-control-focus-width",
     "dimension"
@@ -158,7 +164,7 @@ export function validateSharedUiProfile(source) {
   const profile = JSON.parse(source);
   exactKeys(profile, ["schema", "id", "version", "status", "scope", "tokens"], "root");
   if (profile.schema !== "agentic-design-system/shared-ui-profile/v1" || profile.id !== "shared-ui"
-    || profile.version !== "0.9.0" || profile.status !== "candidate") fail("identity");
+    || profile.version !== "0.10.0" || profile.status !== "candidate") fail("identity");
   exactKeys(profile.scope, ["repository", "surfaces"], "scope");
   if (profile.scope.repository !== "github.com/huijoohwee/agentic-design-system"
     || JSON.stringify(profile.scope.surfaces) !== JSON.stringify(["shared-interface"])) fail("scope");
@@ -172,6 +178,7 @@ export function validateSharedUiProfile(source) {
       || (typeof token.value !== "string" || token.value.length > 256
         || token.type === "dimension" && !DIMENSION.test(token.value)
         || token.type === "number" && (!/^[0-9]+(?:\.[0-9]+)?$/u.test(token.value) || Number(token.value) < 0.5 || Number(token.value) > 4)
+        || token.type === "border" && !BORDER.test(token.value)
         || token.type === "themed-color" && !THEMED_COLOR.test(token.value)
         || token.type === "font-family" && !/^[A-Za-z0-9 ,._-]+$/u.test(token.value)
         || token.type === "grid-template" && (!/^[A-Za-z0-9()., %-]+$/u.test(token.value) || /url|expression|\b(?:auto|none)\b/iu.test(token.value))) || keys.has(token.key) || variables.has(token.cssVar)) fail(`invalid token ${token.key ?? ""}`);
@@ -188,7 +195,7 @@ export function renderSharedUiCss(profile, sourceRevision, profileDigest) {
   const declarations = profile.tokens.map(token => `  ${token.cssVar}: ${token.value};`);
   const input = 'input:not([type="hidden"], [type="file"], [type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="button"], [type="submit"], [type="reset"], [type="image"], [hidden], .sr-only, .file-input)';
   const nativeField = `:is(.agentic-form-controls :where(${input}, select, textarea), .agentic-input-controls :where(${input}, select))`;
-  const field = `.agentic-form-control, ${nativeField}`;
+  const field = `.agentic-form-control, ${nativeField}, .agentic-select-trigger`;
   return `/* Generated from agentic-design-system@${sourceRevision}; profile sha256 ${profileDigest}. Do not edit. */
 :root, :host {
 ${declarations.join("\n")}
@@ -196,7 +203,7 @@ ${declarations.join("\n")}
 .agentic-toggle-group {
   box-sizing: border-box; display: inline-flex; align-items: stretch;
   min-inline-size: 0; max-inline-size: 100%; block-size: var(--agentic-control-height); overflow-x: auto;
-  scrollbar-width: none; border: 1px solid var(--agentic-base-border, var(--kg-border, ButtonBorder));
+  scrollbar-width: none; border: var(--agentic-control-border);
   border-radius: var(--agentic-control-radius); background: var(--agentic-base-surface, var(--kg-panel-bg, Canvas));
   color: var(--agentic-base-muted, var(--kg-text-secondary, CanvasText));
   font: 500 var(--kg-text-xs, .75rem)/var(--kg-text-xs-line, 1rem) var(--agentic-font-sans);
@@ -249,7 +256,7 @@ ${selected} { color: var(--agentic-control-selected-foreground); background-colo
 .agentic-icon-color { color: var(--agentic-base-muted, var(--kg-text-secondary, CanvasText)); }
 .agentic-icon-hover:is(:hover, :focus-visible) { background: var(--agentic-base-hover, var(--kg-panel-action-bg-hover, Canvas)); }
 .agentic-icon-padding { padding: var(--agentic-control-padding-block); }
-.agentic-icon-pill, .agentic-icon-badge { display: inline-flex; align-items: center; justify-content: center; gap: var(--agentic-control-padding-block); min-inline-size: 0; max-inline-size: 100%; box-sizing: border-box; min-block-size: var(--agentic-control-height); padding: 0 var(--agentic-control-padding-inline); border: 1px solid var(--agentic-base-border, var(--kg-border, ButtonBorder)); border-radius: var(--agentic-control-radius); white-space: nowrap; }
+.agentic-icon-pill, .agentic-icon-badge { display: inline-flex; align-items: center; justify-content: center; gap: var(--agentic-control-padding-block); min-inline-size: 0; max-inline-size: 100%; box-sizing: border-box; min-block-size: var(--agentic-control-height); padding: 0 var(--agentic-control-padding-inline); border: var(--agentic-control-border); border-radius: var(--agentic-control-radius); white-space: nowrap; }
 .agentic-icon-text, .agentic-icon-pill, .agentic-icon-badge { font: var(--agentic-font-size-body)/var(--agentic-line-height-body) var(--agentic-font-sans); }
 @container agentic-ktv (width < ${profile.tokens.find(token => token.key === "layout.ktv.stack-breakpoint").value}) {
   .agentic-ktv-row { grid-template-columns: var(--agentic-ktv-columns-narrow); }
@@ -258,7 +265,7 @@ ${selected} { color: var(--agentic-control-selected-foreground); background-colo
 ${field} {
   box-sizing: border-box; min-inline-size: 0; max-inline-size: 100%;
   block-size: var(--agentic-control-height); min-block-size: var(--agentic-control-height);
-  padding-block: 0; padding-inline: var(--agentic-control-padding-inline); border-radius: var(--agentic-control-radius);
+  padding-block: 0; padding-inline: var(--agentic-control-padding-inline); border: var(--agentic-control-border); border-radius: var(--agentic-control-radius);
   font-family: var(--agentic-font-sans); font-size: var(--agentic-font-size-body); line-height: var(--agentic-line-height-body);
 }
 textarea.agentic-form-control, .agentic-form-controls :where(textarea) {
@@ -275,7 +282,7 @@ textarea.agentic-form-control, .agentic-form-controls :where(textarea) {
   display: flex; flex-direction: column; gap: var(--agentic-menu-gap); min-inline-size: 0;
   color: var(--agentic-base-text, var(--kg-text-primary, CanvasText));
   background: var(--agentic-base-surface, var(--kg-panel-bg, Canvas));
-  border: 1px solid var(--agentic-base-border, var(--kg-border, ButtonBorder));
+  border: var(--agentic-control-border);
   border-radius: var(--agentic-control-radius); box-shadow: var(--kg-shadow-overlay, 0 8px 24px rgb(0 0 0 / .12));
   font: var(--agentic-font-size-body)/var(--agentic-line-height-body) var(--agentic-font-sans);
   max-block-size: calc(100dvh - var(--agentic-menu-edge-gap) - var(--agentic-menu-edge-gap));
@@ -295,7 +302,7 @@ textarea.agentic-form-control, .agentic-form-controls :where(textarea) {
 .agentic-menu-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; min-inline-size: 0; }
 .agentic-menu-mark { inline-size: var(--agentic-icon-size-default); flex: 0 0 auto; text-align: center; }
 .agentic-select-source { display: none !important; }
-.agentic-select-trigger { border: 1px solid var(--agentic-base-border, var(--kg-border, ButtonBorder)); background: var(--agentic-base-surface, var(--kg-panel-bg, Canvas)); color: inherit; display: inline-flex; align-items: center; gap: var(--agentic-control-padding-inline); inline-size: 100%; text-align: start; }
+.agentic-select-trigger { background: var(--agentic-base-surface, var(--kg-panel-bg, Canvas)); color: inherit; display: inline-flex; align-items: center; gap: var(--agentic-control-padding-inline); inline-size: 100%; text-align: start; }
 .agentic-menu-popup { position: fixed; z-index: 2147483000; }
 ${dashboardLayoutCss(profile)}
 @media (pointer: coarse), (max-width: 768px) {
