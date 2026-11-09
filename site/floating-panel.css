@@ -4,7 +4,7 @@
   position: relative; display: flex; box-sizing: border-box; min-width: 0; min-height: 0;
   max-width: calc(100vw - 2 * var(--agentic-menu-edge-gap)); max-height: calc(100dvh - 2 * var(--agentic-menu-edge-gap));
   overflow: hidden; pointer-events: auto; border: 1px solid var(--base-border, var(--kg-border, ButtonBorder));
-  border-radius: var(--island-radius, var(--agentic-control-radius)); box-shadow: var(--base-shadow-overlay, var(--kg-shadow-overlay, none));
+  border-radius: var(--agentic-floating-panel-radius); box-shadow: var(--base-shadow-overlay, var(--kg-shadow-overlay, none));
   color: var(--base-text-primary, var(--kg-text-primary, CanvasText)); background: var(--base-panel, var(--kg-panel-bg, Canvas));
   font: var(--agentic-font-size-body)/var(--agentic-line-height-body) var(--agentic-font-sans);
 }

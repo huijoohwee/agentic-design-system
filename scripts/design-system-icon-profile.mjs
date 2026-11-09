@@ -79,6 +79,11 @@ const EXPECTED = Object.freeze([
     "dimension"
   ],
   [
+    "overlay.floating.radius",
+    "--agentic-floating-panel-radius",
+    "dimension"
+  ],
+  [
     "control.height",
     "--agentic-control-height",
     "dimension"
@@ -164,7 +169,7 @@ export function validateSharedUiProfile(source) {
   const profile = JSON.parse(source);
   exactKeys(profile, ["schema", "id", "version", "status", "scope", "tokens"], "root");
   if (profile.schema !== "agentic-design-system/shared-ui-profile/v1" || profile.id !== "shared-ui"
-    || profile.version !== "0.10.0" || profile.status !== "candidate") fail("identity");
+    || profile.version !== "0.10.1" || profile.status !== "candidate") fail("identity");
   exactKeys(profile.scope, ["repository", "surfaces"], "scope");
   if (profile.scope.repository !== "github.com/huijoohwee/agentic-design-system"
     || JSON.stringify(profile.scope.surfaces) !== JSON.stringify(["shared-interface"])) fail("scope");
