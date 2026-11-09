@@ -11,7 +11,7 @@ const outputPath = resolve(root, "site/vendor/shared-ui-profile.css");
 const TOKEN_KEY = /^[a-z][a-z0-9.-]{0,95}$/u;
 const CSS_VAR = /^--agentic-[a-z0-9-]{1,64}$/u;
 const DIMENSION = /^(?:0|[0-9]+(?:\.[0-9]+)?)(?:px|rem|em)$/u;
-const BORDER = /^1px solid var\(--agentic-base-border, var\(--kg-border, var\(--commerce-control-border, ButtonBorder\)\)\)$/u;
+const BORDER = /^1px solid var\(--agentic-base-border, var\(--commerce-control-border, var\(--kg-border, ButtonBorder\)\)\)$/u;
 // Closed inventory: CSS values are validated before projection.
 const channel = String.raw`(?:0|[1-9][0-9]{0,2})(?:\.[0-9]+)?`;
 const oklch = String.raw`oklch\(${channel}% ${channel} ${channel}(?: / 0\.[0-9]+)?\)`;
