@@ -39,6 +39,7 @@ jobs:
           node --check scripts/check-public-release.mjs
           node --check scripts/commerce-profile.mjs
           node --check scripts/design-registry.mjs
+          node --check scripts/dev-csp.mjs
           node --check scripts/dev.mjs
           node --check scripts/graph-profile.mjs
 

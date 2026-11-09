@@ -36,6 +36,10 @@ The server prints its local URL. It serves only the static site on `127.0.0.1`; 
 same catalog and pinned profile files used by the registry check. No backend or runtime network
 service is used.
 
+The local HTML response derives a report-only CSP from the static policy and adds only
+`style-src-elem 'unsafe-inline'` for browser annotation overlays that inject a shadow-root stylesheet.
+The strict production policy remains in `site/index.html`; release validation checks that policy separately.
+
 ## Verify
 
 The GitHub Actions **Integration Gate** checks JavaScript syntax, the catalog and owner-registry
