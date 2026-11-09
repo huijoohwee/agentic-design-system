@@ -20,7 +20,7 @@
   ],
   "capabilities": [
     "protected-integration:pull-request",
-    "quarantine-worktree-cleanup-opt-in"
+    "remove-clean-worktree-cleanup-opt-in"
   ],
   "authority": {
     "runtime": "consumer",
@@ -31,8 +31,8 @@
     "remoteBranch": "retain",
     "remoteTrackingRef": "retain",
     "unreachableObjects": "retain",
-    "worktreeProjection": "quarantine",
-    "worktreeRegistration": "quarantine"
+    "worktreeProjection": "remove-clean",
+    "worktreeRegistration": "remove-clean"
   },
-  "profileDigest": "25918e9c4feb951ea73b2452974017595d29ce2f45ba6c6493ed65f743326815"
+  "profileDigest": "b738aa4a5310260cb0d36ac888352bf7449d62468d1148e992d3610a3d0a2b3f"
 }

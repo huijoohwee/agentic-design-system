@@ -153,15 +153,20 @@ for (const path of expectedFiles) {
 
 const profile = JSON.parse(await readFile(resolve(root, ".agentic-os.json"), "utf8"));
 const { profileDigest, ...profileContent } = profile;
+const cleanupMode = profile.cleanup?.worktreeProjection;
+const cleanupCapability = cleanupMode === "remove-clean"
+  ? "remove-clean-worktree-cleanup-opt-in"
+  : cleanupMode === "quarantine" ? "quarantine-worktree-cleanup-opt-in" : null;
 if (profile.schema !== "agentic-os/repository-profile/v1"
   || profile.repository !== "github.com/huijoohwee/agentic-design-system"
   || profile.requiredChecks?.length !== 1 || profile.requiredChecks[0] !== "Integration Gate"
   || !profile.capabilities?.includes("protected-integration:pull-request")
-  || !profile.capabilities?.includes("quarantine-worktree-cleanup-opt-in")
-  || profile.cleanup?.worktreeProjection !== "quarantine"
-  || profile.cleanup?.worktreeRegistration !== "quarantine"
+  || !cleanupCapability || !profile.capabilities?.includes(cleanupCapability)
+  || profile.capabilities?.includes(cleanupMode === "remove-clean"
+    ? "quarantine-worktree-cleanup-opt-in" : "remove-clean-worktree-cleanup-opt-in")
+  || profile.cleanup?.worktreeRegistration !== cleanupMode
   || createHash("sha256").update(stableJson(profileContent)).digest("hex") !== profileDigest) {
-  fail("Repository release profile does not bind the public CI and quarantine policy");
+  fail("Repository release profile does not bind the public CI and worktree cleanup policy");
 }
 
 const catalog = JSON.parse(await readFile(resolve(root, "site/catalog.json"), "utf8"));
