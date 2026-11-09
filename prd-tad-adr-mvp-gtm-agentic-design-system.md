@@ -1,19 +1,19 @@
 ---
 title: "Agentic Design System — Shared Ownership and Singleton Tokens"
 doc_type: "PRD-TAD-ADR-MVP-GTM"
-version: "0.9.27"
-revision: "0.9.27"
+version: "0.9.28"
+revision: "0.9.28"
 date: "2026-10-29"
-updated_date: "2026-11-08"
+updated_date: "2026-11-10"
 lang: "en-US"
 frontmatter_contract: "required"
 owner: "Design-system product function"
 continuity_id: "DESIGN-TOKEN-ADOPTION-001"
-prd_revision: "0.9.27"
-tad_revision: "0.9.27"
-adr_revision: "0.9.27"
-mvp_revision: "0.9.27"
-gtm_revision: "0.9.27"
+prd_revision: "0.9.28"
+tad_revision: "0.9.28"
+adr_revision: "0.9.28"
+mvp_revision: "0.9.28"
+gtm_revision: "0.9.28"
 local_rung: "dev-proven"
 delivered_rung: "undocumented"
 lane: "authoring"
@@ -26,9 +26,9 @@ guideline_source: "https://github.com/huijoohwee/huijoohwee.github.io/blob/e944d
 template_source: "https://github.com/huijoohwee/huijoohwee.github.io/blob/82835ac37d524643faa6b9703cb077ea9474ab15/guidelines/prd-tad-adr-mvp-gtm-templates.md"
 parent: "https://github.com/huijoohwee/huijoohwee.github.io/blob/d6b6112cc63e4b610ff21ba93db233f548d91510/docs/documents/prd-tad-adr-mvp-gtm-agentic-design-system.md"
 parent_version: "0.2.0"
-worktree_id: "device-0232231d4a19--design-system-registry"
+worktree_id: "device-0232231d4a19--floating-panel-radius"
 agent_id: "codex"
-source_revision: "6b60519f1f6e58053db02d83fd13ad0417940b2f"
+source_revision: "058c56f18f2dab16b46a20ac12cdc4243612bf28"
 lifecycle_status: "proposed"
 load_policy: "on-demand"
 runtime_readiness_policy: "fail-closed"
@@ -36,7 +36,11 @@ runtime_readiness_policy: "fail-closed"
 
 # Agentic Design System — Shared Ownership and Singleton Tokens
 
-**Join:** `DESIGN-TOKEN-ADOPTION-001@0.9.27`, superseding `0.9.17` and its predecessor chain through `0.2.0`. This revision extends the existing shared profile with responsive row/toolbar geometry and retains its glyph projections while retaining draft status, explicit rights, and owner-specific rollback. The prior central registry integration remains at protected `main` commit `bc1921bbcf56e1abb11fef2593917e5459d58df1` via PR #6. Historical Commerce workflow and no-deploy evidence remain recorded below; they are not release or runtime authority for this change.
+**Join:** `DESIGN-TOKEN-ADOPTION-001@0.9.28`, superseding `0.9.27` and its predecessor chain through `0.2.0`. This revision gives the shared FloatingPanel an explicit shared-ui radius token, removing its dependency on Graph's legacy island-radius. It retains draft status, explicit rights, and owner-specific rollback. The prior central registry integration remains at protected `main` commit `bc1921bbcf56e1abb11fef2593917e5459d58df1` via PR #6. Historical Commerce workflow and no-deploy evidence remain recorded below; they are not release or runtime authority for this change.
+
+## Shared FloatingPanel radius
+
+Shared-ui v0.10.1 owns one floating overlay radius, `overlay.floating.radius` (8px). The portable shell consumes that token directly; it no longer inherits Graph's legacy `--island-radius` or the control radius. This preserves the current FloatingPanel appearance while removing theme leakage. Commerce's 14px `radius.panel` continues to describe authored surface cards; the shared floating overlay is a distinct component role. Base owns the React/native shell contract; Graph and Commerce retain content, placement and lifecycle. Consumer projections bind exact profile and shell digests. Rollback restores the prior profile, stylesheet and consumer pins together. No API, runtime dependency, network request, data migration or production activation is selected.
 
 **Change boundary:** the central registry implementation is integrated at `bc1921bbcf56e1abb11fef2593917e5459d58df1` through PR #6. Its predecessor code originated at `a1c56f8ba3c3b8892897fcdbf6d61ed09784b6b7`. This local successor pins AOS at `2bf74425791761c3253e8112a181ed496c1cdf91` as a dev-only dependency, the protected merge commit for PR #649, and records the current audit. The selected Commerce workflow ID is `workflow-commerce-token-plan-20261030-v5`, sequence 3, boundary `end`, manifest digest `370e305e7121cabcb8622db98c438249cecb00934958d072a865c926039c8364`. It binds plan 0.1.4 at Commerce commit `3e764ac4078aff85c5f60ef33eefde6be61ca8bf`, planning digest `706975e57af56068bb9720b67995a2f6803acc99bc2453a79711af8cb28f5aad`, member archive `07a8f61cb189dd0fb65e6725ef3b3cb6245ec427b2dd47542706fba39f95b72d`, and passed checks receipt `cc1dc035ab816b08bb825c03e26da79732ad6c5e01d9bd0531c9410ecf7ef45a`. `releaseTargets` contains the exact member ID; deployment and runtime references point to the immutable plan-backed no-deploy evidence `6c630b7a9d5d4422cd1196748241eac8eb414603c281e0ae79b39734d7c556a0`. The current importer classifies those references as queued production steps, leaving closure incomplete and authority false. This is not deployment/runtime evidence, and the separate AOS delivery-disposition row is deferred until protected source integration. Six lifecycle phases remain missing. The user granted public reuse of four exact Graph artifacts on 2026-10-29; that does not authorize other Graph sources or future revisions. No consumer migration, public release, or deployment is claimed.
 
