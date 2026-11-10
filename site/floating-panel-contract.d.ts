@@ -1,6 +1,6 @@
 import type * as React from 'react'
 
-export type FloatingPanelHostTag = 'div' | 'section' | 'aside' | 'nav' | 'article'
+export type FloatingPanelRootPlacement = 'flow' | 'dock' | 'viewport-overlay'
 
 /** Geometry only; visual properties stay owned by the central FloatingPanel stylesheet. */
 export type FloatingPanelPanelStyle = Pick<React.CSSProperties,
@@ -15,21 +15,8 @@ export type FloatingPanelRootStyle = FloatingPanelPanelStyle & Partial<Record<
   | '--base-panel' | '--base-shadow-overlay' | '--base-toolbar-compact-padding', string
 >>
 
-export interface FloatingPanelProps extends Omit<React.HTMLAttributes<HTMLElement>,
-  'aria-label' | 'aria-hidden' | 'aria-expanded' | 'children' | 'className' | 'id' | 'role' | 'style'> {
-  as?: FloatingPanelHostTag
-  ariaLabel: string
-  ariaHidden?: boolean
-  ariaExpanded?: boolean
-  role?: React.AriaRole
-  className?: string
-  id?: string
-  style?: FloatingPanelPanelStyle
-  children: React.ReactNode
-}
-
 export interface FloatingPanelShellProps {
-  rootClassName?: string
+  rootPlacement?: FloatingPanelRootPlacement
   rootStyle?: FloatingPanelRootStyle
   panelStyle?: FloatingPanelPanelStyle
   ariaLabel?: string
@@ -55,14 +42,16 @@ export interface FloatingPanelTabsProps extends Omit<React.HTMLAttributes<HTMLEl
   'aria-label' | 'aria-orientation' | 'className' | 'children' | 'onKeyDown' | 'role' | 'style'> {
   label: string
   activeKey: string
+  onSelect: (tabKey: string) => void
   children: React.ReactNode
 }
 
 export interface FloatingPanelTabProps {
   tabKey: string
   label: string
-  selected: boolean
-  onSelect: (tabKey: string) => void
+  id?: string
+  ariaControls?: string
+  disabled?: boolean
   icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>
   dataAttributes?: Readonly<Record<`data-${string}`, string>>
 }

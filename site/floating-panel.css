@@ -18,6 +18,10 @@
   flex: none; align-items: center; justify-content: space-between; gap: var(--agentic-control-padding-block); user-select: none;
 }
 .agentic-base-floating-panel-draggable { cursor: move; }
+.agentic-base-floating-panel-root[data-agentic-floating-panel-placement="viewport-overlay"] {
+  position: fixed; z-index: var(--agentic-floating-panel-layer, 4); inset: 0; pointer-events: none;
+}
+.agentic-base-floating-panel-root[data-agentic-floating-panel-placement="viewport-overlay"] > .agentic-base-floating-panel { pointer-events: auto; }
 .agentic-floating-panel-title { margin: 0; font: 600 var(--agentic-font-size-body)/var(--agentic-line-height-body) var(--agentic-font-sans); }
 .agentic-floating-panel-body { flex: 1 1 auto; min-height: 0; min-width: 0; overflow: auto; overscroll-behavior: contain; }
 .agentic-floating-panel-tabs {
@@ -52,7 +56,8 @@
   font-size: var(--agentic-font-size-body); line-height: var(--agentic-line-height-body);
 }
 /* Optional fixed placement. A host may reserve space below it for persistent controls. */
-.agentic-floating-panel-dock {
+.agentic-floating-panel-dock,
+.agentic-base-floating-panel-root[data-agentic-floating-panel-placement="dock"] {
   position: fixed; z-index: var(--agentic-floating-panel-layer, 4); inset: auto;
   inset-block-start: max(var(--agentic-menu-edge-gap), env(safe-area-inset-top));
   inset-inline-end: max(var(--agentic-menu-edge-gap), env(safe-area-inset-right));
@@ -60,5 +65,7 @@
   width: min(var(--agentic-ktv-panel-width), calc(100% - 2 * var(--agentic-menu-edge-gap)));
   max-height: none; margin: 0; padding: 0; border: 0; background: transparent;
 }
-.agentic-floating-panel-dock > .agentic-base-floating-panel { height: 100%; }
-.agentic-floating-panel-dock:has(> [hidden]) { display: none; }
+.agentic-floating-panel-dock > .agentic-base-floating-panel,
+.agentic-base-floating-panel-root[data-agentic-floating-panel-placement="dock"] > .agentic-base-floating-panel { height: 100%; }
+.agentic-floating-panel-dock:has(> [hidden]),
+.agentic-base-floating-panel-root[data-agentic-floating-panel-placement="dock"]:has(> [hidden]) { display: none; }
