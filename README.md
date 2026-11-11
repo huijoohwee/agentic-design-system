@@ -40,6 +40,15 @@ The local HTML response derives a report-only CSP from the static policy and add
 `style-src-elem 'unsafe-inline'` for browser annotation overlays that inject a shadow-root stylesheet.
 The strict production policy remains in `site/index.html`; release validation checks that policy separately.
 
+## Offline cache and browser checks
+
+The service worker caches only the versioned, checked-in static site files listed in
+`site/sw.js`; activation retires older caches in the `agentic-design-system-` namespace. This cache
+contains static public assets, not consumer records. For cache-content changes, bump the versioned
+`CACHE_NAME` in `site/sw.js`; activation then retires prior namespaced caches. Browser E2E should use
+a run-owned context and measure cold install and warm reuse separately. Do not clear the browser
+profile or unrelated origin storage to claim a storage saving.
+
 ## Verify
 
 The GitHub Actions **Integration Gate** checks JavaScript syntax, the catalog and owner-registry
