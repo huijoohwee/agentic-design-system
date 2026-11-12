@@ -118,8 +118,18 @@ async function assertFloatingPanelOwnerContract(indexHtml) {
   if (!controlRuntime.includes("export function applyPanelControl(button, control)")
     || !controlRuntime.includes("export function createPanelControlButton(control")
     || !controlRuntime.includes("export function hydratePanelControls(root")
+    || !controlRuntime.includes("export function updatePanelControlButton(button, control")
+    || !controlRuntime.includes("export function resolvePanelControlRoles({ actions = {}, minimized = false }")
+    || !controlRuntime.includes("export function updatePanelControlGroup(group, {")
+    || !controlRuntime.includes('const roles = Object.keys(definitions)')
+    || !controlRuntime.includes('return roles.filter(control =>')
+    || !controlRuntime.includes("if (typeof actions[control] !== 'function') return false")
+    || !controlRuntime.includes("cache.get(currentRoles[index]) !== child")
+    || !controlRuntime.includes("const PANEL_CONTROL_GROUP_CLASS = 'agentic-panel-control-group'")
     || !controlRuntime.includes("cannot override its canonical")
     || !controlRuntime.includes("cannot replace its existing semantic role")
+    || !controlRuntime.includes("cannot apply consumer visual overrides")
+    || !controlRuntime.includes("cannot contain consumer controls")
     || !appRuntime.includes("hydratePanelControls(document)")
     || /aria-label="Close FloatingPanel"|title="Close FloatingPanel"/u.test(indexHtml)) {
     fail("Panel controls must get their icon and accessible name from one semantic role, without consumer overrides");
