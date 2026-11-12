@@ -31,6 +31,67 @@ export function createDesignIcon(name, ownerDocument = globalThis.document) {
   return icon
 }
 
+/** Resolve a panel action through its centrally owned semantic icon role. */
+export function createPanelControlIcon(control, ownerDocument = globalThis.document) {
+  const definition = iconLibrary.panelControls?.[control]
+  if (!definition || typeof definition.icon !== 'string') throw new RangeError(`Unknown shared panel control: ${control}`)
+  return createDesignIcon(definition.icon, ownerDocument)
+}
+
+/** Return the canonical accessible name for a semantic panel control role. */
+export function getPanelControlLabel(control) {
+  const label = iconLibrary.panelControls?.[control]?.label
+  if (typeof label !== 'string') throw new RangeError(`Unknown shared panel control: ${control}`)
+  return label
+}
+
+/** Apply one canonical icon, accessible name and title to an existing panel button. */
+export function applyPanelControl(button, control) {
+  const definition = iconLibrary.panelControls?.[control]
+  if (!definition || typeof definition.icon !== 'string' || typeof definition.label !== 'string') {
+    throw new RangeError(`Unknown shared panel control: ${control}`)
+  }
+  if (!button || button.localName !== 'button' || !button.ownerDocument?.createElementNS) {
+    throw new TypeError('A panel control must be a button in an owner document')
+  }
+  const existingControl = button.dataset.agenticPanelControl
+  if (existingControl && existingControl !== control) {
+    throw new TypeError(`Panel control cannot replace its existing semantic role: ${existingControl}`)
+  }
+  for (const attribute of ['aria-label', 'title']) {
+    const existing = button.getAttribute(attribute)
+    if (button.hasAttribute(attribute) && existing !== definition.label) {
+      throw new TypeError(`Panel control ${control} cannot override its canonical ${attribute}`)
+    }
+  }
+  if (button.hasAttribute('aria-labelledby') || (control !== 'pin' && button.hasAttribute('aria-pressed'))) {
+    throw new TypeError(`Panel control ${control} cannot override its canonical accessible state`)
+  }
+  button.type = 'button'
+  button.dataset.agenticPanelControl = control
+  button.setAttribute('aria-label', definition.label)
+  button.title = definition.label
+  button.classList.add('agentic-toolbar-item')
+  button.dataset.iconOnly = ''
+  if (control === 'close') button.classList.add('agentic-base-floating-panel-close')
+  button.replaceChildren(createPanelControlIcon(control, button.ownerDocument))
+  return button
+}
+
+/** Render one icon-only button from the semantic panel-control registry. */
+export function createPanelControlButton(control, ownerDocument = globalThis.document) {
+  if (!ownerDocument?.createElement) throw new TypeError('An owner document is required to create a panel control')
+  return applyPanelControl(ownerDocument.createElement('button'), control)
+}
+
+/** Hydrate role-marked buttons from the one panel-control registry. */
+export function hydratePanelControls(root = globalThis.document) {
+  if (!root?.querySelectorAll) throw new TypeError('A panel control hydration root is required')
+  const buttons = [...root.querySelectorAll('[data-agentic-panel-control]')]
+  for (const button of buttons) applyPanelControl(button, button.dataset.agenticPanelControl)
+  return buttons.length
+}
+
 /** Hydrate declarative icon placeholders without copying SVG paths into consumers. */
 export function hydrateDesignIcons(root = globalThis.document) {
   if (!root?.querySelectorAll) throw new TypeError('An icon hydration root is required')

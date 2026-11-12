@@ -14,7 +14,7 @@
   "registry": {
     "schema": "agentic-design-system/owner-registry/v1",
     "registryId": "agentic-design-system",
-    "revision": "0.7.0",
+    "revision": "0.7.1",
     "owner": "github.com/huijoohwee/agentic-design-system",
     "coverage": "Commerce, Base, Graph, shared panels and Editor Workspace token values and presentation have one Design System owner; source attribution is revision-pinned; consumer projections are checked separately and whole-repository parity is not claimed",
     "keyContract": {
@@ -158,7 +158,7 @@
         "id": "agentic-design-system",
         "name": "Agentic Design System",
         "repository": "github.com/huijoohwee/agentic-design-system",
-        "revision": "60fc0c71de7a1fffa5f00957c78cdd9a28c5656c",
+        "revision": "f7c91ed46c01d81bb5d19999903c316dc0d74f14",
         "scopes": [
           "shared-ui"
         ],
@@ -168,7 +168,7 @@
           {
             "path": "site/tokens/shared-ui-profile.json",
             "kind": "native",
-            "digest": "sha256:13974bff2d509be4af80e607c91bbe3a31a76ad292f4813d0ac75b7e98045be8"
+            "digest": "sha256:81ea83f837f417d2e7492821f1c7e466a34cbcc24c50d32304365a2c9219ce7d"
           }
         ]
       }
@@ -287,9 +287,9 @@
         "name": "Shared UI profile",
         "owner": "github.com/huijoohwee/agentic-design-system",
         "repository": "github.com/huijoohwee/agentic-design-system",
-        "revision": "60fc0c71de7a1fffa5f00957c78cdd9a28c5656c",
+        "revision": "f7c91ed46c01d81bb5d19999903c316dc0d74f14",
         "source": "./tokens/shared-ui-profile.json",
-        "digest": "sha256:13974bff2d509be4af80e607c91bbe3a31a76ad292f4813d0ac75b7e98045be8",
+        "digest": "sha256:81ea83f837f417d2e7492821f1c7e466a34cbcc24c50d32304365a2c9219ce7d",
         "scope": [
           "shared-interface"
         ],
@@ -307,7 +307,7 @@
         "consumerPins": [],
         "projection": {
           "path": "./vendor/shared-ui-profile.css",
-          "digest": "sha256:8ba6039a75b94943bd93154949744cb51b5f470f3423aebcf89be592528acb36"
+          "digest": "sha256:58b676bd4ba9615d8a72316fefcc79faf4c8fd8b5b0550f250d40110b6b9196e"
         }
       }
     ]
@@ -315,7 +315,7 @@
   "iconLibrary": {
     "schema": "agentic-design-system/icon-library/v1",
     "path": "icons.json",
-    "version": "1.0.0",
-    "digest": "sha256:52ab0c590ab71329f16d101e493f8dc21c455c918d52431c790a1477fcb357a1"
+    "version": "1.3.0",
+    "digest": "sha256:6adc0bca42161901a0c29d51a60859b435373ae415c157c8aaa978a3fc439dc6"
   }
 }

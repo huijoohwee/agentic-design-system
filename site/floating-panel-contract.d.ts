@@ -30,10 +30,11 @@ export interface FloatingPanelShellProps {
 }
 
 export interface FloatingPanelCloseButtonProps {
-  label: string
   onClose: () => void
   disabled?: boolean
 }
+
+export type PanelControlName = 'search' | 'pin' | 'apply' | 'reset' | 'minimize' | 'restore' | 'close'
 
 export interface FloatingPanelTabsProps extends Omit<React.HTMLAttributes<HTMLElement>,
   'aria-label' | 'aria-orientation' | 'className' | 'children' | 'onKeyDown' | 'role' | 'style'> {

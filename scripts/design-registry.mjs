@@ -257,7 +257,7 @@ async function runMcpStdio() {
 function assertRegistry(registry) {
   exactKeys(registry, ["schema", "registryId", "revision", "owner", "coverage", "keyContract", "owners", "profiles"], "registry");
   if (registry.schema !== "agentic-design-system/owner-registry/v1" || registry.registryId !== "agentic-design-system"
-    || registry.revision !== "0.7.0" || registry.owner !== "github.com/huijoohwee/agentic-design-system"
+    || registry.revision !== "0.7.1" || registry.owner !== "github.com/huijoohwee/agentic-design-system"
     || registry.coverage !== "Commerce, Base, Graph, shared panels and Editor Workspace token values and presentation have one Design System owner; source attribution is revision-pinned; consumer projections are checked separately and whole-repository parity is not claimed") fail("identity or coverage");
   exactKeys(registry.keyContract, ["schema", "canonicalKeyPattern", "cssVariablePattern", "uniqueBy", "overridePolicy"], "key contract");
   if (registry.keyContract.schema !== "agentic-design-system/design-key/v1"
