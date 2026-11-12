@@ -1,4 +1,7 @@
 import { registerWebMcpTools, searchRegistry, validateRegistryContext } from "./registry-query.js?v=c104158";
+import { hydrateDesignIcons } from "./toolbar-icons.js";
+
+hydrateDesignIcons(document);
 
 const grid = document.querySelector("#catalog-grid");
 const empty = document.querySelector("#catalog-empty");
@@ -336,7 +339,7 @@ loadRegistry().catch(error => {
 });
 
 async function prepareOfflineRegistry() {
-  const registration = await navigator.serviceWorker.register("./sw.js?v=floating-panel-preview-4", {
+  const registration = await navigator.serviceWorker.register("./sw.js?v=floating-panel-preview-5", {
     scope: "./", updateViaCache: "none",
   });
   const worker = registration.installing ?? registration.waiting ?? registration.active;

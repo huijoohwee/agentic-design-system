@@ -56,16 +56,20 @@
     </footer>
   </main>
   <section id="panel-preview" class="agentic-base-floating-panel-root agentic-floating-panel-dock" hidden>
-    <aside class="agentic-base-floating-panel agentic-form-controls" role="dialog" aria-modal="false" aria-labelledby="panel-title">
+    <aside class="agentic-base-floating-panel agentic-form-controls" role="dialog" aria-modal="false" aria-label="FloatingPanel preview">
       <section class="agentic-base-floating-panel-inner agentic-base-floating-panel-expanded">
         <header class="agentic-base-floating-panel-header">
-          <h2 class="agentic-floating-panel-title" id="panel-title">FloatingPanel</h2>
-          <button type="button" class="agentic-base-floating-panel-close" data-panel-close aria-label="Close FloatingPanel"><svg class="agentic-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" role="img" aria-label="Close icon"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+          <nav class="agentic-floating-panel-tabs" role="tablist" aria-label="FloatingPanel views" aria-orientation="horizontal">
+            <button id="panel-console-tab" class="agentic-floating-panel-tab" type="button" role="tab" data-agentic-floating-panel-tab-key="console" aria-controls="panel-content" aria-selected="true" aria-label="Console" title="Console" tabindex="0">
+              <svg data-agentic-design-icon="SquareTerminal"></svg><span>Console</span>
+            </button>
+          </nav>
+          <button type="button" class="agentic-base-floating-panel-close" data-panel-close aria-label="Close FloatingPanel"><svg data-agentic-design-icon="X"></svg></button>
         </header>
-        <section class="agentic-floating-panel-body"><p>The header stays in place while the content scrolls. Graph’s tool panel and the Workspace Pack Console use this shell.</p></section>
+        <section id="panel-content" class="agentic-floating-panel-body" role="tabpanel" aria-labelledby="panel-console-tab"><p>The header stays in place while the content scrolls. Graph’s tool panel and the Workspace Pack Console use this shell.</p></section>
       </section>
     </aside>
   </section>
-  <script type="module" src="./app.js?v=floating-panel-preview-5"></script>
+  <script type="module" src="./app.js?v=floating-panel-preview-6"></script>
 </body>
 </html>
