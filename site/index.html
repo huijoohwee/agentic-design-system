@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="light">
+  <meta name="color-scheme" content="light dark">
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self'; script-src 'self'; worker-src 'self'; style-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
   <meta name="description" content="A local, read-only design registry with revision-pinned Commerce, Graph, Base, and shared UI profiles.">
@@ -43,7 +43,7 @@
         <li><article class="agentic-dashboard-card" id="profiles" tabindex="-1"><h3>Profiles</h3><p class="agentic-dashboard-description">Inspect profile identity, rights evidence, and consumer pins.</p></article></li>
         <li><article class="agentic-dashboard-card" id="guidelines" tabindex="-1"><h3>Guidelines</h3><p class="agentic-dashboard-description">Each key has one owner. Duplicate definitions and overrides fail validation.</p></article></li>
         <li><article class="agentic-dashboard-card" id="accessibility" tabindex="-1"><h3>Accessibility</h3><p class="agentic-dashboard-description">Use the keyboard to search, navigate sections, and expand token values.</p></article></li>
-        <li><article class="agentic-dashboard-card" id="components" tabindex="-1"><h3>Components</h3><p class="agentic-dashboard-description">Product repositories own their component behavior and APIs.</p><details data-dashboard-primitive="disclosure"><summary>Dashboard primitives</summary><hr data-dashboard-primitive="divider"><section data-dashboard-primitive="container" data-columns="2" aria-label="Dashboard primitive example"><h4 data-dashboard-primitive="heading">Heading</h4><p data-dashboard-primitive="text">Text follows the available column width.</p></section></details><button id="floating-panel-preview-trigger" type="button" class="agentic-icon-pill" aria-haspopup="dialog" aria-controls="panel-preview" aria-expanded="false">Preview FloatingPanel</button></article></li>
+        <li><article class="agentic-dashboard-card editor-workspace-card" id="components" tabindex="-1"><h3>Shared Editor Workspace</h3><p class="agentic-dashboard-description">MainPanel, BottomPanel, and FloatingPanel share one visual profile and responsive layout.</p><div class="agentic-editor-workspace-preview"><div class="agentic-editor-workspace" aria-label="Editor Workspace panel layout preview"><section class="agentic-editor-workspace-stage" aria-label="Editor canvas"><h4>Editor workspace</h4><p>Content stays inside the available stage.</p></section><aside class="agentic-panel-surface agentic-panel-main" aria-label="MainPanel preview"><header class="agentic-panel-header"><h4 class="agentic-panel-title">MainPanel</h4><span>Inspector</span></header><div class="agentic-panel-body"><p>Shared width, surface, and spacing.</p></div></aside><section class="agentic-panel-surface agentic-panel-bottom" aria-label="BottomPanel preview"><header class="agentic-panel-header"><h4 class="agentic-panel-title">BottomPanel</h4><span>Console</span></header><div class="agentic-panel-body"><p>Responsive, scrollable workspace content.</p></div></section></div></div><button id="floating-panel-preview-trigger" type="button" class="agentic-icon-pill" aria-haspopup="dialog" aria-controls="panel-preview" aria-expanded="false">Preview FloatingPanel</button><details data-dashboard-primitive="disclosure"><summary>Dashboard primitives</summary><hr data-dashboard-primitive="divider"><section data-dashboard-primitive="container" data-columns="2" aria-label="Dashboard primitive example"><h4 data-dashboard-primitive="heading">Heading</h4><p data-dashboard-primitive="text">Text follows the available column width.</p></section></details></article></li>
         <li><article class="agentic-dashboard-card" id="examples" tabindex="-1"><h3>Examples</h3><p class="agentic-dashboard-description">Search for dashboard.card-gap to inspect the spacing used by these cards.</p></article></li>
         <li><article class="agentic-dashboard-card" id="releases" tabindex="-1"><h3>Releases</h3><p class="agentic-dashboard-description">Public records require an owner, grant, source digest, and review evidence.</p></article></li>
       </ul>
@@ -66,6 +66,6 @@
       </section>
     </aside>
   </section>
-  <script type="module" src="./app.js?v=floating-panel-preview-4"></script>
+  <script type="module" src="./app.js?v=floating-panel-preview-5"></script>
 </body>
 </html>
