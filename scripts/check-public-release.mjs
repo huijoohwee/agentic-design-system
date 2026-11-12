@@ -97,6 +97,70 @@ function verifyContentSecurityPolicy(indexHtml) {
   if (/<[^>]+\sstyle\s*=/iu.test(indexHtml)) fail('Inline style attributes are not allowed');
 }
 
+async function assertFloatingPanelOwnerContract(indexHtml) {
+  const triggerIdCount = [...indexHtml.matchAll(/\bid="floating-panel-preview-trigger"/gu)].length;
+  const panelIdCount = [...indexHtml.matchAll(/\bid="panel-preview"/gu)].length;
+  const triggerUsesSharedDock = /<button\b(?=[^>]*\bid="floating-panel-preview-trigger")(?=[^>]*\bdata-icon-only)(?=[^>]*\bdata-dock-edge="end")(?=[^>]*\baria-label="FloatingPanel")[^>]*>\s*<svg\b[^>]*data-agentic-design-icon="SlidersHorizontal"[^>]*><\/svg>\s*<\/button>/u.test(indexHtml);
+  const closeUsesSemanticRole = /<button\b(?=[^>]*\bdata-agentic-panel-control="close")(?=[^>]*\bdata-panel-close)[^>]*>\s*<\/button>/u.test(indexHtml);
+  const tabKeys = [...indexHtml.matchAll(/data-agentic-floating-panel-tab-key="([^"]+)"/gu)].map(([, key]) => key);
+  const tabControls = [...indexHtml.matchAll(/role="tab"[^>]*aria-controls="([^"]+)"/gu)].map(([, id]) => id);
+  const tabPanels = [...indexHtml.matchAll(/<section\b(?=[^>]*role="tabpanel")(?=[^>]*id="([^"]+)")/gu)].map(([, id]) => id);
+  if (triggerIdCount !== 1 || panelIdCount !== 1 || !triggerUsesSharedDock || !closeUsesSemanticRole
+    || [...indexHtml.matchAll(/role="tablist"/gu)].length !== 1
+    || tabKeys.length !== 3 || new Set(tabKeys).size !== tabKeys.length
+    || tabControls.length !== tabKeys.length || new Set(tabControls).size !== tabControls.length
+    || JSON.stringify([...tabControls].sort()) !== JSON.stringify([...tabPanels].sort())) {
+    fail("FloatingPanel preview must use one shared top-right trigger, one shell, and unique icon tabs with matching panels");
+  }
+
+  const controlRuntime = await readFile(resolve(root, "site/toolbar-icons.js"), "utf8");
+  const appRuntime = await readFile(resolve(root, "site/app.js"), "utf8");
+  if (!controlRuntime.includes("export function applyPanelControl(button, control)")
+    || !controlRuntime.includes("export function createPanelControlButton(control")
+    || !controlRuntime.includes("export function hydratePanelControls(root")
+    || !controlRuntime.includes("export function updatePanelControlButton(button, control")
+    || !controlRuntime.includes("export function resolvePanelControlRoles({ actions = {}, minimized = false }")
+    || !controlRuntime.includes("export function updatePanelControlGroup(group, {")
+    || !controlRuntime.includes('const roles = Object.keys(definitions)')
+    || !controlRuntime.includes('return roles.filter(control =>')
+    || !controlRuntime.includes("if (typeof actions[control] !== 'function') return false")
+    || !controlRuntime.includes("cache.get(currentRoles[index]) !== child")
+    || !controlRuntime.includes("const PANEL_CONTROL_GROUP_CLASS = 'agentic-panel-control-group'")
+    || !controlRuntime.includes("cannot override its canonical")
+    || !controlRuntime.includes("cannot replace its existing semantic role")
+    || !controlRuntime.includes("cannot apply consumer visual overrides")
+    || !controlRuntime.includes("cannot contain consumer controls")
+    || !appRuntime.includes("hydratePanelControls(document)")
+    || /aria-label="Close FloatingPanel"|title="Close FloatingPanel"/u.test(indexHtml)) {
+    fail("Panel controls must get their icon and accessible name from one semantic role, without consumer overrides");
+  }
+
+  const panelCss = await readFile(resolve(root, "site/floating-panel.css"), "utf8");
+  const sharedUiCss = await readFile(resolve(root, "site/vendor/shared-ui-profile.css"), "utf8");
+  if (!sharedUiCss.includes("--agentic-control-hover-background: light-dark(#fffbeb, rgb(251 191 36 / 0.16));")
+    || !sharedUiCss.includes("--agentic-icon-size-default: 1rem;")
+    || !sharedUiCss.includes("inline-size: var(--agentic-icon-size-default); block-size: var(--agentic-icon-size-default);")
+    || !panelCss.includes("background: var(--agentic-control-hover-background);")
+    || !panelCss.includes(".agentic-base-floating-panel .agentic-base-floating-panel-close:hover { background: var(--agentic-control-hover-background); }")
+    || panelCss.includes("--kg-panel-action-bg-hover")
+    || !panelCss.includes("box-shadow: none; transform: none; filter: none;")
+    || !panelCss.includes(":is(.agentic-floating-panel-tab, .agentic-base-floating-panel-close):has(> .agentic-icon:only-child)")
+    || /(?:inline-size|block-size|width|height):\s*(?:12|14|16|18|20|24|28|38|48)px\b/u.test(panelCss)) {
+    fail("FloatingPanel icons and square close/tab controls must use the central icon and control tokens");
+  }
+  const toolbarCss = await readFile(resolve(root, "site/toolbar.css"), "utf8");
+  if (!toolbarCss.includes(".agentic-toolbar-item:hover { background: var(--agentic-control-hover-background); }")
+    || /--(?:agentic-base-hover|kg-panel-bg-hover|kg-panel-action-bg-hover)/u.test(sharedUiCss)) {
+    fail("Shared controls must use one canonical hover-background token");
+  }
+
+  const duplicatePanelRule = /\.(?:agentic-base-floating-panel(?:-[a-z0-9-]+)?|agentic-floating-panel-(?:tabs|tab|title|body|dock))\b/iu;
+  for (const path of expectedFiles.filter(file => file.endsWith(".css") && file !== "site/floating-panel.css")) {
+    const stylesheet = await readFile(resolve(root, path), "utf8");
+    if (duplicatePanelRule.test(stylesheet)) fail(`${path} duplicates the central FloatingPanel stylesheet owner`);
+  }
+}
+
 function assertCspFailClosedFixtures() {
   const policy = "default-src 'self'; connect-src 'self'; script-src 'self'; worker-src 'self'; style-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'";
   verifyContentSecurityPolicy(`<meta http-equiv="Content-Security-Policy" content="${policy}">`);
@@ -196,6 +260,7 @@ const catalog = JSON.parse(await readFile(resolve(root, "site/catalog.json"), "u
 const registryHtml = await readFile(resolve(root, "site/index.html"), "utf8");
 verifyContentSecurityPolicy(registryHtml);
 assertLocalDevCspFixtures(registryHtml.toString("utf8"));
+await assertFloatingPanelOwnerContract(registryHtml);
 const registryCss = await readFile(resolve(root, "site/registry.css"), "utf8");
 for (const asset of ["graph-profile", "commerce-theme", "shared-ui-profile"]) {
   if (!registryHtml.includes(`<link rel="stylesheet" href="./vendor/${asset}.css">`)) fail(`Registry must load its pinned ${asset} stylesheet`);
