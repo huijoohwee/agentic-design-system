@@ -68,8 +68,6 @@
 .agentic-editor-workspace-preview { box-sizing: border-box; inline-size: min(100%, 58rem); block-size: 28rem; padding: var(--agentic-panel-gap); border: var(--agentic-panel-border); border-radius: var(--agentic-panel-radius); background: var(--agentic-panel-background); }
 .agentic-editor-workspace-stage { grid-area: stage; min-inline-size: 0; min-block-size: 0; overflow: auto; }
 .agentic-editor-workspace :where(.agentic-panel-surface, .agentic-base-floating-panel) { min-inline-size: 0; min-block-size: 0; }
-.agentic-floating-panel-title { margin: 0; font: 600 var(--agentic-font-size-body)/var(--agentic-line-height-body) var(--agentic-font-sans); }
-.agentic-floating-panel-body { flex: 1 1 auto; min-height: 0; min-width: 0; overflow: auto; overscroll-behavior: contain; }
 .agentic-floating-panel-tabs {
   display: flex; flex: 1 1 auto; align-items: center; min-width: 0; gap: var(--agentic-menu-gap);
   overflow-x: auto; overflow-y: hidden; overscroll-behavior-inline: contain; scrollbar-width: none; touch-action: pan-x;
