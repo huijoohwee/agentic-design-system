@@ -91,6 +91,7 @@ test('MainPanel and FloatingPanel retain shared viewport dimensions when other p
 
   assert.equal(mainWidth?.value, '80vw')
   assert.equal(mainHeight?.value, '80vh')
+  assert.match(panelCss, /\.agentic-panel-main\s*\{[^}]*inline-size:\s*min\(var\(--agentic-panel-main-width\), calc\(100vw - 2 \* var\(--agentic-menu-edge-gap\)\)\)/u)
   assert.match(panelCss, /\.agentic-panel-main--open\.agentic-panel-main\s*\{\s*block-size:\s*min\(var\(--agentic-panel-main-height\)/u)
   assert.match(panelCss, /\.agentic-panel-bottom\s*\{[^}]*block-size:\s*min\(var\(--agentic-panel-bottom-height\)/u)
   assert.doesNotMatch(panelCss, /agentic-floating-panel-available-height|data-agentic-floating-panel-avoid-bottom/u)
