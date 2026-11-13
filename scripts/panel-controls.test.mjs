@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import test from 'node:test'
-import { updatePanelControlButton } from '../site/toolbar-icons.js'
+import { createDesignIcon, createPanelControlIcon, getPanelControlLabel, updatePanelControlButton } from '../site/toolbar-icons.js'
 
 class ElementMock {
   constructor(localName, ownerDocument) {
@@ -38,25 +38,34 @@ const documentMock = {
 test('a transient empty title is repaired to the canonical panel-control label', () => {
   const button = documentMock.createElement('button')
   button.dataset.agenticPanelControl = 'minimize'
-  button.setAttribute('aria-label', 'Minimize')
-  button.title = 'Minimize'
+  button.setAttribute('aria-label', 'Minimize panel')
+  button.title = 'Minimize panel'
   button.className = 'agentic-toolbar-item'
 
   button.title = ''
   updatePanelControlButton(button, 'minimize', { action() {} })
 
-  assert.equal(button.getAttribute('aria-label'), 'Minimize')
-  assert.equal(button.title, 'Minimize')
+  assert.equal(button.getAttribute('aria-label'), 'Minimize panel')
+  assert.equal(button.title, 'Minimize panel')
   assert.equal(button.children.length, 1)
 })
 
 test('a non-empty consumer label override remains forbidden', () => {
   const button = documentMock.createElement('button')
   button.dataset.agenticPanelControl = 'minimize'
-  button.setAttribute('aria-label', 'Minimize')
+  button.setAttribute('aria-label', 'Minimize panel')
   button.title = 'Minimize floating panel'
 
   assert.throws(() => updatePanelControlButton(button, 'minimize', { action() {} }), /cannot override its canonical title/u)
+})
+
+test('panel restore is distinct from restoring history', () => {
+  const restoreIcon = createPanelControlIcon('restore', documentMock)
+  const historyIcon = createDesignIcon('History', documentMock)
+
+  assert.equal(getPanelControlLabel('minimize'), 'Minimize panel')
+  assert.equal(getPanelControlLabel('restore'), 'Restore panel')
+  assert.notDeepEqual(restoreIcon.children, historyIcon.children)
 })
 
 test('toolbar overlay uses the one shared Design System layer token', () => {

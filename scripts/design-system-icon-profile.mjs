@@ -392,7 +392,7 @@ export function validateIconLibrary(source) {
   const panelControls = {
     search: { icon: "Search", label: "Search" }, pin: { icon: "Pin", label: "Pin" },
     apply: { icon: "Check", label: "Apply" }, reset: { icon: "RotateCcw", label: "Reset" },
-    minimize: { icon: "Minimize2", label: "Minimize" }, restore: { icon: "History", label: "Restore" },
+    minimize: { icon: "Minimize2", label: "Minimize panel" }, restore: { icon: "Maximize2", label: "Restore panel" },
     close: { icon: "X", label: "Close" },
   };
   exactKeys(library.panelControls, Object.keys(panelControls), "panel controls");
