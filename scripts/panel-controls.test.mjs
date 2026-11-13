@@ -80,4 +80,18 @@ test('viewport floating panels reserve the shared toolbar row and safe viewport 
   assert.match(panelCss, /inset-inline-end:\s*max\(var\(--agentic-menu-edge-gap\), env\(safe-area-inset-right\)\)/u)
   assert.match(panelCss, /block-size:\s*min\(var\(--agentic-panel-main-height\), calc\(100dvh - max\(var\(--agentic-menu-edge-gap\), env\(safe-area-inset-top\)\) - var\(--agentic-row-height\)/u)
   assert.match(panelCss, /max-block-size:\s*min\(var\(--agentic-panel-main-max-height\), calc\(100dvh - max\(var\(--agentic-menu-edge-gap\), env\(safe-area-inset-top\)\) - var\(--agentic-row-height\)/u)
+  assert.doesNotMatch(panelCss, /floating-panel-avoid-bottom|floating-panel-available-height/u)
+})
+
+test('MainPanel and FloatingPanel retain shared viewport dimensions when other panels open', () => {
+  const panelCss = readFileSync(new URL('../site/floating-panel.css', import.meta.url), 'utf8')
+  const profile = JSON.parse(readFileSync(new URL('../site/tokens/shared-ui-profile.json', import.meta.url), 'utf8'))
+  const mainWidth = profile.tokens.find(token => token.key === 'layout.panel.main-width')
+  const mainHeight = profile.tokens.find(token => token.key === 'layout.panel.main-height')
+
+  assert.equal(mainWidth?.value, '80vw')
+  assert.equal(mainHeight?.value, '80vh')
+  assert.match(panelCss, /\.agentic-panel-main--open\.agentic-panel-main\s*\{\s*block-size:\s*min\(var\(--agentic-panel-main-height\)/u)
+  assert.match(panelCss, /\.agentic-panel-bottom\s*\{[^}]*block-size:\s*min\(var\(--agentic-panel-bottom-height\)/u)
+  assert.doesNotMatch(panelCss, /agentic-floating-panel-available-height|data-agentic-floating-panel-avoid-bottom/u)
 })
