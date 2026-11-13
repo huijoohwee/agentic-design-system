@@ -13,7 +13,7 @@ const CSS_VAR = /^--agentic-[a-z0-9-]{1,64}$/u;
 const DIMENSION = /^(?:0|[0-9]+(?:\.[0-9]+)?)(?:px|rem|em)$/u;
 const RESPONSIVE_DIMENSION = /^(?:0|[0-9]+(?:\.[0-9]+)?)(?:px|rem|em|vw|vh|dvh|%)$/u;
 const BORDER = /^(?:1px solid var\(--agentic-base-border, var\(--commerce-control-border, var\(--kg-border, ButtonBorder\)\)\)|1px solid var\(--agentic-panel-border-color\))$/u;
-const PANEL_SHADOW = /^0 16px 40px oklch\(0% 0 0 \/ 0\.2\)$/u;
+const TOOLBAR_SHADOW = /^0 1px 2px rgb\(0 0 0 \/ \.04\)$/u;
 // Closed inventory: CSS values are validated before projection.
 const channel = String.raw`(?:0|[1-9][0-9]{0,2})(?:\.[0-9]+)?`;
 const oklch = String.raw`oklch\(${channel}% ${channel} ${channel}(?: / 0\.[0-9]+)?\)`;
@@ -98,6 +98,7 @@ const EXPECTED = Object.freeze([
     "dimension"
   ],
   ["layout.toolbar.overlay-layer", "--agentic-toolbar-overlay-layer", "number"],
+  ["surface.toolbar.shadow", "--agentic-toolbar-shadow", "shadow"],
   [
     "surface.panel.background",
     "--agentic-panel-background",
@@ -123,7 +124,6 @@ const EXPECTED = Object.freeze([
     "--agentic-panel-radius",
     "dimension"
   ],
-  ["surface.panel.shadow", "--agentic-panel-shadow", "shadow"],
   [
     "control.height",
     "--agentic-control-height",
@@ -227,7 +227,7 @@ export function validateSharedUiProfile(source) {
         || token.type === "responsive-dimension" && !RESPONSIVE_DIMENSION.test(token.value)
         || token.type === "number" && (!/^[0-9]+(?:\.[0-9]+)?$/u.test(token.value) || Number(token.value) < 0.5 || Number(token.value) > 10000)
         || token.type === "border" && !BORDER.test(token.value)
-        || token.type === "shadow" && !PANEL_SHADOW.test(token.value)
+        || token.type === "shadow" && !TOOLBAR_SHADOW.test(token.value)
         || token.type === "themed-color" && !THEMED_COLOR.test(token.value)
         || token.type === "font-family" && !/^[A-Za-z0-9 ,._-]+$/u.test(token.value)
         || token.type === "grid-template" && (!/^[A-Za-z0-9()., %-]+$/u.test(token.value) || /url|expression|\b(?:auto|none)\b/iu.test(token.value))) || keys.has(token.key) || variables.has(token.cssVar)) fail(`invalid token ${token.key ?? ""}`);

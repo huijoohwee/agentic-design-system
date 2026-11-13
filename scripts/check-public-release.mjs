@@ -151,6 +151,12 @@ async function assertFloatingPanelOwnerContract(indexHtml) {
   }
   const toolbarCss = await readFile(resolve(root, "site/toolbar.css"), "utf8");
   if (!toolbarCss.includes(".agentic-toolbar-item:hover { background: var(--agentic-control-hover-background); }")
+    || !toolbarCss.includes("border: var(--agentic-panel-border);")
+    || !toolbarCss.includes("border-radius: var(--agentic-panel-radius);")
+    || !toolbarCss.includes("box-shadow: var(--agentic-toolbar-shadow);")
+    || !panelCss.includes("box-shadow: var(--agentic-toolbar-shadow);")
+    || !panelCss.includes("min-block-size: var(--agentic-toolbar-height)")
+    || sharedUiCss.includes("--agentic-panel-shadow:")
     || /--(?:agentic-base-hover|kg-panel-bg-hover|kg-panel-action-bg-hover)/u.test(sharedUiCss)) {
     fail("Shared controls must use one canonical hover-background token");
   }

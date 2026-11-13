@@ -85,11 +85,25 @@ test('toolbar overlay uses the one shared Design System layer token', () => {
 test('viewport floating panels reserve the shared toolbar row and safe viewport insets', () => {
   const panelCss = readFileSync(new URL('../site/floating-panel.css', import.meta.url), 'utf8')
 
-  assert.match(panelCss, /inset-block-start:\s*calc\(max\(var\(--agentic-menu-edge-gap\), env\(safe-area-inset-top\)\) \+ var\(--agentic-row-height\) \+ var\(--agentic-menu-edge-gap\)\)/u)
+  assert.match(panelCss, /inset-block-start:\s*calc\(max\(var\(--agentic-menu-edge-gap\), env\(safe-area-inset-top\)\) \+ var\(--agentic-toolbar-height\) \+ var\(--agentic-menu-edge-gap\)\)/u)
   assert.match(panelCss, /inset-inline-end:\s*max\(var\(--agentic-menu-edge-gap\), env\(safe-area-inset-right\)\)/u)
-  assert.match(panelCss, /block-size:\s*min\(var\(--agentic-panel-main-height\), calc\(100dvh - max\(var\(--agentic-menu-edge-gap\), env\(safe-area-inset-top\)\) - var\(--agentic-row-height\)/u)
-  assert.match(panelCss, /max-block-size:\s*min\(var\(--agentic-panel-main-max-height\), calc\(100dvh - max\(var\(--agentic-menu-edge-gap\), env\(safe-area-inset-top\)\) - var\(--agentic-row-height\)/u)
+  assert.match(panelCss, /block-size:\s*min\(var\(--agentic-panel-main-height\), calc\(100dvh - max\(var\(--agentic-menu-edge-gap\), env\(safe-area-inset-top\)\) - var\(--agentic-toolbar-height\)/u)
+  assert.match(panelCss, /max-block-size:\s*min\(var\(--agentic-panel-main-max-height\), calc\(100dvh - max\(var\(--agentic-menu-edge-gap\), env\(safe-area-inset-top\)\) - var\(--agentic-toolbar-height\)/u)
   assert.doesNotMatch(panelCss, /floating-panel-avoid-bottom|floating-panel-available-height/u)
+})
+
+test('all panel states reuse toolbar chrome and control sizing', () => {
+  const panelCss = readFileSync(new URL('../site/floating-panel.css', import.meta.url), 'utf8')
+  const toolbarCss = readFileSync(new URL('../site/toolbar.css', import.meta.url), 'utf8')
+  const profile = JSON.parse(readFileSync(new URL('../site/tokens/shared-ui-profile.json', import.meta.url), 'utf8'))
+
+  assert.equal(profile.tokens.some(token => token.cssVar === '--agentic-panel-shadow'), false)
+  assert.equal(profile.tokens.find(token => token.cssVar === '--agentic-toolbar-shadow')?.value, '0 1px 2px rgb(0 0 0 / .04)')
+  assert.match(panelCss, /border-radius:\s*var\(--agentic-panel-radius\); box-shadow:\s*var\(--agentic-toolbar-shadow\)/u)
+  assert.match(panelCss, /min-block-size:\s*var\(--agentic-toolbar-height\)/u)
+  assert.match(panelCss, /\.agentic-base-floating-panel\[data-agentic-base-panel-minimized="true"\] > \.agentic-base-floating-panel-inner\s*\{\s*gap:\s*0; padding:\s*0;/u)
+  assert.match(toolbarCss, /border:\s*var\(--agentic-panel-border\);\s*border-radius:\s*var\(--agentic-panel-radius\);\s*box-shadow:\s*var\(--agentic-toolbar-shadow\)/u)
+  assert.match(toolbarCss, /--agentic-toolbar-height:\s*var\(--agentic-row-height\)/u)
 })
 
 test('MainPanel and FloatingPanel retain shared viewport dimensions when other panels open', () => {
