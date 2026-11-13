@@ -72,3 +72,11 @@ test('toolbar overlay uses the one shared Design System layer token', () => {
   assert.match(toolbarCss, /\.agentic-toolbar-overlay-layer\s*\{\s*z-index:\s*var\(--agentic-toolbar-overlay-layer\);\s*\}/u)
   assert.doesNotMatch(toolbarCss, /z-index:\s*calc\(var\(--agentic-floating-panel-layer/u)
 })
+
+test('viewport floating panels reserve the shared toolbar row and safe viewport insets', () => {
+  const panelCss = readFileSync(new URL('../site/floating-panel.css', import.meta.url), 'utf8')
+
+  assert.match(panelCss, /--agentic-panel-viewport-top-inset:\s*calc\(max\(var\(--agentic-menu-edge-gap\), env\(safe-area-inset-top\)\) \+ var\(--agentic-row-height\) \+ var\(--agentic-menu-edge-gap\)\)/u)
+  assert.match(panelCss, /block-size:\s*min\(var\(--agentic-panel-main-height\), calc\(100dvh - var\(--agentic-panel-viewport-top-inset\)/u)
+  assert.match(panelCss, /max-block-size:\s*min\(var\(--agentic-panel-main-max-height\), calc\(100dvh - var\(--agentic-panel-viewport-top-inset\)/u)
+})

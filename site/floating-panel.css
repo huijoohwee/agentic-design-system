@@ -27,13 +27,14 @@
 .agentic-base-floating-panel-expanded { width: 100%; height: 100%; }
 .agentic-base-floating-panel-draggable { cursor: move; }
 .agentic-base-floating-panel-root[data-agentic-floating-panel-placement="viewport-overlay"] {
+  --agentic-panel-viewport-top-inset: calc(max(var(--agentic-menu-edge-gap), env(safe-area-inset-top)) + var(--agentic-row-height) + var(--agentic-menu-edge-gap));
   position: fixed; z-index: var(--agentic-floating-panel-layer, 4); inset: 0; pointer-events: none;
 }
 .agentic-base-floating-panel-root[data-agentic-floating-panel-placement="viewport-overlay"] > .agentic-base-floating-panel { pointer-events: auto; }
 .agentic-base-floating-panel-root[data-agentic-floating-panel-placement="viewport-overlay"] > .agentic-base-floating-panel {
   inline-size: min(var(--agentic-panel-width), calc(100vw - 2 * var(--agentic-menu-edge-gap)));
-  block-size: min(var(--agentic-panel-main-height), calc(100dvh - 2 * var(--agentic-menu-edge-gap)));
-  max-block-size: min(var(--agentic-panel-main-max-height), calc(100dvh - 2 * var(--agentic-menu-edge-gap)));
+  block-size: min(var(--agentic-panel-main-height), calc(100dvh - var(--agentic-panel-viewport-top-inset) - max(var(--agentic-menu-edge-gap), env(safe-area-inset-bottom))));
+  max-block-size: min(var(--agentic-panel-main-max-height), calc(100dvh - var(--agentic-panel-viewport-top-inset) - max(var(--agentic-menu-edge-gap), env(safe-area-inset-bottom))));
 }
 .agentic-base-floating-panel-root[data-agentic-floating-panel-placement="viewport-overlay"] > .agentic-base-floating-panel[data-agentic-base-panel-minimized="true"] {
   block-size: fit-content; height: auto; max-block-size: none; max-height: none;
@@ -166,8 +167,8 @@
     max-block-size: calc(100dvh - 2 * var(--agentic-menu-edge-gap));
   }
   .agentic-base-floating-panel-root[data-agentic-floating-panel-placement="viewport-overlay"] > .agentic-base-floating-panel {
-    block-size: min(var(--agentic-panel-main-height-mobile), calc(100dvh - 2 * var(--agentic-menu-edge-gap)));
-    max-block-size: calc(100dvh - 2 * var(--agentic-menu-edge-gap));
+    block-size: min(var(--agentic-panel-main-height-mobile), calc(100dvh - var(--agentic-panel-viewport-top-inset) - max(var(--agentic-menu-edge-gap), env(safe-area-inset-bottom))));
+    max-block-size: calc(100dvh - var(--agentic-panel-viewport-top-inset) - max(var(--agentic-menu-edge-gap), env(safe-area-inset-bottom)));
   }
   .agentic-panel-bottom-dock { max-block-size: min(var(--agentic-panel-bottom-height), 45dvh); }
   .agentic-floating-panel-dock,
