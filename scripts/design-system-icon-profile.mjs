@@ -11,11 +11,14 @@ const outputPath = resolve(root, "site/vendor/shared-ui-profile.css");
 const TOKEN_KEY = /^[a-z][a-z0-9.-]{0,95}$/u;
 const CSS_VAR = /^--agentic-[a-z0-9-]{1,64}$/u;
 const DIMENSION = /^(?:0|[0-9]+(?:\.[0-9]+)?)(?:px|rem|em)$/u;
-const BORDER = /^1px solid var\(--agentic-base-border, var\(--commerce-control-border, var\(--kg-border, ButtonBorder\)\)\)$/u;
+const RESPONSIVE_DIMENSION = /^(?:0|[0-9]+(?:\.[0-9]+)?)(?:px|rem|em|vw|vh|dvh|%)$/u;
+const BORDER = /^(?:1px solid var\(--agentic-base-border, var\(--commerce-control-border, var\(--kg-border, ButtonBorder\)\)\)|1px solid var\(--agentic-panel-border-color\))$/u;
+const TOOLBAR_SHADOW = /^0 1px 2px rgb\(0 0 0 \/ \.04\)$/u;
 // Closed inventory: CSS values are validated before projection.
 const channel = String.raw`(?:0|[1-9][0-9]{0,2})(?:\.[0-9]+)?`;
 const oklch = String.raw`oklch\(${channel}% ${channel} ${channel}(?: / 0\.[0-9]+)?\)`;
-const THEMED_COLOR = new RegExp(String.raw`^light-dark\(${oklch}, ${oklch}\)$`, "u");
+const color = String.raw`(?:${oklch}|#[a-f0-9]{6}|rgb\(${channel} ${channel} ${channel}(?: / 0\.[0-9]+)?\))`;
+const THEMED_COLOR = new RegExp(String.raw`^light-dark\(${color}, ${color}\)$`, "iu");
 const EXPECTED = Object.freeze([
   [
     "icon.size.compact",
@@ -74,13 +77,51 @@ const EXPECTED = Object.freeze([
     "dimension"
   ],
   [
-    "layout.ktv.panel-width",
-    "--agentic-ktv-panel-width",
+    "layout.panel.width",
+    "--agentic-panel-width",
+    "dimension"
+  ],
+  ["layout.panel.main-width", "--agentic-panel-main-width", "responsive-dimension"],
+  ["layout.panel.main-width-mobile", "--agentic-panel-main-width-mobile", "responsive-dimension"],
+  ["layout.panel.main-max-width", "--agentic-panel-main-max-width", "dimension"],
+  ["layout.panel.main-height", "--agentic-panel-main-height", "responsive-dimension"],
+  ["layout.panel.main-height-mobile", "--agentic-panel-main-height-mobile", "responsive-dimension"],
+  ["layout.panel.main-max-height", "--agentic-panel-main-max-height", "dimension"],
+  [
+    "layout.panel.bottom-height",
+    "--agentic-panel-bottom-height",
     "dimension"
   ],
   [
-    "overlay.floating.radius",
-    "--agentic-floating-panel-radius",
+    "layout.panel.gap",
+    "--agentic-panel-gap",
+    "dimension"
+  ],
+  ["layout.toolbar.overlay-layer", "--agentic-toolbar-overlay-layer", "number"],
+  ["surface.toolbar.shadow", "--agentic-toolbar-shadow", "shadow"],
+  [
+    "surface.panel.background",
+    "--agentic-panel-background",
+    "themed-color"
+  ],
+  [
+    "surface.panel.foreground",
+    "--agentic-panel-foreground",
+    "themed-color"
+  ],
+  [
+    "surface.panel.border-color",
+    "--agentic-panel-border-color",
+    "themed-color"
+  ],
+  [
+    "surface.panel.border",
+    "--agentic-panel-border",
+    "border"
+  ],
+  [
+    "surface.panel.radius",
+    "--agentic-panel-radius",
     "dimension"
   ],
   [
@@ -144,6 +185,7 @@ const EXPECTED = Object.freeze([
     "dimension"
   ],
   ["control.selected.foreground", "--agentic-control-selected-foreground", "themed-color"],
+  ["control.hover.background", "--agentic-control-hover-background", "themed-color"],
   ["control.selected.background", "--agentic-control-selected-background", "themed-color"],
   ["dashboard.card-gap", "--agentic-dashboard-card-gap", "dimension"],
   ["dashboard.section-gap", "--agentic-dashboard-section-gap", "dimension"],
@@ -169,7 +211,7 @@ export function validateSharedUiProfile(source) {
   const profile = JSON.parse(source);
   exactKeys(profile, ["schema", "id", "version", "status", "scope", "tokens"], "root");
   if (profile.schema !== "agentic-design-system/shared-ui-profile/v1" || profile.id !== "shared-ui"
-    || profile.version !== "0.10.1" || profile.status !== "candidate") fail("identity");
+    || profile.version !== "0.13.0" || profile.status !== "candidate") fail("identity");
   exactKeys(profile.scope, ["repository", "surfaces"], "scope");
   if (profile.scope.repository !== "github.com/huijoohwee/agentic-design-system"
     || JSON.stringify(profile.scope.surfaces) !== JSON.stringify(["shared-interface"])) fail("scope");
@@ -182,8 +224,10 @@ export function validateSharedUiProfile(source) {
     if (!TOKEN_KEY.test(token.key ?? "") || !CSS_VAR.test(token.cssVar ?? "")
       || (typeof token.value !== "string" || token.value.length > 256
         || token.type === "dimension" && !DIMENSION.test(token.value)
-        || token.type === "number" && (!/^[0-9]+(?:\.[0-9]+)?$/u.test(token.value) || Number(token.value) < 0.5 || Number(token.value) > 4)
+        || token.type === "responsive-dimension" && !RESPONSIVE_DIMENSION.test(token.value)
+        || token.type === "number" && (!/^[0-9]+(?:\.[0-9]+)?$/u.test(token.value) || Number(token.value) < 0.5 || Number(token.value) > 10000)
         || token.type === "border" && !BORDER.test(token.value)
+        || token.type === "shadow" && !TOOLBAR_SHADOW.test(token.value)
         || token.type === "themed-color" && !THEMED_COLOR.test(token.value)
         || token.type === "font-family" && !/^[A-Za-z0-9 ,._-]+$/u.test(token.value)
         || token.type === "grid-template" && (!/^[A-Za-z0-9()., %-]+$/u.test(token.value) || /url|expression|\b(?:auto|none)\b/iu.test(token.value))) || keys.has(token.key) || variables.has(token.cssVar)) fail(`invalid token ${token.key ?? ""}`);
@@ -198,6 +242,8 @@ export function renderSharedUiCss(profile, sourceRevision, profileDigest) {
   if (!/^[a-f0-9]{40}$/u.test(sourceRevision ?? "") || !/^[a-f0-9]{64}$/u.test(profileDigest ?? "")) fail("projection binding");
   const selected = ':is(.agentic-control-selected, .agentic-toggle-group > button[aria-pressed="true"])';
   const declarations = profile.tokens.map(token => `  ${token.cssVar}: ${token.value};`);
+  declarations.push("  --agentic-ktv-panel-width: var(--agentic-panel-width);");
+  declarations.push("  --agentic-floating-panel-radius: var(--agentic-panel-radius);");
   const input = 'input:not([type="hidden"], [type="file"], [type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="button"], [type="submit"], [type="reset"], [type="image"], [hidden], .sr-only, .file-input)';
   const nativeField = `:is(.agentic-form-controls :where(${input}, select, textarea), .agentic-input-controls :where(${input}, select))`;
   const field = `.agentic-form-control, ${nativeField}, .agentic-select-trigger`;
@@ -218,7 +264,7 @@ ${declarations.join("\n")}
   margin: 0; padding: 0 var(--agentic-control-padding-inline); border: 0; border-radius: 0;
   background: transparent; color: inherit; font: inherit; white-space: nowrap; cursor: pointer;
 }
-.agentic-toggle-group > button:where(:enabled:hover) { background: var(--agentic-base-hover, var(--kg-panel-action-bg-hover, color-mix(in srgb, currentColor 6%, transparent))); }
+.agentic-toggle-group > button:where(:enabled:hover) { background: var(--agentic-control-hover-background); }
 ${selected} { color: var(--agentic-control-selected-foreground); background-color: var(--agentic-control-selected-background); }
 .agentic-toggle-group > button:focus-visible { outline: var(--agentic-control-focus-width) solid var(--agentic-control-focus, Highlight); outline-offset: calc(-1 * var(--agentic-control-focus-width)); }
 .agentic-toggle-group > button:disabled { opacity: .5; cursor: not-allowed; }
@@ -259,7 +305,7 @@ ${selected} { color: var(--agentic-control-selected-foreground); background-colo
 .agentic-icon { display: block; flex: 0 0 auto; inline-size: var(--agentic-icon-size-default); block-size: var(--agentic-icon-size-default); stroke-width: var(--agentic-icon-stroke-width); }
 .agentic-icon-compact { inline-size: var(--agentic-icon-size-compact); block-size: var(--agentic-icon-size-compact); }
 .agentic-icon-color { color: var(--agentic-base-muted, var(--kg-text-secondary, CanvasText)); }
-.agentic-icon-hover:is(:hover, :focus-visible) { background: var(--agentic-base-hover, var(--kg-panel-action-bg-hover, Canvas)); }
+.agentic-icon-hover:is(:hover, :focus-visible) { background: var(--agentic-control-hover-background); }
 .agentic-icon-padding { padding: var(--agentic-control-padding-block); }
 .agentic-icon-pill, .agentic-icon-badge { display: inline-flex; align-items: center; justify-content: center; gap: var(--agentic-control-padding-block); min-inline-size: 0; max-inline-size: 100%; box-sizing: border-box; min-block-size: var(--agentic-control-height); padding: 0 var(--agentic-control-padding-inline); border: var(--agentic-control-border); border-radius: var(--agentic-control-radius); white-space: nowrap; }
 .agentic-icon-text, .agentic-icon-pill, .agentic-icon-badge { font: var(--agentic-font-size-body)/var(--agentic-line-height-body) var(--agentic-font-sans); }
@@ -299,7 +345,7 @@ textarea.agentic-form-control, .agentic-form-controls :where(textarea) {
   inline-size: 100%; text-align: start; cursor: pointer;
   border: 1px solid transparent; color: inherit; background: transparent;
 }
-.agentic-menu-option:is(:hover, :focus-visible) { background: var(--agentic-base-hover, var(--kg-panel-action-bg-hover, color-mix(in srgb, Highlight 8%, Canvas))); }
+.agentic-menu-option:is(:hover, :focus-visible) { background: var(--agentic-control-hover-background); }
 .agentic-menu-option:is([aria-checked="true"], [aria-selected="true"], [data-selected="true"], .agentic-menu-selected) {
   color: var(--kg-accent, LinkText); background: var(--agentic-base-selected, var(--kg-accent-soft-bg, color-mix(in srgb, Highlight 12%, Canvas)));
   border-color: var(--agentic-base-focus, var(--kg-accent, Highlight));
@@ -319,8 +365,8 @@ ${dashboardLayoutCss(profile)}
 
 export function validateIconLibrary(source) {
   const library = JSON.parse(source);
-  exactKeys(library, ["schema", "version", "owner", "source", "viewBox", "icons"], "icon library");
-  if (library.schema !== "agentic-design-system/icon-library/v1" || library.version !== "1.0.0"
+  exactKeys(library, ["schema", "version", "owner", "source", "viewBox", "panelControls", "icons"], "icon library");
+  if (library.schema !== "agentic-design-system/icon-library/v1" || library.version !== "1.3.0"
     || library.owner !== "github.com/huijoohwee/agentic-design-system" || library.viewBox !== "0 0 24 24") fail("icon identity");
   exactKeys(library.source, ["package", "version", "license", "licenseSha256"], "icon source");
   if (library.source.package !== "lucide-react" || library.source.version !== "0.562.0"
@@ -342,6 +388,18 @@ export function validateIconLibrary(source) {
           || !(key === "fill" ? /^(?:none|currentColor)$/u : key === "d" ? /^[MmLlHhVvCcSsQqTtAaZz0-9., +eE-]+$/u : /^[0-9., +eE-]+$/u).test(value)) fail(`unsafe icon attribute: ${name}.${key}`);
       }
     }
+  }
+  const panelControls = {
+    search: { icon: "Search", label: "Search" }, pin: { icon: "Pin", label: "Pin" },
+    apply: { icon: "Check", label: "Apply" }, reset: { icon: "RotateCcw", label: "Reset" },
+    minimize: { icon: "Minimize2", label: "Minimize panel" }, restore: { icon: "Maximize2", label: "Restore panel" },
+    close: { icon: "X", label: "Close" },
+  };
+  exactKeys(library.panelControls, Object.keys(panelControls), "panel controls");
+  for (const [role, definition] of Object.entries(panelControls)) {
+    exactKeys(library.panelControls[role], ["icon", "label"], `panel control ${role}`);
+    if (JSON.stringify(library.panelControls[role]) !== JSON.stringify(definition)
+      || !Object.hasOwn(library.icons, definition.icon)) fail(`panel control ownership: ${role}`);
   }
   return library;
 }
