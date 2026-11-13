@@ -26,6 +26,7 @@ const expectedFiles = [
   "scripts/design-system-icon-profile.mjs",
   "scripts/dev-csp.mjs", "scripts/dev.mjs",
   "scripts/graph-profile.mjs",
+  "scripts/panel-controls.test.mjs",
   "site/THIRD-PARTY-NOTICES.txt",
   "site/app.js",
   "site/catalog.json",
