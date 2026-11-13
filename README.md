@@ -11,7 +11,8 @@ Four candidate profiles centrally own Commerce, Base, Graph and shared interface
 Profile bytes, source revisions, generated output, rights and consumer pins are checked independently.
 The Graph grant covers its eight pinned token sources; the private classification remains in force
 outside that scope. Consumers use immutable projections and native component behavior. Base owns the
-shared KTV renderer and dropdown adapters; this registry supplies no copied component runtime.
+shared KTV renderer and dropdown adapters. The Design System's `toolbar-icons.js` runtime also owns
+panel-control rendering and state visibility; framework hosts only bind their app callbacks and state.
 
 The central Icon Library owns the verified artwork inventory. Shared interface roles own glyph size,
 stroke, typography, responsive row/control geometry and icon presentation. Local appearance settings
@@ -76,7 +77,7 @@ Icon presentation uses the same shared profile: stroke width, control padding, p
 
 [Toolbar](site/toolbar.css) owns the compact navigation surface, action states and sticky dock. Use an accessible name on the navigation element and the shared `agentic-toolbar-item` class for links and buttons. For an icon-only action, add `data-icon-only`, give the button an accessible name and put `agentic-icon` on its SVG. Use [the shared icon helpers](site/toolbar-icons.js) to create native buttons or apply the same button props and glyph classes in a component host. Place floating actions directly in the dock with `data-dock-edge="start"` or `"end"`. The toolbar stays centered when either action is hidden. A dock sits below an open FloatingPanel. Graph retains its canvas placement.
 
-FloatingPanel presentation is owned by [the portable shell](site/floating-panel.css). The shared UI profile owns its 8px overlay radius; the shell does not inherit a product-specific radius or accept consumer overrides. The existing Base class names are its markup contract: surface, inner column, header, scroll body, and close control. Base supplies the React adapter for Graph; native HTML consumers pin the same stylesheet. Use the optional dock for side placement, or let the host position the shell. Hosts own open/close, focus, drag, and domain actions. See **Components → Preview FloatingPanel** in the registry.
+MainPanel, FloatingPanel, BottomPanel, and Editor Workspace layout share one owner: [the panel stylesheet](site/floating-panel.css), [the shared UI profile](site/tokens/shared-ui-profile.json), and [the panel-control runtime](site/toolbar-icons.js). The profile owns panel width, bottom height, gap, surface colors, border, radius, and shadow. The runtime owns control roles, order, icon and accessible-label rendering, action binding, and minimized visibility. Consumers reuse pinned generated projections; competing panel variants and local visual or behavior overrides are forbidden. Base's React bridge only forwards app callbacks and state. Graph and Commerce retain panel content, app actions, and lifecycle; Canvas OS consumes Graph's UI. See **Components → Shared Editor Workspace** in the registry for desktop and mobile previews.
 
 Dashboard primitive props are native HTML attributes in the shared UI profile. Use `data-dashboard-primitive="heading"` on the semantic heading, `text` on body copy, `disclosure` on native details/summary, and `divider` on hr. Use `container` with `data-columns="2|3|4"` inside an `agentic-dashboard-region`; it uses the same responsive grid as Mission cards. Supply domain content, labels and state in the host. Do not restyle these roles in a consumer.
 

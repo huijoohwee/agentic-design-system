@@ -9,11 +9,8 @@ export type FloatingPanelPanelStyle = Pick<React.CSSProperties,
   | 'maxWidth' | 'maxHeight' | 'zIndex'
 >
 
-/** The shell accepts only placement plus the named host-token bridge variables. */
-export type FloatingPanelRootStyle = FloatingPanelPanelStyle & Partial<Record<
-  | '--base-accent' | '--base-text-primary' | '--base-text-secondary' | '--base-border'
-  | '--base-panel' | '--base-shadow-overlay' | '--base-toolbar-compact-padding', string
->>
+/** The shell accepts geometry and placement only; visuals come from the shared UI profile. */
+export type FloatingPanelRootStyle = FloatingPanelPanelStyle
 
 export interface FloatingPanelShellProps {
   rootPlacement?: FloatingPanelRootPlacement
@@ -33,10 +30,11 @@ export interface FloatingPanelShellProps {
 }
 
 export interface FloatingPanelCloseButtonProps {
-  label: string
   onClose: () => void
   disabled?: boolean
 }
+
+export type PanelControlName = 'search' | 'pin' | 'apply' | 'reset' | 'minimize' | 'restore' | 'close'
 
 export interface FloatingPanelTabsProps extends Omit<React.HTMLAttributes<HTMLElement>,
   'aria-label' | 'aria-orientation' | 'className' | 'children' | 'onKeyDown' | 'role' | 'style'> {
