@@ -100,6 +100,7 @@ test('all panel states reuse toolbar chrome and control sizing', () => {
   assert.equal(profile.tokens.some(token => token.cssVar === '--agentic-panel-shadow'), false)
   assert.equal(profile.tokens.find(token => token.cssVar === '--agentic-toolbar-shadow')?.value, '0 1px 2px rgb(0 0 0 / .04)')
   assert.match(panelCss, /border-radius:\s*var\(--agentic-panel-radius\); box-shadow:\s*var\(--agentic-toolbar-shadow\)/u)
+  assert.match(panelCss, /block-size:\s*var\(--agentic-toolbar-height\); min-block-size:\s*var\(--agentic-toolbar-height\)/u)
   assert.match(panelCss, /min-block-size:\s*var\(--agentic-toolbar-height\)/u)
   assert.match(panelCss, /\.agentic-base-floating-panel\[data-agentic-base-panel-minimized="true"\] > \.agentic-base-floating-panel-inner\s*\{\s*gap:\s*0; padding:\s*0;/u)
   assert.match(toolbarCss, /border:\s*var\(--agentic-panel-border\);\s*border-radius:\s*var\(--agentic-panel-radius\);\s*box-shadow:\s*var\(--agentic-toolbar-shadow\)/u)
