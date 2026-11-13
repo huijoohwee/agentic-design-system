@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
 import test from 'node:test'
 import { updatePanelControlButton } from '../site/toolbar-icons.js'
 
@@ -56,4 +57,18 @@ test('a non-empty consumer label override remains forbidden', () => {
   button.title = 'Minimize floating panel'
 
   assert.throws(() => updatePanelControlButton(button, 'minimize', { action() {} }), /cannot override its canonical title/u)
+})
+
+test('toolbar overlay uses the one shared Design System layer token', () => {
+  const profile = JSON.parse(readFileSync(new URL('../site/tokens/shared-ui-profile.json', import.meta.url), 'utf8'))
+  const toolbarCss = readFileSync(new URL('../site/toolbar.css', import.meta.url), 'utf8')
+
+  assert.deepEqual(profile.tokens.find(token => token.key === 'layout.toolbar.overlay-layer'), {
+    key: 'layout.toolbar.overlay-layer',
+    cssVar: '--agentic-toolbar-overlay-layer',
+    type: 'number',
+    value: '6000',
+  })
+  assert.match(toolbarCss, /\.agentic-toolbar-overlay-layer\s*\{\s*z-index:\s*var\(--agentic-toolbar-overlay-layer\);\s*\}/u)
+  assert.doesNotMatch(toolbarCss, /z-index:\s*calc\(var\(--agentic-floating-panel-layer/u)
 })

@@ -97,6 +97,7 @@ const EXPECTED = Object.freeze([
     "--agentic-panel-gap",
     "dimension"
   ],
+  ["layout.toolbar.overlay-layer", "--agentic-toolbar-overlay-layer", "number"],
   [
     "surface.panel.background",
     "--agentic-panel-background",
@@ -210,7 +211,7 @@ export function validateSharedUiProfile(source) {
   const profile = JSON.parse(source);
   exactKeys(profile, ["schema", "id", "version", "status", "scope", "tokens"], "root");
   if (profile.schema !== "agentic-design-system/shared-ui-profile/v1" || profile.id !== "shared-ui"
-    || profile.version !== "0.12.0" || profile.status !== "candidate") fail("identity");
+    || profile.version !== "0.13.0" || profile.status !== "candidate") fail("identity");
   exactKeys(profile.scope, ["repository", "surfaces"], "scope");
   if (profile.scope.repository !== "github.com/huijoohwee/agentic-design-system"
     || JSON.stringify(profile.scope.surfaces) !== JSON.stringify(["shared-interface"])) fail("scope");
@@ -224,7 +225,7 @@ export function validateSharedUiProfile(source) {
       || (typeof token.value !== "string" || token.value.length > 256
         || token.type === "dimension" && !DIMENSION.test(token.value)
         || token.type === "responsive-dimension" && !RESPONSIVE_DIMENSION.test(token.value)
-        || token.type === "number" && (!/^[0-9]+(?:\.[0-9]+)?$/u.test(token.value) || Number(token.value) < 0.5 || Number(token.value) > 4)
+        || token.type === "number" && (!/^[0-9]+(?:\.[0-9]+)?$/u.test(token.value) || Number(token.value) < 0.5 || Number(token.value) > 10000)
         || token.type === "border" && !BORDER.test(token.value)
         || token.type === "shadow" && !PANEL_SHADOW.test(token.value)
         || token.type === "themed-color" && !THEMED_COLOR.test(token.value)

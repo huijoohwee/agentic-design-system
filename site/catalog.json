@@ -168,7 +168,7 @@
           {
             "path": "site/tokens/shared-ui-profile.json",
             "kind": "native",
-            "digest": "sha256:81ea83f837f417d2e7492821f1c7e466a34cbcc24c50d32304365a2c9219ce7d"
+            "digest": "sha256:01e7b88286247b17c186fadf9517852e46807bc01035d7f07f6d8947ab9c59b9"
           }
         ]
       }
@@ -289,7 +289,7 @@
         "repository": "github.com/huijoohwee/agentic-design-system",
         "revision": "3a1bce56673bdc3256cef861717bf64f846e15eb",
         "source": "./tokens/shared-ui-profile.json",
-        "digest": "sha256:81ea83f837f417d2e7492821f1c7e466a34cbcc24c50d32304365a2c9219ce7d",
+        "digest": "sha256:01e7b88286247b17c186fadf9517852e46807bc01035d7f07f6d8947ab9c59b9",
         "scope": [
           "shared-interface"
         ],
@@ -307,7 +307,7 @@
         "consumerPins": [],
         "projection": {
           "path": "./vendor/shared-ui-profile.css",
-          "digest": "sha256:9cff9a5969cfdf4f459d0e223868cf0fbc163bbc350e55c92efca43b4b48583c"
+          "digest": "sha256:fdc03e805f8b62270c947ae5f53f347a0d6491864675ef4a5a7d8fd68c80f070"
         }
       }
     ]
