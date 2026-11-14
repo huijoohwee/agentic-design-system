@@ -33,7 +33,7 @@
 .agentic-panel-main--collapsed > .agentic-base-floating-panel-inner,
 .agentic-panel-bottom--collapsed > .agentic-base-floating-panel-inner,
 .agentic-base-floating-panel[data-agentic-base-panel-minimized="true"] > .agentic-base-floating-panel-inner {
-  gap: 0; padding: 0;
+  gap: 0; padding: 0; inline-size: 100%;
 }
 .agentic-panel-main--collapsed :is(.agentic-panel-header, .agentic-base-floating-panel-header),
 .agentic-panel-bottom--collapsed :is(.agentic-panel-header, .agentic-base-floating-panel-header),
