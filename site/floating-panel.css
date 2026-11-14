@@ -25,6 +25,11 @@
   box-sizing: border-box; display: flex; min-width: 0; min-height: 0; flex-direction: column; gap: var(--agentic-control-padding-block);
   padding: var(--agentic-control-padding-inline);
 }
+.agentic-base-floating-panel-expanded > .agentic-base-floating-panel-header {
+  inline-size: calc(100% + 2 * var(--agentic-control-padding-inline));
+  margin-block: calc(-1 * var(--agentic-control-padding-inline)) var(--agentic-control-padding-inline);
+  margin-inline: calc(-1 * var(--agentic-control-padding-inline));
+}
 .agentic-panel-main--collapsed.agentic-panel-main,
 .agentic-panel-bottom--collapsed,
 .agentic-base-floating-panel[data-agentic-base-panel-minimized="true"] {
