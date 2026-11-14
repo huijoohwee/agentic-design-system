@@ -6,7 +6,7 @@
   position: relative; display: flex; box-sizing: border-box; min-width: 0; min-height: 0;
   max-width: calc(100vw - 2 * var(--agentic-menu-edge-gap)); max-height: calc(100dvh - 2 * var(--agentic-menu-edge-gap));
   overflow: hidden; pointer-events: auto; border: var(--agentic-panel-border);
-  border-radius: var(--agentic-panel-radius); box-shadow: var(--agentic-toolbar-shadow, 0 1px 2px rgb(0 0 0 / .04));
+  border-radius: var(--agentic-panel-radius); box-shadow: var(--agentic-toolbar-shadow);
   color-scheme: inherit; color: var(--agentic-panel-foreground); background: var(--agentic-panel-background);
   font: var(--agentic-font-size-body)/var(--agentic-line-height-body) var(--agentic-font-sans);
 }

@@ -99,7 +99,7 @@ test('all panel states reuse toolbar chrome and control sizing', () => {
 
   assert.equal(profile.tokens.some(token => token.cssVar === '--agentic-panel-shadow'), false)
   assert.equal(profile.tokens.find(token => token.cssVar === '--agentic-toolbar-shadow')?.value, '0 1px 2px rgb(0 0 0 / .04)')
-  assert.match(panelCss, /border-radius:\s*var\(--agentic-panel-radius\); box-shadow:\s*var\(--agentic-toolbar-shadow, 0 1px 2px rgb\(0 0 0 \/ \.04\)\)/u)
+  assert.match(panelCss, /border-radius:\s*var\(--agentic-panel-radius\); box-shadow:\s*var\(--agentic-toolbar-shadow\)/u)
   assert.match(panelCss, /block-size:\s*var\(--agentic-toolbar-height\); min-block-size:\s*var\(--agentic-toolbar-height\)/u)
   assert.match(panelCss, /min-block-size:\s*var\(--agentic-toolbar-height\)/u)
   assert.match(panelCss, /\.agentic-panel-main--collapsed\.agentic-panel-main,\s*\.agentic-panel-bottom--collapsed,\s*\.agentic-base-floating-panel\[data-agentic-base-panel-minimized="true"\]\s*\{\s*block-size: var\(--agentic-toolbar-height\); min-block-size: var\(--agentic-toolbar-height\); max-block-size: var\(--agentic-toolbar-height\);/u)
