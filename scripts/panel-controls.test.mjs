@@ -111,6 +111,17 @@ test('all panel states reuse toolbar chrome and control sizing', () => {
   assert.match(toolbarCss, /--agentic-toolbar-height:\s*var\(--agentic-row-height\)/u)
 })
 
+test('minimized dock panels override placement height without changing their width', () => {
+  const panelCss = readFileSync(new URL('../site/floating-panel.css', import.meta.url), 'utf8')
+  const dockSizing = panelCss.indexOf('.agentic-base-floating-panel-root[data-agentic-floating-panel-placement="dock"] > .agentic-base-floating-panel { height: 100%; }')
+  const minimizedDockSizing = panelCss.indexOf('.agentic-base-floating-panel-root[data-agentic-floating-panel-placement="dock"] > .agentic-base-floating-panel[data-agentic-base-panel-minimized="true"]')
+
+  assert.ok(dockSizing >= 0)
+  assert.ok(minimizedDockSizing > dockSizing, 'minimized dimensions follow the dock placement rule')
+  assert.match(panelCss.slice(minimizedDockSizing), /block-size:\s*var\(--agentic-toolbar-height\);\s*min-block-size:\s*var\(--agentic-toolbar-height\);\s*max-block-size:\s*var\(--agentic-toolbar-height\);/u)
+  assert.doesNotMatch(panelCss.slice(minimizedDockSizing).split('}')[0], /inline-size|width\s*:/u)
+})
+
 test('MainPanel and FloatingPanel retain shared viewport dimensions when other panels open', () => {
   const panelCss = readFileSync(new URL('../site/floating-panel.css', import.meta.url), 'utf8')
   const profile = JSON.parse(readFileSync(new URL('../site/tokens/shared-ui-profile.json', import.meta.url), 'utf8'))

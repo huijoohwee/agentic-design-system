@@ -170,6 +170,14 @@
 .agentic-base-floating-panel-root[data-agentic-floating-panel-placement="dock"] > .agentic-base-floating-panel { height: 100%; }
 .agentic-floating-panel-dock:has(> [hidden]),
 .agentic-base-floating-panel-root[data-agentic-floating-panel-placement="dock"]:has(> [hidden]) { display: none; }
+/* A minimized dock keeps its width, but its frame always collapses to one toolbar row. */
+.agentic-floating-panel-dock > .agentic-base-floating-panel[data-agentic-base-panel-minimized="true"],
+.agentic-base-floating-panel-root[data-agentic-floating-panel-placement="dock"] > .agentic-base-floating-panel[data-agentic-base-panel-minimized="true"],
+.agentic-base-floating-panel-root[data-agentic-floating-panel-placement="viewport-overlay"] > .agentic-base-floating-panel[data-agentic-base-panel-minimized="true"] {
+  block-size: var(--agentic-toolbar-height);
+  min-block-size: var(--agentic-toolbar-height);
+  max-block-size: var(--agentic-toolbar-height);
+}
 @media (max-width: 768px) {
   .agentic-editor-workspace {
     grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(8rem, 1fr) minmax(8rem, 0.8fr) minmax(7rem, min(30vh, var(--agentic-panel-bottom-height)));
