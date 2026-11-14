@@ -119,10 +119,10 @@ test('FloatingPanel view tabs are icon-only with accessible names', () => {
   assert.doesNotMatch(panelCss, /\.agentic-base-floating-panel:not\(\.agentic-panel-main\):not\(\.agentic-panel-bottom\)[^}]*\.agentic-floating-panel-tab[^}]*\{[^}]*display: none/u)
 })
 
-test('MainPanel and BottomPanel tabs reveal only the selected icon label', () => {
+test('MainPanel and BottomPanel tabs reveal icon labels on hover, focus, and selection', () => {
   const panelCss = readFileSync(new URL('../site/floating-panel.css', import.meta.url), 'utf8')
 
-  assert.match(panelCss, /\.agentic-base-floating-panel:is\(\.agentic-panel-main, \.agentic-panel-bottom\) \.agentic-floating-panel-tab:not\(\[aria-selected="true"\]\):has\(> \.agentic-icon\) > span \{ font-size: 0; line-height: 0; \}/u)
+  assert.match(panelCss, /\.agentic-base-floating-panel:is\(\.agentic-panel-main, \.agentic-panel-bottom\) \.agentic-floating-panel-tab:not\(\[aria-selected="true"\]\):not\(:hover\):not\(:focus-visible\):has\(> \.agentic-icon\) > span \{ font-size: 0; line-height: 0; \}/u)
   assert.match(panelCss, /\.agentic-base-floating-panel \.agentic-floating-panel-tab\s*\{[^}]*block-size:\s*max\(var\(--agentic-control-height\), var\(--agentic-icon-size-default\)\)/u)
 })
 
