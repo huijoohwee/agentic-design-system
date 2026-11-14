@@ -29,6 +29,11 @@
 .agentic-base-floating-panel[data-agentic-base-panel-minimized="true"] > .agentic-base-floating-panel-inner {
   gap: 0; padding: 0;
 }
+.agentic-panel-main--collapsed :is(.agentic-panel-header, .agentic-base-floating-panel-header),
+.agentic-panel-bottom--collapsed :is(.agentic-panel-header, .agentic-base-floating-panel-header),
+.agentic-base-floating-panel[data-agentic-base-panel-minimized="true"] .agentic-base-floating-panel-header {
+  border-block-end: 0;
+}
 .agentic-base-floating-panel-expanded { width: 100%; height: 100%; }
 .agentic-base-floating-panel-draggable { cursor: move; }
 .agentic-base-floating-panel-root[data-agentic-floating-panel-placement="viewport-overlay"] {
@@ -108,14 +113,17 @@
   background: var(--agentic-control-hover-background);
   box-shadow: none; transform: none; filter: none;
 }
-.agentic-base-floating-panel :is(.agentic-floating-panel-tab, .agentic-base-floating-panel-close):has(> .agentic-icon:only-child) {
+.agentic-base-floating-panel :is(.agentic-floating-panel-tab, .agentic-base-floating-panel-close):has(> .agentic-icon:only-child),
+.agentic-base-floating-panel[data-agentic-base-panel-minimized="true"] .agentic-floating-panel-tab:has(> .agentic-icon) {
   inline-size: max(var(--agentic-control-height), var(--agentic-icon-size-default));
   min-inline-size: max(var(--agentic-control-height), var(--agentic-icon-size-default));
   block-size: max(var(--agentic-control-height), var(--agentic-icon-size-default));
   min-block-size: max(var(--agentic-control-height), var(--agentic-icon-size-default)); padding: 0;
 }
+.agentic-base-floating-panel[data-agentic-base-panel-minimized="true"] .agentic-floating-panel-tab:has(> .agentic-icon) > span { display: none; }
 @media (pointer: coarse) {
-  .agentic-base-floating-panel :is(.agentic-floating-panel-tab, .agentic-base-floating-panel-close):has(> .agentic-icon:only-child) {
+  .agentic-base-floating-panel :is(.agentic-floating-panel-tab, .agentic-base-floating-panel-close):has(> .agentic-icon:only-child),
+  .agentic-base-floating-panel[data-agentic-base-panel-minimized="true"] .agentic-floating-panel-tab:has(> .agentic-icon) {
     inline-size: max(var(--agentic-control-height-touch), var(--agentic-icon-size-default));
     min-inline-size: max(var(--agentic-control-height-touch), var(--agentic-icon-size-default));
     block-size: max(var(--agentic-control-height-touch), var(--agentic-icon-size-default));
