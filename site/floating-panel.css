@@ -112,8 +112,9 @@
 .agentic-base-floating-panel[data-agentic-base-panel-minimized="true"] .agentic-floating-panel-tab:has(> .agentic-icon) > span { font-size: 0; line-height: 0; }
 .agentic-base-floating-panel .agentic-floating-panel-tab {
   box-sizing: border-box; display: inline-flex; flex: 0 0 auto; align-items: center; justify-content: center;
-  min-inline-size: var(--agentic-control-height); block-size: var(--agentic-toolbar-height);
-  min-block-size: var(--agentic-toolbar-height); gap: var(--agentic-menu-gap);
+  min-inline-size: var(--agentic-control-height);
+  block-size: max(var(--agentic-control-height), var(--agentic-icon-size-default));
+  min-block-size: max(var(--agentic-control-height), var(--agentic-icon-size-default)); gap: var(--agentic-menu-gap);
   padding-inline: var(--agentic-control-padding-inline); border: 0; border-radius: var(--agentic-control-radius);
   color: inherit; background: transparent; cursor: pointer; touch-action: manipulation; white-space: nowrap;
 }
@@ -141,6 +142,10 @@
   }
   .agentic-panel-header,
   .agentic-base-floating-panel-header { min-block-size: var(--agentic-toolbar-height); }
+  .agentic-base-floating-panel .agentic-floating-panel-tab {
+    block-size: max(var(--agentic-control-height-touch), var(--agentic-icon-size-default));
+    min-block-size: max(var(--agentic-control-height-touch), var(--agentic-icon-size-default));
+  }
 }
 .agentic-base-floating-panel .agentic-floating-panel-tab[aria-selected="true"] {
   color: var(--agentic-control-selected-foreground); background: var(--agentic-control-selected-background);

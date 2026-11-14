@@ -119,6 +119,16 @@ test('FloatingPanel view tabs are icon-only with accessible names', () => {
   assert.doesNotMatch(panelCss, /\.agentic-base-floating-panel:not\(\.agentic-panel-main\):not\(\.agentic-panel-bottom\)[^}]*\.agentic-floating-panel-tab[^}]*\{[^}]*display: none/u)
 })
 
+test('icon and icon-label panel tabs share one control height', () => {
+  const panelCss = readFileSync(new URL('../site/floating-panel.css', import.meta.url), 'utf8')
+  const coarsePointer = panelCss.indexOf('@media (pointer: coarse)')
+  const touchTabRule = panelCss.indexOf('.agentic-base-floating-panel .agentic-floating-panel-tab {', coarsePointer)
+
+  assert.match(panelCss, /\.agentic-base-floating-panel \.agentic-floating-panel-tab\s*\{[^}]*block-size:\s*max\(var\(--agentic-control-height\), var\(--agentic-icon-size-default\)\);\s*min-block-size:\s*max\(var\(--agentic-control-height\), var\(--agentic-icon-size-default\)\)/u)
+  assert.ok(coarsePointer >= 0 && touchTabRule > coarsePointer)
+  assert.match(panelCss.slice(touchTabRule, touchTabRule + 320), /block-size:\s*max\(var\(--agentic-control-height-touch\), var\(--agentic-icon-size-default\)\);\s*min-block-size:\s*max\(var\(--agentic-control-height-touch\), var\(--agentic-icon-size-default\)\);/u)
+})
+
 test('minimized dock panels override placement height without changing their width', () => {
   const panelCss = readFileSync(new URL('../site/floating-panel.css', import.meta.url), 'utf8')
   const dockSizing = panelCss.indexOf('.agentic-base-floating-panel-root[data-agentic-floating-panel-placement="dock"] > .agentic-base-floating-panel { height: 100%; }')
