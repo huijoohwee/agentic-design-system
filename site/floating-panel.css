@@ -2,10 +2,11 @@
 .agentic-base-floating-panel-root { position: relative; min-width: 0; min-height: 0; }
 .agentic-panel-surface,
 .agentic-base-floating-panel {
+  --agentic-panel-frame-stroke-width: 1px;
   position: relative; display: flex; box-sizing: border-box; min-width: 0; min-height: 0;
   max-width: calc(100vw - 2 * var(--agentic-menu-edge-gap)); max-height: calc(100dvh - 2 * var(--agentic-menu-edge-gap));
   overflow: hidden; pointer-events: auto; border: var(--agentic-panel-border);
-  border-radius: var(--agentic-panel-radius); box-shadow: var(--agentic-toolbar-shadow);
+  border-radius: var(--agentic-panel-radius); box-shadow: var(--agentic-toolbar-shadow, 0 1px 2px rgb(0 0 0 / .04));
   color-scheme: inherit; color: var(--agentic-panel-foreground); background: var(--agentic-panel-background);
   font: var(--agentic-font-size-body)/var(--agentic-line-height-body) var(--agentic-font-sans);
 }
@@ -24,6 +25,11 @@
   box-sizing: border-box; display: flex; min-width: 0; min-height: 0; flex-direction: column; gap: var(--agentic-control-padding-block);
   padding: var(--agentic-control-padding-inline);
 }
+.agentic-panel-main--collapsed.agentic-panel-main,
+.agentic-panel-bottom--collapsed,
+.agentic-base-floating-panel[data-agentic-base-panel-minimized="true"] {
+  block-size: var(--agentic-toolbar-height); min-block-size: var(--agentic-toolbar-height); max-block-size: var(--agentic-toolbar-height);
+}
 .agentic-panel-main--collapsed > .agentic-base-floating-panel-inner,
 .agentic-panel-bottom--collapsed > .agentic-base-floating-panel-inner,
 .agentic-base-floating-panel[data-agentic-base-panel-minimized="true"] > .agentic-base-floating-panel-inner {
@@ -32,6 +38,8 @@
 .agentic-panel-main--collapsed :is(.agentic-panel-header, .agentic-base-floating-panel-header),
 .agentic-panel-bottom--collapsed :is(.agentic-panel-header, .agentic-base-floating-panel-header),
 .agentic-base-floating-panel[data-agentic-base-panel-minimized="true"] .agentic-base-floating-panel-header {
+  block-size: calc(var(--agentic-toolbar-height) - var(--agentic-panel-frame-stroke-width) - var(--agentic-panel-frame-stroke-width));
+  min-block-size: calc(var(--agentic-toolbar-height) - var(--agentic-panel-frame-stroke-width) - var(--agentic-panel-frame-stroke-width));
   border-block-end: 0;
 }
 .agentic-base-floating-panel-expanded { width: 100%; height: 100%; }
@@ -48,9 +56,6 @@
   block-size: min(var(--agentic-panel-main-height), calc(100dvh - max(var(--agentic-menu-edge-gap), env(safe-area-inset-top)) - var(--agentic-toolbar-height) - var(--agentic-menu-edge-gap) - max(var(--agentic-menu-edge-gap), env(safe-area-inset-bottom))));
   max-block-size: min(var(--agentic-panel-main-max-height), calc(100dvh - max(var(--agentic-menu-edge-gap), env(safe-area-inset-top)) - var(--agentic-toolbar-height) - var(--agentic-menu-edge-gap) - max(var(--agentic-menu-edge-gap), env(safe-area-inset-bottom))));
 }
-.agentic-base-floating-panel-root[data-agentic-floating-panel-placement="viewport-overlay"] > .agentic-base-floating-panel[data-agentic-base-panel-minimized="true"] {
-  block-size: fit-content; height: auto; max-block-size: none; max-height: none;
-}
 .agentic-panel-main {
   grid-area: main;
   inline-size: min(var(--agentic-panel-main-width), calc(100vw - 2 * var(--agentic-menu-edge-gap)));
@@ -61,15 +66,11 @@
   block-size: min(var(--agentic-panel-main-height), calc(100dvh - 2 * var(--agentic-menu-edge-gap)));
   max-block-size: min(var(--agentic-panel-main-max-height), calc(100dvh - 2 * var(--agentic-menu-edge-gap)));
 }
-.agentic-panel-main--collapsed.agentic-panel-main {
-  block-size: fit-content; max-block-size: none;
-}
 .agentic-panel-bottom {
   grid-area: bottom; inline-size: min(calc(100% - 2 * var(--agentic-panel-gap)), var(--agentic-panel-main-max-width));
   max-inline-size: 100%; min-inline-size: 0; min-block-size: 0;
   block-size: min(var(--agentic-panel-bottom-height), 100%);
 }
-.agentic-panel-bottom--collapsed { block-size: fit-content; max-block-size: none; }
 .agentic-panel-main-dock {
   position: fixed; z-index: var(--agentic-floating-panel-layer, 4);
   inset-block: max(var(--agentic-menu-edge-gap), env(safe-area-inset-top)) max(var(--agentic-menu-edge-gap), env(safe-area-inset-bottom));
