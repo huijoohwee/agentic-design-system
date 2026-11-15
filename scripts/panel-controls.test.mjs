@@ -82,13 +82,19 @@ test('toolbar overlay uses the one shared Design System layer token', () => {
   assert.doesNotMatch(toolbarCss, /z-index:\s*calc\(var\(--agentic-floating-panel-layer/u)
 })
 
-test('viewport floating panels reserve the shared toolbar row and safe viewport insets', () => {
+test('viewport floating panels use one host offset for placement and available height', () => {
   const panelCss = readFileSync(new URL('../site/floating-panel.css', import.meta.url), 'utf8')
+  const mobileCss = panelCss.slice(panelCss.indexOf('@media (max-width: 768px)'))
 
-  assert.match(panelCss, /inset-block-start:\s*calc\(max\(var\(--agentic-menu-edge-gap\), env\(safe-area-inset-top\)\) \+ var\(--agentic-toolbar-height\) \+ var\(--agentic-menu-edge-gap\)\)/u)
+  assert.match(panelCss, /--agentic-floating-panel-effective-block-start-offset:\s*var\(--agentic-floating-panel-block-start-offset, calc\(max\(var\(--agentic-menu-edge-gap\), env\(safe-area-inset-top\)\) \+ var\(--agentic-toolbar-height\) \+ var\(--agentic-menu-edge-gap\)\)\)/u)
+  assert.match(panelCss, /--agentic-floating-panel-available-block-size:\s*max\(0px, calc\(100dvh - var\(--agentic-floating-panel-effective-block-start-offset\) - max\(var\(--agentic-menu-edge-gap\), env\(safe-area-inset-bottom\)\)\)\)/u)
+  assert.match(panelCss, /inset-block-start:\s*var\(--agentic-floating-panel-effective-block-start-offset\)/u)
   assert.match(panelCss, /inset-inline-end:\s*max\(var\(--agentic-menu-edge-gap\), env\(safe-area-inset-right\)\)/u)
-  assert.match(panelCss, /block-size:\s*min\(var\(--agentic-panel-main-height\), calc\(100dvh - max\(var\(--agentic-menu-edge-gap\), env\(safe-area-inset-top\)\) - var\(--agentic-toolbar-height\)/u)
-  assert.match(panelCss, /max-block-size:\s*min\(var\(--agentic-panel-main-max-height\), calc\(100dvh - max\(var\(--agentic-menu-edge-gap\), env\(safe-area-inset-top\)\) - var\(--agentic-toolbar-height\)/u)
+  assert.match(panelCss, /block-size:\s*min\(var\(--agentic-panel-main-height\), var\(--agentic-floating-panel-available-block-size\)\)/u)
+  assert.match(panelCss, /max-block-size:\s*min\(var\(--agentic-panel-main-max-height\), var\(--agentic-floating-panel-available-block-size\)\)/u)
+  assert.match(mobileCss, /block-size:\s*min\(var\(--agentic-panel-main-height-mobile\), var\(--agentic-floating-panel-available-block-size\)\)/u)
+  assert.match(mobileCss, /max-block-size:\s*min\(var\(--agentic-panel-main-max-height\), var\(--agentic-floating-panel-available-block-size\)\)/u)
+  assert.doesNotMatch(mobileCss, /100dvh - max\(var\(--agentic-menu-edge-gap\), env\(safe-area-inset-top\)\) - var\(--agentic-toolbar-height\)/u)
   assert.doesNotMatch(panelCss, /floating-panel-avoid-bottom|floating-panel-available-height/u)
 })
 
