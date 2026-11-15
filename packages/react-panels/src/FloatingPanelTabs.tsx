@@ -1,11 +1,34 @@
-import React, { createContext, useContext, useId } from 'react'
+import React, { createContext, useContext, useId, useLayoutEffect, useRef } from 'react'
 import type { FloatingPanelTabProps, FloatingPanelTabsProps } from '../../../site/floating-panel-contract'
 
 type TabsContextValue = Pick<FloatingPanelTabsProps, 'activeKey' | 'onSelect'>
 const TabsContext = createContext<TabsContextValue | null>(null)
+const useBrowserLayoutEffect = typeof window === 'undefined' ? React.useEffect : useLayoutEffect
+
+function revealSelectedTab(rail: HTMLElement) {
+  const tab = rail.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]')
+  if (!tab) return
+  const railBounds = rail.getBoundingClientRect()
+  const tabBounds = tab.getBoundingClientRect()
+  const delta = tabBounds.left < railBounds.left ? tabBounds.left - railBounds.left
+    : tabBounds.right > railBounds.right ? tabBounds.right - railBounds.right : 0
+  if (delta) rail.scrollLeft += delta
+}
 
 /** One controlled tab rail; active state and navigation are shared across consumers. */
 export function FloatingPanelTabs({ label, activeKey, onSelect, children, ...attributes }: FloatingPanelTabsProps) {
+  const railRef = useRef<HTMLElement>(null)
+
+  useBrowserLayoutEffect(() => {
+    const rail = railRef.current
+    if (!rail) return
+    revealSelectedTab(rail)
+    if (typeof ResizeObserver === 'undefined') return
+    const observer = new ResizeObserver(() => revealSelectedTab(rail))
+    observer.observe(rail)
+    return () => observer.disconnect()
+  }, [activeKey])
+
   const handleKeyDown: React.KeyboardEventHandler<HTMLElement> = event => {
     if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return
     const tabs = Array.from(event.currentTarget.querySelectorAll<HTMLButtonElement>('[role="tab"]:not(:disabled)'))
@@ -20,7 +43,7 @@ export function FloatingPanelTabs({ label, activeKey, onSelect, children, ...att
   }
 
   return <TabsContext.Provider value={{ activeKey, onSelect }}>
-    <nav {...attributes} className="agentic-floating-panel-tabs" aria-label={label} aria-orientation="horizontal"
+    <nav {...attributes} ref={railRef} className="agentic-floating-panel-tabs" aria-label={label} aria-orientation="horizontal"
       role="tablist" onKeyDown={handleKeyDown}>{children}</nav>
   </TabsContext.Provider>
 }
