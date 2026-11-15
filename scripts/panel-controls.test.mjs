@@ -82,13 +82,19 @@ test('toolbar overlay uses the one shared Design System layer token', () => {
   assert.doesNotMatch(toolbarCss, /z-index:\s*calc\(var\(--agentic-floating-panel-layer/u)
 })
 
-test('viewport floating panels reserve the shared toolbar row and safe viewport insets', () => {
+test('viewport floating panels use one host offset for placement and available height', () => {
   const panelCss = readFileSync(new URL('../site/floating-panel.css', import.meta.url), 'utf8')
+  const mobileCss = panelCss.slice(panelCss.indexOf('@media (max-width: 768px)'))
 
-  assert.match(panelCss, /inset-block-start:\s*calc\(max\(var\(--agentic-menu-edge-gap\), env\(safe-area-inset-top\)\) \+ var\(--agentic-toolbar-height\) \+ var\(--agentic-menu-edge-gap\)\)/u)
+  assert.match(panelCss, /--agentic-floating-panel-effective-block-start-offset:\s*var\(--agentic-floating-panel-block-start-offset, calc\(max\(var\(--agentic-menu-edge-gap\), env\(safe-area-inset-top\)\) \+ var\(--agentic-toolbar-height\) \+ var\(--agentic-menu-edge-gap\)\)\)/u)
+  assert.match(panelCss, /--agentic-floating-panel-available-block-size:\s*max\(0px, calc\(100dvh - var\(--agentic-floating-panel-effective-block-start-offset\) - max\(var\(--agentic-menu-edge-gap\), env\(safe-area-inset-bottom\)\)\)\)/u)
+  assert.match(panelCss, /inset-block-start:\s*var\(--agentic-floating-panel-effective-block-start-offset\)/u)
   assert.match(panelCss, /inset-inline-end:\s*max\(var\(--agentic-menu-edge-gap\), env\(safe-area-inset-right\)\)/u)
-  assert.match(panelCss, /block-size:\s*min\(var\(--agentic-panel-main-height\), calc\(100dvh - max\(var\(--agentic-menu-edge-gap\), env\(safe-area-inset-top\)\) - var\(--agentic-toolbar-height\)/u)
-  assert.match(panelCss, /max-block-size:\s*min\(var\(--agentic-panel-main-max-height\), calc\(100dvh - max\(var\(--agentic-menu-edge-gap\), env\(safe-area-inset-top\)\) - var\(--agentic-toolbar-height\)/u)
+  assert.match(panelCss, /block-size:\s*min\(var\(--agentic-panel-main-height\), var\(--agentic-floating-panel-available-block-size\)\)/u)
+  assert.match(panelCss, /max-block-size:\s*min\(var\(--agentic-panel-main-max-height\), var\(--agentic-floating-panel-available-block-size\)\)/u)
+  assert.match(mobileCss, /block-size:\s*min\(var\(--agentic-panel-main-height-mobile\), var\(--agentic-floating-panel-available-block-size\)\)/u)
+  assert.match(mobileCss, /max-block-size:\s*min\(var\(--agentic-panel-main-max-height\), var\(--agentic-floating-panel-available-block-size\)\)/u)
+  assert.doesNotMatch(mobileCss, /100dvh - max\(var\(--agentic-menu-edge-gap\), env\(safe-area-inset-top\)\) - var\(--agentic-toolbar-height\)/u)
   assert.doesNotMatch(panelCss, /floating-panel-avoid-bottom|floating-panel-available-height/u)
 })
 
@@ -113,15 +119,19 @@ test('all panel states reuse toolbar chrome and control sizing', () => {
   assert.match(toolbarCss, /--agentic-toolbar-height:\s*var\(--agentic-row-height\)/u)
 })
 
-test('all expanded panel tabs reveal icon labels on hover, focus, and selection', () => {
+test('expanded and minimized panel tabs reveal labels on hover, focus, and selection', () => {
   const panelCss = readFileSync(new URL('../site/floating-panel.css', import.meta.url), 'utf8')
 
-  assert.match(panelCss, /\.agentic-base-floating-panel \.agentic-floating-panel-tab:not\(\[aria-selected="true"\]\):not\(:hover\):not\(:focus-visible\):has\(> \.agentic-icon\) > span \{ font-size: 0; line-height: 0; \}/u)
-  assert.doesNotMatch(panelCss, /\.agentic-base-floating-panel\[data-agentic-base-panel-minimized="true"\][^{]*\.agentic-floating-panel-tab[^}]*font-size: 0/u)
+  const compactLabelRule = panelCss.match(/\.agentic-base-floating-panel \.agentic-floating-panel-tab:not\(\[aria-selected="true"\]\):not\(:hover\):not\(:focus-visible\):has\(> \.agentic-icon\) > span \{[^}]+\}/u)?.[0]
+
+  assert.ok(compactLabelRule, 'inactive tabs compact their labels only when neither hovered nor focused')
+  assert.doesNotMatch(compactLabelRule, /expanded|collapsed|minimized/u, 'the same label rule applies in every panel state')
+  assert.doesNotMatch(panelCss, /\.agentic-base-floating-panel\[data-agentic-base-panel-minimized="true"\][^{]*\.agentic-floating-panel-tab[^}]*font-size:\s*0/u, 'minimized panels do not hide selected, hovered, or focused labels')
+  assert.match(panelCss, /\.agentic-base-floating-panel \.agentic-floating-panel-tab\[aria-selected="true"\]/u, 'the selected tab remains a labeled tab in minimized and expanded panels')
   assert.doesNotMatch(panelCss, /\.agentic-base-floating-panel:not\(\.agentic-panel-main\):not\(\.agentic-panel-bottom\)[^}]*\.agentic-floating-panel-tab/u)
 })
 
-test('all expanded panel tabs share hover, focus, and selection label behavior', () => {
+test('FloatingPanel shares the panel tab label behavior', () => {
   const panelCss = readFileSync(new URL('../site/floating-panel.css', import.meta.url), 'utf8')
 
   assert.match(panelCss, /\.agentic-base-floating-panel \.agentic-floating-panel-tab:not\(\[aria-selected="true"\]\):not\(:hover\):not\(:focus-visible\):has\(> \.agentic-icon\) > span \{ font-size: 0; line-height: 0; \}/u)

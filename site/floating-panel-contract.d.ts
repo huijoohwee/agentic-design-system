@@ -14,6 +14,8 @@ export type FloatingPanelRootStyle = FloatingPanelPanelStyle
 
 export interface FloatingPanelShellProps {
   rootPlacement?: FloatingPanelRootPlacement
+  /** Total viewport inset consumed by host chrome; shared placement and height use the same value. */
+  viewportBlockStartOffset?: React.CSSProperties['insetBlockStart']
   rootStyle?: FloatingPanelRootStyle
   panelStyle?: FloatingPanelPanelStyle
   ariaLabel?: string
