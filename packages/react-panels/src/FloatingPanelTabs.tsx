@@ -5,14 +5,28 @@ type TabsContextValue = Pick<FloatingPanelTabsProps, 'activeKey' | 'onSelect'>
 const TabsContext = createContext<TabsContextValue | null>(null)
 const useBrowserLayoutEffect = typeof window === 'undefined' ? React.useEffect : useLayoutEffect
 
-function revealSelectedTab(rail: HTMLElement) {
-  const tab = rail.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]')
+function revealTab(rail: HTMLElement, tab: HTMLElement | null) {
   if (!tab) return
   const railBounds = rail.getBoundingClientRect()
   const tabBounds = tab.getBoundingClientRect()
   const delta = tabBounds.left < railBounds.left ? tabBounds.left - railBounds.left
     : tabBounds.right > railBounds.right ? tabBounds.right - railBounds.right : 0
   if (delta) rail.scrollLeft += delta
+}
+
+function revealSelectedTab(rail: HTMLElement) {
+  revealTab(rail, rail.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]'))
+}
+
+function revealInteractiveTab(rail: HTMLElement, target: EventTarget | null) {
+  const tab = target instanceof Element ? target.closest<HTMLElement>('[role="tab"]') : null
+  if (tab) requestAnimationFrame(() => revealTab(rail, tab))
+}
+
+function revealPreferredTab(rail: HTMLElement) {
+  requestAnimationFrame(() => revealTab(rail,
+    rail.querySelector<HTMLElement>('[role="tab"]:focus-visible')
+      ?? rail.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]')))
 }
 
 /** One controlled tab rail; active state and navigation are shared across consumers. */
@@ -44,7 +58,13 @@ export function FloatingPanelTabs({ label, activeKey, onSelect, children, ...att
 
   return <TabsContext.Provider value={{ activeKey, onSelect }}>
     <nav {...attributes} ref={railRef} className="agentic-floating-panel-tabs" aria-label={label} aria-orientation="horizontal"
-      role="tablist" onKeyDown={handleKeyDown}>{children}</nav>
+      role="tablist" onKeyDown={handleKeyDown}
+      onPointerOver={event => revealInteractiveTab(event.currentTarget, event.target)}
+      onPointerLeave={event => revealPreferredTab(event.currentTarget)}
+      onFocus={event => revealInteractiveTab(event.currentTarget, event.target)}
+      onBlur={event => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) revealPreferredTab(event.currentTarget)
+      }}>{children}</nav>
   </TabsContext.Provider>
 }
 
