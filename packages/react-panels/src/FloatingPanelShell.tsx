@@ -18,7 +18,7 @@ export type FloatingPanelShellProps = Omit<CanonicalFloatingPanelShellProps, 'ro
 
 /** One Design System shell for MainPanel, FloatingPanel, and BottomPanel content. */
 export const FloatingPanelShell = React.forwardRef<HTMLElement, FloatingPanelShellProps>(function FloatingPanelShell({
-  rootPlacement = 'flow', rootStyle, panelStyle, theme = 'system', ariaLabel = 'Floating panel', minimized = false,
+  rootPlacement = 'flow', rootStyle, panelStyle, theme = 'inherit', ariaLabel = 'Floating panel', minimized = false,
   pinned = true, rowHeight, fieldLine, onHeaderPointerDown, onPointerDownCapture, onFocusCapture,
   panelLayer, header, children,
 }, ref) {
