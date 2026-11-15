@@ -107,22 +107,23 @@ test('all panel states reuse toolbar chrome and control sizing', () => {
   assert.match(panelCss, /\.agentic-base-floating-panel-expanded > \.agentic-base-floating-panel-header\s*\{\s*inline-size: calc\(100% \+ 2 \* var\(--agentic-control-padding-inline\)\);\s*margin-block: calc\(-1 \* var\(--agentic-control-padding-inline\)\) var\(--agentic-control-padding-inline\);\s*margin-inline: calc\(-1 \* var\(--agentic-control-padding-inline\)\);/u)
   assert.match(panelCss, /\.agentic-panel-main--collapsed :is\(\.agentic-panel-header, \.agentic-base-floating-panel-header\),\s*\.agentic-panel-bottom--collapsed :is\(\.agentic-panel-header, \.agentic-base-floating-panel-header\),\s*\.agentic-base-floating-panel\[data-agentic-base-panel-minimized="true"\] \.agentic-base-floating-panel-header\s*\{\s*block-size: calc\(var\(--agentic-toolbar-height\) - var\(--agentic-panel-frame-stroke-width\) - var\(--agentic-panel-frame-stroke-width\)\);\s*min-block-size: calc\(var\(--agentic-toolbar-height\) - var\(--agentic-panel-frame-stroke-width\) - var\(--agentic-panel-frame-stroke-width\)\);\s*border-block-end: 0;/u)
   assert.match(panelCss, /\.agentic-base-floating-panel\[data-agentic-base-panel-minimized="true"\] \.agentic-floating-panel-tab:has\(> \.agentic-icon\) > span \{ font-size: 0; line-height: 0; \}/u)
-  assert.match(panelCss, /\.agentic-base-floating-panel :is\(\.agentic-floating-panel-tab, \.agentic-base-floating-panel-close\):has\(> \.agentic-icon:only-child\),\s*\.agentic-base-floating-panel\[data-agentic-base-panel-minimized="true"\] \.agentic-floating-panel-tab:has\(> \.agentic-icon\),\s*\.agentic-base-floating-panel:not\(\.agentic-panel-main\):not\(\.agentic-panel-bottom\) :is\(\.agentic-panel-header, \.agentic-base-floating-panel-header\) \.agentic-floating-panel-tab:has\(> \.agentic-icon\)\s*\{\s*inline-size: max\(var\(--agentic-control-height\), var\(--agentic-icon-size-default\)\)/u)
+  assert.match(panelCss, /\.agentic-base-floating-panel :is\(\.agentic-floating-panel-tab, \.agentic-base-floating-panel-close\):has\(> \.agentic-icon:only-child\),\s*\.agentic-base-floating-panel\[data-agentic-base-panel-minimized="true"\] \.agentic-floating-panel-tab:has\(> \.agentic-icon\)\s*\{\s*inline-size: max\(var\(--agentic-control-height\), var\(--agentic-icon-size-default\)\)/u)
   assert.match(toolbarCss, /border:\s*var\(--agentic-panel-border\);\s*border-radius:\s*var\(--agentic-panel-radius\);\s*box-shadow:\s*var\(--agentic-toolbar-shadow\)/u)
   assert.match(toolbarCss, /--agentic-toolbar-height:\s*var\(--agentic-row-height\)/u)
 })
 
-test('FloatingPanel view tabs are icon-only with accessible names', () => {
+test('all expanded panel tabs reveal icon labels on hover, focus, and selection', () => {
   const panelCss = readFileSync(new URL('../site/floating-panel.css', import.meta.url), 'utf8')
 
-  assert.match(panelCss, /\.agentic-base-floating-panel:not\(\.agentic-panel-main\):not\(\.agentic-panel-bottom\) :is\(\.agentic-panel-header, \.agentic-base-floating-panel-header\) \.agentic-floating-panel-tab:has\(> \.agentic-icon\) > span,\s*\.agentic-base-floating-panel\[data-agentic-base-panel-minimized="true"\] \.agentic-floating-panel-tab:has\(> \.agentic-icon\) > span \{ font-size: 0; line-height: 0; \}/u)
-  assert.doesNotMatch(panelCss, /\.agentic-base-floating-panel:not\(\.agentic-panel-main\):not\(\.agentic-panel-bottom\)[^}]*\.agentic-floating-panel-tab[^}]*\{[^}]*display: none/u)
+  assert.match(panelCss, /\.agentic-base-floating-panel:not\(\[data-agentic-base-panel-minimized="true"\]\) \.agentic-floating-panel-tab:not\(\[aria-selected="true"\]\):not\(:hover\):not\(:focus-visible\):has\(> \.agentic-icon\) > span \{ font-size: 0; line-height: 0; \}/u)
+  assert.match(panelCss, /\.agentic-base-floating-panel\[data-agentic-base-panel-minimized="true"\] \.agentic-floating-panel-tab:has\(> \.agentic-icon\) > span \{ font-size: 0; line-height: 0; \}/u)
+  assert.doesNotMatch(panelCss, /\.agentic-base-floating-panel:not\(\.agentic-panel-main\):not\(\.agentic-panel-bottom\)[^}]*\.agentic-floating-panel-tab/u)
 })
 
-test('MainPanel and BottomPanel tabs reveal icon labels on hover, focus, and selection', () => {
+test('all expanded panel tabs share hover, focus, and selection label behavior', () => {
   const panelCss = readFileSync(new URL('../site/floating-panel.css', import.meta.url), 'utf8')
 
-  assert.match(panelCss, /\.agentic-base-floating-panel:is\(\.agentic-panel-main, \.agentic-panel-bottom\) \.agentic-floating-panel-tab:not\(\[aria-selected="true"\]\):not\(:hover\):not\(:focus-visible\):has\(> \.agentic-icon\) > span \{ font-size: 0; line-height: 0; \}/u)
+  assert.match(panelCss, /\.agentic-base-floating-panel:not\(\[data-agentic-base-panel-minimized="true"\]\) \.agentic-floating-panel-tab:not\(\[aria-selected="true"\]\):not\(:hover\):not\(:focus-visible\):has\(> \.agentic-icon\) > span \{ font-size: 0; line-height: 0; \}/u)
   assert.match(panelCss, /\.agentic-base-floating-panel \.agentic-floating-panel-tab\s*\{[^}]*block-size:\s*max\(var\(--agentic-control-height\), var\(--agentic-icon-size-default\)\)/u)
 })
 
