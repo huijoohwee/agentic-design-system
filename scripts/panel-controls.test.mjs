@@ -119,15 +119,19 @@ test('all panel states reuse toolbar chrome and control sizing', () => {
   assert.match(toolbarCss, /--agentic-toolbar-height:\s*var\(--agentic-row-height\)/u)
 })
 
-test('all expanded panel tabs reveal icon labels on hover, focus, and selection', () => {
+test('expanded and minimized panel tabs reveal labels on hover, focus, and selection', () => {
   const panelCss = readFileSync(new URL('../site/floating-panel.css', import.meta.url), 'utf8')
 
-  assert.match(panelCss, /\.agentic-base-floating-panel \.agentic-floating-panel-tab:not\(\[aria-selected="true"\]\):not\(:hover\):not\(:focus-visible\):has\(> \.agentic-icon\) > span \{ font-size: 0; line-height: 0; \}/u)
-  assert.doesNotMatch(panelCss, /\.agentic-base-floating-panel\[data-agentic-base-panel-minimized="true"\][^{]*\.agentic-floating-panel-tab[^}]*font-size: 0/u)
+  const compactLabelRule = panelCss.match(/\.agentic-base-floating-panel \.agentic-floating-panel-tab:not\(\[aria-selected="true"\]\):not\(:hover\):not\(:focus-visible\):has\(> \.agentic-icon\) > span \{[^}]+\}/u)?.[0]
+
+  assert.ok(compactLabelRule, 'inactive tabs compact their labels only when neither hovered nor focused')
+  assert.doesNotMatch(compactLabelRule, /expanded|collapsed|minimized/u, 'the same label rule applies in every panel state')
+  assert.doesNotMatch(panelCss, /\.agentic-base-floating-panel\[data-agentic-base-panel-minimized="true"\][^{]*\.agentic-floating-panel-tab[^}]*font-size:\s*0/u, 'minimized panels do not hide selected, hovered, or focused labels')
+  assert.match(panelCss, /\.agentic-base-floating-panel \.agentic-floating-panel-tab\[aria-selected="true"\]/u, 'the selected tab remains a labeled tab in minimized and expanded panels')
   assert.doesNotMatch(panelCss, /\.agentic-base-floating-panel:not\(\.agentic-panel-main\):not\(\.agentic-panel-bottom\)[^}]*\.agentic-floating-panel-tab/u)
 })
 
-test('all expanded panel tabs share hover, focus, and selection label behavior', () => {
+test('FloatingPanel shares the panel tab label behavior', () => {
   const panelCss = readFileSync(new URL('../site/floating-panel.css', import.meta.url), 'utf8')
 
   assert.match(panelCss, /\.agentic-base-floating-panel \.agentic-floating-panel-tab:not\(\[aria-selected="true"\]\):not\(:hover\):not\(:focus-visible\):has\(> \.agentic-icon\) > span \{ font-size: 0; line-height: 0; \}/u)
