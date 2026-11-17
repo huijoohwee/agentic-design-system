@@ -33,7 +33,24 @@
       "types": "./site/panel-section.d.ts",
       "import": "./site/panel-section.js"
     },
-    "./sections.css": "./site/panel-section.css"
+    "./sections.css": "./site/panel-section.css",
+    "./markdown": {
+      "types": "./site/markdown.d.ts",
+      "import": "./site/markdown.js"
+    },
+    "./markdown/parser": {
+      "types": "./site/markdown-parser.d.ts",
+      "import": "./site/markdown-parser.js"
+    },
+    "./color": {
+      "types": "./site/color.d.ts",
+      "import": "./site/color.js"
+    },
+    "./react/rich-text": {
+      "types": "./packages/react-rich-text/src/index.tsx",
+      "import": "./packages/react-rich-text/src/index.tsx"
+    },
+    "./rich-text.css": "./site/rich-text.css"
   },
   "engines": {
     "node": ">=20.11"
@@ -55,7 +72,7 @@
     "lane": "agentic-os start",
     "land": "agentic-os land",
     "dev": "node scripts/dev.mjs",
-    "check:design-system": "node --test scripts/panel-controls.test.mjs scripts/react-panel-adapter.test.mjs scripts/key-type-value.test.mjs scripts/hover.test.mjs scripts/panel-section.test.mjs && node scripts/design-registry.mjs check",
+    "check:design-system": "node --test scripts/panel-controls.test.mjs scripts/react-panel-adapter.test.mjs scripts/key-type-value.test.mjs scripts/hover.test.mjs scripts/panel-section.test.mjs scripts/markdown.test.mjs && node scripts/design-registry.mjs check",
     "mcp": "node scripts/design-registry.mjs mcp"
   },
   "devDependencies": {

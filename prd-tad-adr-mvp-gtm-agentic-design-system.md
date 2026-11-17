@@ -1,19 +1,19 @@
 ---
 title: "Agentic Design System — Shared Ownership and Singleton Tokens"
 doc_type: "PRD-TAD-ADR-MVP-GTM"
-version: "0.9.31"
-revision: "0.9.31"
+version: "0.9.32"
+revision: "0.9.32"
 date: "2026-10-29"
 updated_date: "2026-11-17"
 lang: "en-US"
 frontmatter_contract: "required"
 owner: "Design-system product function"
 continuity_id: "DESIGN-TOKEN-ADOPTION-001"
-prd_revision: "0.9.31"
-tad_revision: "0.9.31"
-adr_revision: "0.9.31"
-mvp_revision: "0.9.31"
-gtm_revision: "0.9.31"
+prd_revision: "0.9.32"
+tad_revision: "0.9.32"
+adr_revision: "0.9.32"
+mvp_revision: "0.9.32"
+gtm_revision: "0.9.32"
 local_rung: "dev-proven"
 delivered_rung: "undocumented"
 lane: "authoring"
@@ -361,3 +361,11 @@ Owner checks and consumer observations establish only their stated scope. Local 
 **MVP/VCC:** KTV-06 one independently editable value per row, including minimum/maximum; KTV-07 stable control IDs, values, labels and events survive composition; KTV-08 invalid groups fail before moving any node; KTV-09 four consumers use the exact integrated owner with desktop, narrow and offline proof. Named checks: owner key-type-value tests, public-release validation, consumer native checks and live UI. Local acceptance remains pending at authoring; Production is not selected.
 
 **GTM/bounds:** Existing planning and settings users can distinguish and edit each amount endpoint. No paid feature, service or dependency; $0 spend, 45-minute first pass, 60 KB authored changes, 100 paths excluding immutable generated projections, no new runtime module, 500,000-byte browser chunk cap. Revisit on failing conformance or observed UI drift. Rollback restores exact prior owner/consumer pins together; user data formats and field IDs are unchanged.
+
+## Shared Markdown and palette — 0.9.32
+
+**PRD:** One owner must supply heading, bold, italic, strike, code, link, list, quote, slash/variable intent, indentation, underline, superscript/subscript, math, highlight, comment, clear formatting and color palette controls across existing workspaces. User instruction on 2026-11-17 authorizes centralizing Graph's reusable implementation. No new paid offer or demand claim is made.
+
+**TAD/ADR:** Design System owns semantic command/syntax records, selection transforms, engine configuration, native controls and thin React bindings. Hosts inject their existing parser/plugins and retain product document state, command execution, sanitization and overlay geometry. React mounts the same native toolbar/palette. Exact pins and immutable projections replace generic consumer implementations. No reverse product dependency, provider effect or runtime network.
+
+**MVP/GTM:** Transform, parser and color contracts have named owner tests in `scripts/markdown.test.mjs`; public-release and registry checks remain required. Consumer cutover and live desktop/mobile evidence must be recorded after integration; this source alone does not prove them. Four authored runtime modules, 150 KB authored cap, 45-minute implementation bound; CI waits are separate. Consumers roll back by reverting exact pins. Development evidence remains separate from production delivery.
