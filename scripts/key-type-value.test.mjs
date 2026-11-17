@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { readFileSync } from 'node:fs'
-import { createKeyTypeValueRow, KTV_ROW_PARTS } from '../site/key-type-value.js'
+import { createKeyTypeValueRow, createKeyTypeValueRows, validateKeyTypeValueRows, KTV_ROW_PARTS } from '../site/key-type-value.js'
 
 function documentFixture() {
   const document = { createElement: tag => ({ tag, nodeType: 1, ownerDocument: document, dataset: {}, children: [], append(...nodes) { this.children.push(...nodes) } }) }
@@ -33,4 +33,33 @@ test('React shares immutable slots without a reverse consumer dependency or inli
   assert.match(adapter, /KTV_ROW_PARTS\.map/)
   assert.match(adapter, /from '\.\.\/\.\.\/\.\.\/site\/key-type-value\.js'/)
   assert.doesNotMatch(adapter, /@agentic-base|grph-shared|grid-template|style=/)
+})
+
+test('independent range values occupy separate KTV rows without cloning their controls', () => {
+  const ownerDocument = documentFixture(), low = ownerDocument.createElement('input'), high = ownerDocument.createElement('input')
+  low.value = '12'; high.value = '18'; low.oninput = () => 'minimum edited'
+  const group = createKeyTypeValueRows({ ownerDocument, rows: [
+    { id: 'cost-minimum', keyNode: 'Cost minimum', typeNode: 'Number', valueNode: low },
+    { id: 'cost-maximum', keyNode: 'Cost maximum', typeNode: 'Number', valueNode: high },
+  ] })
+  assert.equal(group.children.length, 2)
+  for (const [index, value] of [low, high].entries()) {
+    const row = group.children[index].children[0]
+    assert.deepEqual(row.children.map(cell => cell.tag), ['dt', 'dd', 'dd'])
+    assert.deepEqual(row.children[2].children, [value])
+  }
+  assert.equal(low.oninput(), 'minimum edited'); assert.equal(low.value, '12'); assert.equal(high.value, '18')
+})
+
+test('invalid row groups fail atomically before moving any control', () => {
+  const ownerDocument = documentFixture(), control = ownerDocument.createElement('input')
+  const first = { id: 'minimum', keyNode: 'Minimum', typeNode: 'Number', valueNode: control }
+  for (const rows of [[], [first, { ...first }], [first, { ...first, id: 'maximum' }],
+    [first, { id: 'maximum', keyNode: 'Maximum', typeNode: 'Number' }]]) {
+    assert.throws(() => createKeyTypeValueRows({ ownerDocument, rows }), TypeError)
+  }
+  for (const rows of [[{ id: '' }], [{ id: 'x', align: 'other' }]]) assert.throws(() => validateKeyTypeValueRows(rows), TypeError)
+  const adapter = readFileSync(new URL('../packages/react-ktv/src/index.tsx', import.meta.url), 'utf8')
+  assert.match(adapter, /validateKeyTypeValueRows\(rows\)/)
+  assert.match(adapter, /key=\{row\.id\}/)
 })

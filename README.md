@@ -69,6 +69,8 @@ The shared UI profile centrally owns body typography (14px/20px), font families,
 
 KTV sizing adapts to the shared row container; the shared profile owns tracks, the stacking breakpoint and the default field-panel width. Consumer projections remain immutable local artifacts.
 
+Each KTV row represents one independently editable value. Range minimum and maximum use separate rows through `createKeyTypeValueRows` (`/ktv`) or `KeyTypeValueRows` (`/react/ktv`). Supply a unique stable `id` and key/type/value content for each row; the group composes the existing row owner without another layout. Native groups validate all descriptors before moving controls; React uses the same IDs as list keys. Multiple controls that edit the same value, such as a slider and its numeric input, remain one value.
+
 Dropdowns and textboxes reuse the generated `agentic-form-control` utility; native fields opt in through `agentic-form-controls`. Shared geometry is 28px desktop and 48px on coarse pointers or viewports up to 768px, with 8px inline padding, a 6px radius and body typography. Focus color stays with the local theme; native select behavior, labels, validation and Graph menu behavior stay with their existing owners.
 
 Opened dropdown menus also reuse the generated shared surface, option, hover, selected, focus and touch styles. Base owns the neutral menu behavior and native/React adapters; this registry adds no runtime dependency on Base.
