@@ -87,3 +87,11 @@ test('React adapts the owner contract and uses native buttons without duplicate 
   assert.match(css, /\[hidden\] \{ display: none !important/)
   assert.match(css, /@media print/)
 })
+
+test('the native preview and offline cache both admit section runtime assets', () => {
+  for (const path of ['../scripts/dev.mjs', '../site/sw.js']) {
+    const source = readFileSync(new URL(path, import.meta.url), 'utf8')
+    assert.match(source, /panel-section\.js/)
+    assert.match(source, /panel-section\.css/)
+  }
+})
