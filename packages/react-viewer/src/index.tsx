@@ -15,14 +15,14 @@ export const ViewerSurface=React.forwardRef<HTMLElement,ViewerSurfaceProps>(func
   if(!active&&!wasActive.current)renderedChildren.current=children
   React.useLayoutEffect(()=>{
     if(!editRoot.current)return
-    const label=editRoot.current.getAttribute('aria-label')
-    const mounted=attachViewerSurface(editRoot.current,{editable,activation,
+    const target=editRoot.current,label=target.getAttribute('aria-label')
+    const mounted=attachViewerSurface(target,{editable,activation,
       readValue:node=>latest.current.readValue?.(node)??node.textContent??'',
       onEditingChange:next=>{setLocalEditing(next);latest.current.onEditingChange?.(next)},
       onCommit:value=>latest.current.onCommit?.(value),
       ...(onCancel?{onCancel:state=>latest.current.onCancel?.(state)}:{})})
     controller.current=mounted
-    return()=>{controller.current=null;mounted.destroy();if(editRoot.current){if(label===null)editRoot.current.removeAttribute('aria-label');else editRoot.current.setAttribute('aria-label',label)}}
+    return()=>{controller.current=null;mounted.destroy();if(label===null)target.removeAttribute('aria-label');else target.setAttribute('aria-label',label)}
   },[editable,activation,Boolean(onCancel),generation])
   React.useLayoutEffect(()=>{
     if(active&&!wasActive.current)baselineHtml.current=editRoot.current?.innerHTML??''
