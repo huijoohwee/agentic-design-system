@@ -50,7 +50,16 @@
       "types": "./packages/react-rich-text/src/index.tsx",
       "import": "./packages/react-rich-text/src/index.tsx"
     },
-    "./rich-text.css": "./site/rich-text.css"
+    "./rich-text.css": "./site/rich-text.css",
+    "./viewer": {
+      "types": "./site/viewer-surface.d.ts",
+      "import": "./site/viewer-surface.js"
+    },
+    "./react/viewer": {
+      "types": "./packages/react-viewer/src/index.tsx",
+      "import": "./packages/react-viewer/src/index.tsx"
+    },
+    "./viewer.css": "./site/viewer-surface.css"
   },
   "engines": {
     "node": ">=20.11"
@@ -72,7 +81,7 @@
     "lane": "agentic-os start",
     "land": "agentic-os land",
     "dev": "node scripts/dev.mjs",
-    "check:design-system": "node --test scripts/panel-controls.test.mjs scripts/react-panel-adapter.test.mjs scripts/key-type-value.test.mjs scripts/hover.test.mjs scripts/panel-section.test.mjs scripts/markdown.test.mjs && node scripts/design-registry.mjs check",
+    "check:design-system": "node --test scripts/panel-controls.test.mjs scripts/react-panel-adapter.test.mjs scripts/key-type-value.test.mjs scripts/hover.test.mjs scripts/panel-section.test.mjs scripts/markdown.test.mjs scripts/viewer-surface.test.mjs && node scripts/design-registry.mjs check",
     "mcp": "node scripts/design-registry.mjs mcp"
   },
   "devDependencies": {
