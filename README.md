@@ -101,3 +101,5 @@ always stay mounted. Action buttons are outside the expansion button. Sticky
 headers use `--agentic-section-offset` for host chrome geometry; scroll regions
 use `--agentic-scroll-block-size` only when the host has a bounded viewport. Do not
 redeclare sticky, collapse or overflow behavior in consumer section variants.
+
+Shared rich-text source owns Markdown command IDs, labels, syntax and selection transforms (`/markdown`), Markdown-it parser configuration (`/markdown/parser`), colour conversion/native palette (`/color`) and native/React controls (`/react/rich-text`). Load `/rich-text.css` with the shared UI profile. React mounts the native toolbar and palette; hosts retain source text, selection, product commands and overlay placement. Parser constructors and optional plugins are injected from the host's installed FOSS engine; no runtime network or reverse product import is used. Rich HTML renderers must preserve their existing sanitization boundary. Native fields use `attachMarkdownEditor`; dispose before retiring the field. Generic command callbacks never invoke providers.
