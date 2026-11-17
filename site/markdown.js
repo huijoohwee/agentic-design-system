@@ -1,3 +1,4 @@
+import { computeTooltipPositionFromAnchor, constrainTooltipPosition, getTooltipPortalTarget } from './hover-text.js'
 import { createColorPalette, DEFAULT_COLOR_SWATCHES } from './color.js'
 
 const command = (id, label, glyph, extra = {}) => Object.freeze({ id, label, glyph, ...extra, ...(extra.wrap ? {wrap:Object.freeze([...extra.wrap])} : {}) })
@@ -137,10 +138,24 @@ export function createMarkdownToolbar({ document: doc = globalThis.document, onC
       const section = doc.createElement('section'); section.className = 'agentic-color-palette'; section.role = 'dialog'; section.ariaLabel = 'Color Palette'
       const colors = createColorPalette(section, { value: '#000000', swatches, onValueChange: color => run(id, color) })
       const close = doc.createElement('button'); close.type = 'button'; close.className = 'agentic-toolbar-item'; close.textContent = 'Done'
-      palette = { destroy() { colors.destroy(); section.remove() } }
-      close.onclick = () => { palette.destroy(); palette = null; button.ariaExpanded = 'false'; button.focus() }
-      section.onkeydown = event => { if (event.key === 'Escape') { event.preventDefault(); close.click() } }
-      section.prepend(close); root.append(section); button.ariaExpanded = 'true'; button.ariaHasPopup = 'dialog'
+      const win=doc.defaultView
+      section.classList.add('agentic-rich-text-popover')
+      const position=()=>{
+        if(!section.isConnected)return
+        const pos=constrainTooltipPosition({pos:computeTooltipPositionFromAnchor(button,4),tooltipRect:section.getBoundingClientRect(),anchorRect:button.getBoundingClientRect(),viewportW:win.innerWidth,viewportH:win.innerHeight,paddingPx:8,offsetPx:4})
+        section.style.left=`${pos.left}px`;section.style.top=`${pos.top}px`
+      }
+      const dismiss=()=>{palette?.destroy();palette=null;button.ariaExpanded='false'}
+      const outside=event=>{if(!section.contains(event.target)&&!button.contains(event.target))dismiss()}
+      const key=event=>{if(event.key==='Escape'){event.preventDefault();event.stopPropagation();dismiss();button.focus({preventScroll:true})}}
+      section.addEventListener('pointerdown',event=>{onInteractionStart?.();event.stopPropagation()})
+      section.addEventListener('click',event=>event.stopPropagation())
+      const observer=win.ResizeObserver?new win.ResizeObserver(position):null
+      palette = { destroy() { observer?.disconnect();win.removeEventListener('resize',position);doc.removeEventListener('scroll',position,true);doc.removeEventListener('pointerdown',outside,true);doc.removeEventListener('keydown',key,true);colors.destroy();section.remove() } }
+      close.onclick=()=>{dismiss();button.focus({preventScroll:true})}
+      section.prepend(close);getTooltipPortalTarget(button).append(section)
+      win.addEventListener('resize',position);doc.addEventListener('scroll',position,true);doc.addEventListener('pointerdown',outside,true);doc.addEventListener('keydown',key,true)
+      observer?.observe(section);position();button.ariaExpanded='true';button.ariaHasPopup='dialog'
     })
     root.append(button)
   }
