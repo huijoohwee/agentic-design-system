@@ -32,3 +32,15 @@ test('palette conversions roundtrip extrema and representative RGB values',()=>{
  assert.equal(normalizeHexColor('#AbC'),'#aabbcc'); assert.equal(normalizeHexColor('red'),null)
  for(const color of ['#000000','#ffffff','#ff0000','#60a5fa','#808080','#13c789']){assert.equal(hsvToHex(hexToHsv(color)),color);assert.equal(rgbToHex(hexToRgb(color)),color)}
 })
+
+test('successive palette edits update one annotation while preserving selection',()=>{
+ const first=apply('Plan','colorPalette',0,4,'#336699')
+ const next=applyMarkdownFormatAction({text:first.nextText,selection:first.nextSelection,action:'colorPalette',value:'#60a5fa'})
+ assert.equal(next.nextText,'<span style="color:#60a5fa">Plan</span>')
+ assert.deepEqual(next.nextSelection,first.nextSelection)
+})
+
+test('clear formatting preserves code literals and surrounding emphasis',()=>{
+ assert.equal(clearMarkdownFormatting('**`**literal**`**'),'**literal**')
+ assert.equal(clearMarkdownFormatting('```md\n## literal\n**literal**\n```'),'## literal\n**literal**')
+})

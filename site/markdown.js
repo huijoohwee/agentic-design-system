@@ -53,14 +53,25 @@ export function toggleHeadingAcrossLines({ text, level }) {
   return lines.map(line => !line.trim() ? line : remove ? line.slice(prefix.length) : prefix + line.replace(/^#{1,6}\s+/, '')).join('\n')
 }
 export function clearMarkdownFormatting(text) {
-  // Preserve fenced/inline code contents and link labels; remove only supported formatting syntax.
-  return String(text).replace(/^([ \t]*)(?:#{1,6}\s+|>\s*|[-+*]\s+|\d+[.)]\s+)/gm, '$1')
-    .replace(/^\s*(`{3,}|~{3,})[^\n]*\n([\s\S]*?)\n\s*\1\s*$/gm, '$2')
-    .replace(/(`+)([^\n]*?)\1/g, '$2').replace(/!?\[([^\]]*)\]\([^\n)]*\)/g, '$1')
+  text = String(text)
+  // Protect literal code contents before removing surrounding formatting.
+  const used = new Set([...text.matchAll(/\0c(\d+):\0/g)].map(match=>Number(match[1])))
+  let id=0; while(used.has(id)) id++
+  const prefix=`\0c${id}:\0`, code=[]
+  const stash=content=>`${prefix}${code.push(content)-1}\0`
+  let plain=text.replace(/^[ \t]{0,3}(`{3,}|~{3,})[^\n]*\n([\s\S]*?)\n[ \t]{0,3}\1[ \t]*$/gm,(_,marker,content)=>stash(content))
+  plain=plain.replace(/(`+)([^\n]*?)\1/g,(whole,marker,content,offset,input)=>{
+    let escapes=0;for(let i=offset-1;i>=0&&input[i]==='\\';i--)escapes++
+    return escapes%2?whole:stash(content)
+  })
+  plain=plain.replace(/^([ \t]*)(?:#{1,6}\s+|>\s*|[-+*]\s+|\d+[.)]\s+)/gm, '$1')
+    .replace(/!?\[([^\]]*)\]\([^\n)]*\)/g, '$1')
     .replace(/<!--[\s\S]*?-->/g, value => value.slice(4, -3).trim())
     .replace(/<\/?(?:u|sup|sub|mark|span|strong|em|s|del)(?:\s[^>]*)?>/gi, '')
     .replace(/(\*\*|__|~~|==)([\s\S]+?)\1/g, '$2').replace(/([*_^~$])([^\s][^\n]*?)\1/g, '$2')
+  return plain.replace(new RegExp(`\\0c${id}:\\0(\\d+)\\0`,'g'),(_,index)=>code[Number(index)])
 }
+
 export function applyMarkdownFormatAction({ text, selection, action, value }) {
   text = String(text)
   const descriptor = getMarkdownCommand(action), sel = clampMarkdownSelection(text, selection)
@@ -73,7 +84,12 @@ export function applyMarkdownFormatAction({ text, selection, action, value }) {
   }
   if (action === 'colorPalette') {
     if (!/^#[0-9a-f]{6}$/i.test(value || '')) throw new TypeError('A six-digit hex colour is required')
-    return wrapMarkdownSelection(text, sel, `<span style="color:${value.toLowerCase()}">`, '</span>')
+    const open = `<span style="color:${value.toLowerCase()}">`
+    const previous = text.slice(0,a).match(/<span style="color:#[0-9a-f]{6}">$/i)
+    if (previous && text.slice(b,b+7) === '</span>') return {
+      nextText:text.slice(0,a-previous[0].length)+open+text.slice(a), nextSelection:sel,
+    }
+    return wrapMarkdownSelection(text, sel, open, '</span>')
   }
   if (['slashCommands', 'variableCommands'].includes(action)) {
     const next = action === 'slashCommands' ? '/' : '@'
