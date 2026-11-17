@@ -15,16 +15,33 @@
     "./react/ktv": {
       "types": "./packages/react-ktv/src/index.tsx",
       "import": "./packages/react-ktv/src/index.tsx"
+    },
+    "./hover": {
+      "types": "./site/hover.d.ts",
+      "import": "./site/hover.js"
+    },
+    "./hover/text": {
+      "types": "./site/hover-text.d.ts",
+      "import": "./site/hover-text.js"
+    },
+    "./hover.css": "./site/hover.css",
+    "./react/hover": {
+      "types": "./packages/react-hover/src/index.tsx",
+      "import": "./packages/react-hover/src/index.tsx"
     }
   },
   "engines": {
     "node": ">=20.11"
   },
   "peerDependencies": {
-    "react": ">=18"
+    "react": ">=18",
+    "react-dom": ">=18"
   },
   "peerDependenciesMeta": {
     "react": {
+      "optional": true
+    },
+    "react-dom": {
       "optional": true
     }
   },
@@ -33,7 +50,7 @@
     "lane": "agentic-os start",
     "land": "agentic-os land",
     "dev": "node scripts/dev.mjs",
-    "check:design-system": "node --test scripts/panel-controls.test.mjs scripts/react-panel-adapter.test.mjs scripts/key-type-value.test.mjs && node scripts/design-registry.mjs check",
+    "check:design-system": "node --test scripts/panel-controls.test.mjs scripts/react-panel-adapter.test.mjs scripts/key-type-value.test.mjs scripts/hover.test.mjs && node scripts/design-registry.mjs check",
     "mcp": "node scripts/design-registry.mjs mcp"
   },
   "devDependencies": {

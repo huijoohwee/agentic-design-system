@@ -56,7 +56,7 @@ function parseProfile(source) {
   const profile = JSON.parse(source);
   exactKeys(profile, ["schema", "id", "version", "status", "scope", "sourceRevision", "sources", "permissionEvidence", "tokens"], "root");
   if (profile.schema !== "agentic-design-system/graph-profile/v1" || profile.id !== "graph"
-    || profile.version !== "0.2.0" || profile.status !== "candidate" || profile.sourceRevision !== SOURCE_REVISION) fail("identity");
+    || profile.version !== "0.2.1" || profile.status !== "candidate" || profile.sourceRevision !== SOURCE_REVISION) fail("identity");
   exactKeys(profile.scope, ["repository", "surfaces"], "scope");
   if (profile.scope.repository !== "github.com/huijoohwee/agentic-graph"
     || JSON.stringify(profile.scope.surfaces) !== JSON.stringify(["graph-ui", "application-typography"])) fail("scope");
@@ -78,7 +78,8 @@ function parseProfile(source) {
   }
   const known = new Set([...variables, '--agentic-font-sans', '--agentic-font-mono', '--agentic-font-size-body',
     '--agentic-line-height-body', '--agentic-icon-size-compact', '--agentic-icon-size-default',
-    '--agentic-control-height', '--agentic-control-height-touch', '--agentic-row-height']);
+    '--agentic-control-height', '--agentic-control-height-touch', '--agentic-row-height',
+    '--agentic-hover-panel-background', '--agentic-hover-text-color']);
   const byVar = new Map(profile.tokens.map(token => [token.cssVar, token]));
   const visit = (variable, mode, chain = []) => {
     if (chain.includes(variable) || chain.length > 16) fail(`reference cycle/depth ${variable}`);
@@ -113,6 +114,12 @@ export function renderGraphCss(profile, profileDigest) {
   return [
     `/* Generated from agentic-design-system Graph profile; origin agentic-graph@${profile.sourceRevision}; profile sha256 ${profileDigest}. Do not edit. */`,
     ":root {", ...rootRows, "}",
+    ".agentic-hover-panel {",
+    "  --kg-panel-bg: var(--agentic-hover-panel-background);",
+    "  --kg-text-primary: var(--agentic-hover-text-color);",
+    "  --kg-text-secondary: var(--agentic-hover-label-color);",
+    "  --kg-text-tertiary: var(--agentic-hover-label-color);",
+    "}",
     ...(darkRows.length ? [":root[data-theme='dark'] {", ...darkRows, "}"] : []),
     ...(blackRows.length ? [":root[data-theme='dark'][data-dark-variant='black'] {", ...blackRows, "}"] : []),
     ...(reducedRows.length ? ['@media (prefers-reduced-motion: reduce) {', '  :root {', ...reducedRows, '  }', '}'] : []),

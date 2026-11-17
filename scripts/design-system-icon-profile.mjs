@@ -197,7 +197,22 @@ const EXPECTED = Object.freeze([
   ["dashboard.breakpoint.wide", "--agentic-dashboard-breakpoint-wide", "dimension"],
   ["dashboard.primary", "--agentic-dashboard-primary", "themed-color"],
   ["dashboard.secondary", "--agentic-dashboard-secondary", "themed-color"],
-  ["dashboard.success", "--agentic-dashboard-success", "themed-color"]
+  ["dashboard.success", "--agentic-dashboard-success", "themed-color"],
+  ["hover.panel.background", "--agentic-hover-panel-background", "themed-color"],
+  ["hover.text.color", "--agentic-hover-text-color", "themed-color"],
+  ["hover.label.color", "--agentic-hover-label-color", "themed-color"],
+  ["hover.width.default", "--agentic-hover-width-default", "dimension"],
+  ["hover.width.label", "--agentic-hover-width-label", "dimension"],
+  ["hover.anchor-gap", "--agentic-hover-anchor-gap", "dimension"],
+  ["hover.edge-gap", "--agentic-hover-edge-gap", "dimension"],
+  ["hover.padding.inline", "--agentic-hover-padding-inline", "dimension"],
+  ["hover.padding.block", "--agentic-hover-padding-block", "dimension"],
+  ["hover.radius", "--agentic-hover-radius", "dimension"],
+  ["hover.typography.size", "--agentic-hover-font-size", "dimension"],
+  ["hover.typography.line-height", "--agentic-hover-line-height", "dimension"],
+  ["hover.key.max-width", "--agentic-hover-key-max-width", "dimension"],
+  ["hover.expanded.max-height", "--agentic-hover-expanded-max-height", "dimension"],
+  ["hover.layer", "--agentic-hover-layer", "layer"]
 ]);
 const digest = bytes => createHash("sha256").update(bytes).digest("hex");
 const fail = message => { throw new Error(`Invalid shared UI profile: ${message}`); };
@@ -211,7 +226,7 @@ export function validateSharedUiProfile(source) {
   const profile = JSON.parse(source);
   exactKeys(profile, ["schema", "id", "version", "status", "scope", "tokens"], "root");
   if (profile.schema !== "agentic-design-system/shared-ui-profile/v1" || profile.id !== "shared-ui"
-    || profile.version !== "0.13.0" || profile.status !== "candidate") fail("identity");
+    || profile.version !== "0.14.0" || profile.status !== "candidate") fail("identity");
   exactKeys(profile.scope, ["repository", "surfaces"], "scope");
   if (profile.scope.repository !== "github.com/huijoohwee/agentic-design-system"
     || JSON.stringify(profile.scope.surfaces) !== JSON.stringify(["shared-interface"])) fail("scope");
@@ -225,6 +240,7 @@ export function validateSharedUiProfile(source) {
       || (typeof token.value !== "string" || token.value.length > 256
         || token.type === "dimension" && !DIMENSION.test(token.value)
         || token.type === "responsive-dimension" && !RESPONSIVE_DIMENSION.test(token.value)
+        || token.type === "layer" && (!/^[0-9]{1,10}$/u.test(token.value) || Number(token.value) > 2147483647)
         || token.type === "number" && (!/^[0-9]+(?:\.[0-9]+)?$/u.test(token.value) || Number(token.value) < 0.5 || Number(token.value) > 10000)
         || token.type === "border" && !BORDER.test(token.value)
         || token.type === "shadow" && !TOOLBAR_SHADOW.test(token.value)

@@ -8,7 +8,7 @@ import { checkDesignRegistry } from "./design-registry.mjs";
 import { prepareLocalDevHtml } from "./dev-csp.mjs";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
-execFileSync(process.execPath, ['--test', 'scripts/key-type-value.test.mjs'], { cwd: root, stdio: 'inherit' });
+execFileSync(process.execPath, ['--test', 'scripts/key-type-value.test.mjs', 'scripts/hover.test.mjs'], { cwd: root, stdio: 'inherit' });
 const expectedFiles = [
   ".agentic-os.json",
   ".github/workflows/integration.yml",
@@ -26,6 +26,7 @@ const expectedFiles = [
   "packages/react-panels/src/design-system-runtime.d.ts",
   "packages/react-panels/src/index.ts",
   "packages/react-ktv/src/index.tsx",
+  "packages/react-hover/src/index.tsx",
   "prd-tad-adr-mvp-gtm-agentic-design-system.md",
   "scripts/base-profile.mjs",
   "scripts/check-public-release.mjs",
@@ -38,6 +39,7 @@ const expectedFiles = [
   "scripts/panel-controls.test.mjs",
   "scripts/react-panel-adapter.test.mjs",
   "scripts/key-type-value.test.mjs",
+  "scripts/hover.test.mjs",
   "site/THIRD-PARTY-NOTICES.txt",
   "site/app.js",
   "site/catalog.json",
@@ -48,6 +50,7 @@ const expectedFiles = [
   "site/floating-panel-contract.d.ts",
   "site/icons.json",
   "site/key-type-value.js", "site/key-type-value.d.ts",
+  "site/hover.js", "site/hover.d.ts", "site/hover-text.js", "site/hover-text.d.ts", "site/hover.css",
   "site/registry.css",
   "site/registry-query.js",
   "site/sw.js",
