@@ -1,4 +1,4 @@
-.agentic-markdown-toolbar { display:flex; flex-wrap:wrap; gap:4px; position:relative; align-items:center; max-inline-size:100%; }
+.agentic-markdown-toolbar { margin:0; padding:0; list-style:none; display:flex; flex-wrap:wrap; gap:4px; position:relative; align-items:center; max-inline-size:100%; }
 .agentic-rich-text { display:grid; gap:8px; min-inline-size:0; }
 .agentic-rich-text textarea { inline-size:100%; box-sizing:border-box; }
 .agentic-color-palette { display:grid; gap:8px; box-sizing:border-box; inline-size:min(288px,calc(100vw - 16px)); max-block-size:calc(100dvh - 16px); overflow:auto; padding:12px; color:var(--agentic-panel-foreground,currentColor); background:var(--agentic-panel-background,Canvas); border:1px solid var(--agentic-color-border,GrayText); border-radius:var(--agentic-control-radius,6px); }
