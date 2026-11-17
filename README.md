@@ -84,3 +84,20 @@ MainPanel, FloatingPanel, BottomPanel, and Editor Workspace layout share one own
 Dashboard primitive props are native HTML attributes in the shared UI profile. Use `data-dashboard-primitive="heading"` on the semantic heading, `text` on body copy, `disclosure` on native details/summary, and `divider` on hr. Use `container` with `data-columns="2|3|4"` inside an `agentic-dashboard-region`; it uses the same responsive grid as Mission cards. Supply domain content, labels and state in the host. Do not restyle these roles in a consumer.
 
 The optional local column editor is enabled with `DESIGN_LAYOUT_ADMIN=1 npm run dev`. Its scoped credential is the owner-only file `~/.local/state/agentic-design-system/dashboard/admin-token` (override the directory with `DESIGN_LAYOUT_STATE_DIR`). Only read the key locally and paste it into the Commerce Admin edit-mode prompt. The static registry remains read-only. The loopback authoring service stores column counts separately and checks the expected revision before saving. Stop the service or restart without the opt-in to disable writes. Back up or restore the layout.json file with the service stopped.
+
+Shared section mechanics are owned here: `agentic-design-system/sections` exports
+`installPanelSections`, `setPanelSectionExpanded` and the immutable section contract.
+Load `agentic-design-system/sections.css` with the shared UI profile. Native hosts
+opt in existing `<details data-agentic-section>` with a direct `<summary>`. Install
+once per DOM root and dispose when the root is retired; inserted sections are
+enhanced without cloning inputs. Bulk controls use `data-agentic-sections-action`
+(`expand`, `collapse`, `toggle`) and `aria-controls` naming their local group.
+
+React hosts import `SettingsSectionHeader`, `CollapsibleSection`, `PanelDisclosure`,
+`PanelScrollRegion`, `ExpandCollapseAllButton` and `useCollapsibleSectionGroup` from
+`agentic-design-system/react/panels`. Product owners retain saved state/callbacks.
+Collapsed sections mount lazily and retain opened children; disclosure children
+always stay mounted. Action buttons are outside the expansion button. Sticky
+headers use `--agentic-section-offset` for host chrome geometry; scroll regions
+use `--agentic-scroll-block-size` only when the host has a bounded viewport. Do not
+redeclare sticky, collapse or overflow behavior in consumer section variants.

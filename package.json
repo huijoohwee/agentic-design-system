@@ -28,7 +28,12 @@
     "./react/hover": {
       "types": "./packages/react-hover/src/index.tsx",
       "import": "./packages/react-hover/src/index.tsx"
-    }
+    },
+    "./sections": {
+      "types": "./site/panel-section.d.ts",
+      "import": "./site/panel-section.js"
+    },
+    "./sections.css": "./site/panel-section.css"
   },
   "engines": {
     "node": ">=20.11"
@@ -50,7 +55,7 @@
     "lane": "agentic-os start",
     "land": "agentic-os land",
     "dev": "node scripts/dev.mjs",
-    "check:design-system": "node --test scripts/panel-controls.test.mjs scripts/react-panel-adapter.test.mjs scripts/key-type-value.test.mjs scripts/hover.test.mjs && node scripts/design-registry.mjs check",
+    "check:design-system": "node --test scripts/panel-controls.test.mjs scripts/react-panel-adapter.test.mjs scripts/key-type-value.test.mjs scripts/hover.test.mjs scripts/panel-section.test.mjs && node scripts/design-registry.mjs check",
     "mcp": "node scripts/design-registry.mjs mcp"
   },
   "devDependencies": {

@@ -10,3 +10,6 @@ export { PanelControlButton } from './PanelControlButton'
 export type { PanelControlButtonProps } from './PanelControlButton'
 export { PanelControlGroup } from './PanelControlGroup'
 export type { PanelControlGroupProps, PanelControlActions, PanelControlDisabledState } from './PanelControlGroup'
+
+export { SettingsSectionHeader, CollapsibleSection, PanelDisclosure, PanelScrollRegion, ExpandCollapseAllButton, useCollapsibleSectionGroup } from './PanelSection'
+export type { SettingsSectionHeaderProps, CollapsibleSectionProps, PanelDisclosureProps, ExpandCollapseAllButtonProps } from './PanelSection'
