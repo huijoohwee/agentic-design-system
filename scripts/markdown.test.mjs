@@ -6,7 +6,7 @@ import { normalizeHexColor, hexToHsv, hsvToHex, hexToRgb, rgbToHex } from '../si
 const apply=(text,action,start=0,end=text.length,value)=>applyMarkdownFormatAction({text,action,selection:{startOffset:start,endOffset:end},value})
 test('all requested commands have unique stable labels and safe lookup',()=>{
  assert.equal(new Set(MARKDOWN_COMMANDS.map(c=>c.id)).size,MARKDOWN_COMMANDS.length)
- assert(MARKDOWN_COMMANDS.every(Object.isFrozen)); assert(Object.isFrozen(MARKDOWN_COMMANDS))
+ assert(MARKDOWN_COMMANDS.every(Object.isFrozen)); assert(MARKDOWN_COMMANDS.every(command=>!command.wrap||Object.isFrozen(command.wrap))); assert(Object.isFrozen(MARKDOWN_COMMANDS))
  assert.equal(markdownCommandMatches('/math')[0].id,'math'); assert.throws(()=>apply('x','unknown'),RangeError)
 })
 for(const [action,left,right] of [['bold','**','**'],['italic','*','*'],['strike','~~','~~'],['inlineCode','`','`'],['underline','<u>','</u>'],['superscript','^','^'],['subscript','~','~'],['math','$','$'],['highlight','==','=='],['comment','<!-- ',' -->']])
