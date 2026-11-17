@@ -39,3 +39,8 @@ test('successive palette edits update one annotation while preserving selection'
  assert.equal(next.nextText,'<span style="color:#60a5fa">Plan</span>')
  assert.deepEqual(next.nextSelection,first.nextSelection)
 })
+
+test('clear formatting preserves code literals and surrounding emphasis',()=>{
+ assert.equal(clearMarkdownFormatting('**`**literal**`**'),'**literal**')
+ assert.equal(clearMarkdownFormatting('```md\n## literal\n**literal**\n```'),'## literal\n**literal**')
+})
