@@ -3,16 +3,29 @@ import {
   computeTooltipPositionFromAnchor, computeTooltipMaxWidthPx, constrainTooltipPosition, getTooltipPortalTarget,
 } from './hover-text.js'
 
-let nextId = 0
 const LABEL_OWNER = Symbol.for('agentic-design-system/hover-label-owner/v1')
+const ID_OWNER = Symbol.for('agentic-design-system/hover-id-owner/v1')
 const protectedStyle = /^(?:background|color$|font|lineHeight$|padding|margin|border|boxShadow$|position$|zIndex$|transform$|pointerEvents$|(?:max|min)?(?:Width|Height)$|--agentic-hover)/i
 const unitless = new Set(['opacity', 'zIndex', 'flex', 'flexGrow', 'flexShrink', 'order'])
 const isElement = value => Boolean(value?.ownerDocument?.defaultView?.Element
   && value instanceof value.ownerDocument.defaultView.Element)
-const generatedId = doc => {
-  let id
-  do { id = 'agentic-hover-' + (++nextId) } while (doc.getElementById(id))
-  return id
+const idOwner = doc => {
+  const current = doc[ID_OWNER]
+  if (current) {
+    if (!Number.isSafeInteger(current.next) || current.next < 0 || Object.prototype.toString.call(current.ids) !== '[object Set]')
+      throw new Error('Conflicting hover ID owner')
+    return current
+  }
+  const state = { next: 0, ids: new Set() }
+  Object.defineProperty(doc, ID_OWNER, { value: state })
+  return state
+}
+const generatedId = (doc, state) => {
+  for (let attempt = 0; attempt < 1000; attempt++) {
+    const id = 'agentic-hover-' + (++state.next)
+    if (!state.ids.has(id) && !doc.getElementById(id)) return id
+  }
+  throw new Error('Hover ID namespace is occupied')
 }
 const addDescription = (node, id) => {
   if (!isElement(node)) return
@@ -37,8 +50,9 @@ export function createHoverPanel(anchor, initial = {}) {
   const doc = anchor.ownerDocument, win = doc.defaultView
   if (anchor.hasAttribute('data-agentic-hover-id')) throw new Error('Hover anchor already has an owner')
   const element = doc.createElement('section'), contentElement = doc.createElement('section')
-  const id = initial.id || generatedId(doc)
-  if (typeof id !== 'string' || /\s/.test(id) || doc.getElementById(id)) throw new TypeError('Hover ID must be unique')
+  const ids = idOwner(doc), id = initial.id || generatedId(doc, ids)
+  if (typeof id !== 'string' || /\s/.test(id) || doc.getElementById(id) || ids.ids.has(id)) throw new TypeError('Hover ID must be unique')
+  ids.ids.add(id)
   element.id = id; element.setAttribute('role', 'tooltip'); element.dataset.agenticHoverRoot = '1'
   contentElement.className = 'agentic-hover-content'; element.append(contentElement)
   let options = {}, visible = false, destroyed = false, frame = null, observer = null
@@ -197,6 +211,7 @@ export function createHoverPanel(anchor, initial = {}) {
   const destroy = () => {
     if (destroyed) return
     setOpen(false); destroyed = true
+    ids.ids.delete(id)
     anchor.removeEventListener('mouseenter', enter); anchor.removeEventListener('mouseleave', leave)
     anchor.removeEventListener('focusin', enter); anchor.removeEventListener('focusout', leave)
     element.removeEventListener('mouseenter', contentEnter); element.removeEventListener('mouseleave', contentLeave)
@@ -235,6 +250,11 @@ export function installHoverLabels(ownerDocument = globalThis.document, { fallba
     if (addedLabel && element.getAttribute('aria-label') === text) element.removeAttribute('aria-label')
     active = null
   }
+  const renderActive = () => {
+    if (!active?.delegated || panel) return
+    try { panel = createHoverPanel(active.element, { content: active.text, open: true, interactive: false, widthRole: 'label' }) }
+    catch (error) { restore(); throw error }
+  }
   const show = target => {
     if (!isElement(target)) return
     const element = target.closest(selector)
@@ -244,15 +264,12 @@ export function installHoverLabels(ownerDocument = globalThis.document, { fallba
     restore()
     if (!element || !text) return
     const delegated = !element.closest('[data-agentic-hover-anchor="1"]')
-    const addedLabel = !element.getAttribute('aria-label') && !element.getAttribute('aria-labelledby')
+    const addedLabel = !element.getAttribute('aria-label') && !element.getAttribute('aria-labelledby') && !element.labels?.length
       && !element.textContent?.trim() && element.matches('button,a[href],input,select,textarea,[role="button"]')
     active = { element, title, text, delegated, addedLabel }
     element.setAttribute('title', '')
     if (addedLabel) element.setAttribute('aria-label', text)
-    if (delegated) {
-      try { panel = createHoverPanel(element, { content: text, open: true, interactive: false, widthRole: 'label' }) }
-      catch (error) { restore(); throw error }
-    }
+    renderActive()
     observer = new win.MutationObserver(() => {
       if (!active) return
       if (!element.isConnected) { restore(); return }
@@ -270,7 +287,10 @@ export function installHoverLabels(ownerDocument = globalThis.document, { fallba
     observer.observe(doc.body, { childList: true, subtree: true })
     observer.observe(element, { attributes: true, attributeFilter: ['title'] })
   }
-  const enter = event => show(event.target)
+  const enter = event => {
+    if (event.type === 'focusin' && isElement(event.target) && event.target.closest(selector) === active?.element) renderActive()
+    else show(event.target)
+  }
   const leave = event => {
     if (!active || event.relatedTarget?.nodeType && active.element.contains(event.relatedTarget)) return
     if (event.type === 'mouseout' && active.element.contains(doc.activeElement)) return

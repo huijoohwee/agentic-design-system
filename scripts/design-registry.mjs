@@ -320,7 +320,7 @@ function assertRegistry(registry) {
     || base.licenseEvidence.length !== 2 || base.consumerPins.length !== 0
     || base.projection?.path !== "./vendor/base-profile.css") fail("Base scoped profile binding");
   if (graph.id !== "graph" || graph.owner !== registry.owner || graph.repository !== registry.owner
-    || graph.revision !== "eab0dcaad86c3d2cfd0c6eebf60070998fdb3b1e" || graph.source !== "./tokens/graph-profile.json"
+    || graph.revision !== "e52a52111f52b6af85f99195ec9e59a490548575" || graph.source !== "./tokens/graph-profile.json"
     || graph.rights !== "cleared-scoped" || graph.scope.join(",") !== "graph-ui,application-typography"
     || graph.permissionEvidence !== "User instructions 2026-11-07: centralize design token values and generated projections from the eight listed Graph token sources in Agentic Design System, with attribution; no broader Graph source grant."
     || graph.licenseEvidence.length !== 1 || graph.consumerPins.length !== 0

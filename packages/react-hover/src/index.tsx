@@ -21,7 +21,7 @@ const assignRef = (ref: React.Ref<HTMLElement> | undefined, node: HTMLElement | 
 
 /** React owns content only. The native owner supplies placement, events, accessibility and disposal. */
 export default function Tooltip(props: TooltipProps) {
-  const generatedId = React.useId(), anchorRef = React.useRef<HTMLSpanElement | null>(null)
+  const anchorRef = React.useRef<HTMLSpanElement | null>(null)
   const controller = React.useRef<HoverController | null>(null), latest = React.useRef(props)
   const [host, setHost] = React.useState<HTMLElement | null>(null), [visible, setVisible] = React.useState(false)
   latest.current = props
@@ -30,7 +30,7 @@ export default function Tooltip(props: TooltipProps) {
     if (!anchor) return
     let mounted = true
     const instance = createHoverPanel(anchor, {
-      id: props.id || generatedId,
+      id: props.id,
       onVisibilityChange: node => {
         assignRef(latest.current.contentRef, node)
         if (mounted) setVisible(Boolean(node))
@@ -38,7 +38,7 @@ export default function Tooltip(props: TooltipProps) {
     })
     controller.current = instance; setHost(instance.contentElement)
     return () => { mounted = false; instance.destroy(); controller.current = null }
-  }, [props.anchorElement, props.id, generatedId])
+  }, [props.anchorElement, props.id])
   useLayout(() => {
     controller.current?.update({
       open: props.open, interactive: props.interactive,
