@@ -82,9 +82,9 @@ export function PanelDisclosure({ id, title, children, expanded, onExpandedChang
     <section className={PANEL_SECTION.body}>{children}</section>
   </details>
 }
-export function PanelScrollRegion({ className, ...props }: React.HTMLAttributes<HTMLElement>) {
-  return <section tabIndex={0} {...props} className={classes(PANEL_SECTION.scroll, className)} />
-}
+export const PanelScrollRegion = React.forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement>>(function PanelScrollRegion({ className, ...props }, ref) {
+  return <section tabIndex={0} {...props} ref={ref} className={classes(PANEL_SECTION.scroll, className)} />
+})
 export function useCollapsibleSectionGroup(visibleKeys: readonly string[]) {
   const [collapsedKeys, setCollapsedKeys] = useState<ReadonlySet<string>>(() => new Set())
   const allCollapsed = isSectionGroupCollapsed(visibleKeys, collapsedKeys)

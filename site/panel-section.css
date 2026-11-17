@@ -1,12 +1,9 @@
 /* Shared section mechanics; consumers supply only content, state and host geometry. */
-.agentic-panel-section { min-inline-size: 0; max-inline-size: 100%; scroll-margin-block-start: var(--agentic-section-offset, 0px); }
-.agentic-panel-section-header { display: flex; align-items: center; justify-content: space-between; gap: var(--agentic-control-padding-block, .25rem); min-inline-size: 0; min-block-size: var(--agentic-row-height, 2.375rem); }
+.agentic-panel-section { scroll-margin-block-start: var(--agentic-section-offset, 0px); }
 .agentic-panel-section-header[data-agentic-sticky="true"] {
   position: sticky; inset-block-start: var(--agentic-section-offset, 0px); z-index: 1;
   background: var(--panel-bg, var(--agentic-base-surface, var(--agentic-surface, Canvas)));
 }
-.agentic-panel-section-title { flex: 1 1 auto; min-inline-size: 0; }
-.agentic-panel-section-actions { display: flex; flex: 0 0 auto; align-items: center; gap: var(--agentic-control-padding-block, .25rem); }
 .agentic-panel-section-toggle {
   display: flex; align-items: center; justify-content: space-between; gap: .5rem;
   inline-size: 100%; min-inline-size: 0; min-block-size: var(--agentic-row-height, 2.375rem);
