@@ -1,34 +1,34 @@
 ---
 title: "Agentic Design System — Shared Ownership and Singleton Tokens"
 doc_type: "PRD-TAD-ADR-MVP-GTM"
-version: "0.9.29"
-revision: "0.9.29"
+version: "0.9.30"
+revision: "0.9.30"
 date: "2026-10-29"
 updated_date: "2026-11-17"
 lang: "en-US"
 frontmatter_contract: "required"
 owner: "Design-system product function"
 continuity_id: "DESIGN-TOKEN-ADOPTION-001"
-prd_revision: "0.9.29"
-tad_revision: "0.9.29"
-adr_revision: "0.9.29"
-mvp_revision: "0.9.29"
-gtm_revision: "0.9.29"
+prd_revision: "0.9.30"
+tad_revision: "0.9.30"
+adr_revision: "0.9.30"
+mvp_revision: "0.9.30"
+gtm_revision: "0.9.30"
 local_rung: "dev-proven"
 delivered_rung: "undocumented"
 lane: "authoring"
 universal_scope: false
-guideline_revision: "3.4.0"
-guideline_sha256: "8f0eda9aaf4d0b1e2bcc7388e15d19d95e6ba88fe158dbbbb53c2c0d4225d87a"
+guideline_revision: "3.5.0"
+guideline_sha256: "4c7b9cfce239e0fba3b1ef560aba81e634dbea7d18213a2d1c7d7261736d8541"
 template_revision: "1.5.0"
 template_sha256: "862369425974a704529164c02973a7ccb98b94d9a4eea73e347c8b4b57aa7966"
-guideline_source: "https://github.com/huijoohwee/huijoohwee.github.io/blob/e944d60b20400aebc89b8647662147f6a744e44e/guidelines/prd-tad-adr-mvp-gtm-guidelines.md"
+guideline_source: "https://github.com/huijoohwee/huijoohwee.github.io/blob/99ea1f49211361528256045719b54f1634eee41a/guidelines/prd-tad-adr-mvp-gtm-guidelines.md"
 template_source: "https://github.com/huijoohwee/huijoohwee.github.io/blob/82835ac37d524643faa6b9703cb077ea9474ab15/guidelines/prd-tad-adr-mvp-gtm-templates.md"
 parent: "https://github.com/huijoohwee/huijoohwee.github.io/blob/d6b6112cc63e4b610ff21ba93db233f548d91510/docs/documents/prd-tad-adr-mvp-gtm-agentic-design-system.md"
 parent_version: "0.2.0"
 worktree_id: "device-0232231d4a19--floating-panel-radius"
 agent_id: "codex"
-source_revision: "058c56f18f2dab16b46a20ac12cdc4243612bf28"
+source_revision: "eab0dcaad86c3d2cfd0c6eebf60070998fdb3b1e"
 lifecycle_status: "proposed"
 load_policy: "on-demand"
 runtime_readiness_policy: "fail-closed"
@@ -36,7 +36,7 @@ runtime_readiness_policy: "fail-closed"
 
 # Agentic Design System — Shared Ownership and Singleton Tokens
 
-**Join:** `DESIGN-TOKEN-ADOPTION-001@0.9.28`, superseding `0.9.27` and its predecessor chain through `0.2.0`. This revision gives the shared FloatingPanel an explicit shared-ui radius token, removing its dependency on Graph's legacy island-radius. It retains draft status, explicit rights, and owner-specific rollback. The prior central registry integration remains at protected `main` commit `bc1921bbcf56e1abb11fef2593917e5459d58df1` via PR #6. Historical Commerce workflow and no-deploy evidence remain recorded below; they are not release or runtime authority for this change.
+**Join:** `DESIGN-TOKEN-ADOPTION-001@0.9.30` supersedes `0.9.29` in this existing joined artifact. This increment gives shared hover panels, palette, labels, text and key/value help syntax one Design System owner, with exact consumer pins and no independent implementations. Earlier source and delivery observations below remain historical evidence, not activation authority.
 
 ## Shared FloatingPanel radius
 
@@ -328,3 +328,26 @@ The existing shared profile also projects the KTV row/cell layout, typography an
 ### Native row normalization — reference implementation
 
 Local Commerce verification exposed browser default definition-list margins that Graph’s CSS reset already removed. The shared row rule now explicitly owns zero outer margin so native and React rows use the same profile without consumer resets. No track, field value, font, control, behavior or dependency changes. The existing generator and public projection checks bind the regenerated CSS digest. Consumer pins advance together after protected source integration; this is scoped local consistency, not Production or whole-product parity.
+
+
+## Shared hover ownership — 0.9.30
+
+**PRD:** Contributors currently maintain Graph tooltip/title lifecycles and key/value help builders alongside independent chart hover visuals. A contributor must be able to hover or focus a field and receive one readable, bounded help surface across Graph, Base, Commerce and the Canvas-hosted Graph UI. Preserve labels, values, product callbacks, graph content, pin/resize behavior, offline use and keyboard dismissal. Buyer pain and willingness to pay remain unmeasured; this is the existing free developer workflow, with no new commercial claim.
+
+**TAD:** `site/hover-text.js` owns the action/outcome and Default/Min/Max/Interval grammar, semantic text roles and pure placement functions. `site/hover.js` owns the native DOM lifecycle, dynamic title delegation, focus associations, viewport constraints and disposal. `packages/react-hover` only binds refs, product props and React portal content to that native owner. `site/hover.css` consumes the shared-ui profile's hover palette, typography, edge gaps, widths and layer. The legacy Graph palette contains references to these values, not a second editable palette. There is no reverse product dependency, runtime network request, storage migration or new framework dependency for native clients.
+
+**ADR:** Remove Graph's generic Tooltip, title delegate, placement utilities and reusable text builders after consumers import the exact integrated Design System API directly. Product constants, graph data/schema resolution, content and view-state callbacks remain with their products. Base chart tooltips and native consumer field help reuse this owner. Canvas reuses its embedded Graph runtime and records the same central owner; it does not introduce a renderer. Generated offline assets are immutable projections, never authored forks. The user's 2026-11-17 instruction grants this scoped migration from Graph `e64cf69dc1196fc6f50806784fe21013e7dc6801`: Tooltip, NativeTitleTooltip, tooltipUtils, and only the generic builders preceding the product constants in config-copy/tooltips. Existing token source grants remain separately bounded.
+
+**MVP / VCCs:**
+
+| ID | End state | Check and evidence |
+|---|---|---|
+| HOVER-01 | Native and React use one lifecycle and grammar without importing a product. | `node --test scripts/hover.test.mjs`, consumer typechecks and native/React interaction checks. |
+| HOVER-02 | Every theme uses the central inverse palette; local hover palette forks are absent. | Registry/projection checks, consumer conformance and light/dark computed-style observations. |
+| HOVER-03 | Focus/hover exposes one accessible description; Escape, dynamic title edits and disposal retain authored attributes. | Existing Graph title-delegation tests plus live native/React checks. |
+| HOVER-04 | Long help stays inside desktop/narrow/zoomed viewports and remains available offline. | Geometry edge tests and bounded live viewport/offline verification. |
+| HOVER-05 | All four consumers use the exact integrated owner; replaced code and entry points are removed. | Dependency pins, generated input hashes, required consumer CI and source searches. |
+
+Owner checks and consumer observations establish only their stated scope. Local browser verification is not whole-product parity, provider proof or Production delivery. At this authoring checkpoint, consumer pins and live acceptance remain pending.
+
+**GTM / execution:** Discover the shared API through the existing catalog's hover keys and live field-help preview; activation is one correct local integration, not an inferred purchase. Integrate the owner first, then Base, Graph, Commerce and Canvas in dependency order. Keep source/CI/live evidence separate. Caps: three new shared runtime modules, each under 600 lines and 500 KB; 160 KB authored diff and 140 affected paths across the migration, with generated browser chunks under 500 KB. External waits require exact conditions and rechecks rather than an ETA. Rollback restores the prior exact owner and consumer pins plus their generated assets together; it never clears browser data or restores a forwarding/duplicate hover implementation. No deployment is selected by this increment.
