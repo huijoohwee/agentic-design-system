@@ -8,7 +8,7 @@ import { checkDesignRegistry } from "./design-registry.mjs";
 import { prepareLocalDevHtml } from "./dev-csp.mjs";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
-execFileSync(process.execPath, ['--test', 'scripts/key-type-value.test.mjs', 'scripts/hover.test.mjs'], { cwd: root, stdio: 'inherit' });
+execFileSync(process.execPath, ['--test', 'scripts/key-type-value.test.mjs', 'scripts/hover.test.mjs', 'scripts/panel-section.test.mjs'], { cwd: root, stdio: 'inherit' });
 const expectedFiles = [
   ".agentic-os.json",
   ".github/workflows/integration.yml",
@@ -49,6 +49,8 @@ const expectedFiles = [
   "site/index.html",
   "site/floating-panel-contract.d.ts",
   "site/icons.json",
+  "site/panel-section.js", "site/panel-section.d.ts", "site/panel-section.css",
+  "packages/react-panels/src/PanelSection.tsx", "scripts/panel-section.test.mjs",
   "site/key-type-value.js", "site/key-type-value.d.ts",
   "site/hover.js", "site/hover.d.ts", "site/hover-text.js", "site/hover-text.d.ts", "site/hover.css",
   "site/registry.css",

@@ -1,0 +1,89 @@
+import assert from 'node:assert/strict'
+import test from 'node:test'
+import { readFileSync } from 'node:fs'
+import { PANEL_SECTION, recoverSectionFocus, isSectionGroupCollapsed, updateSectionGroup,
+  installPanelSections, setPanelSectionExpanded } from '../site/panel-section.js'
+
+function fixture() {
+  const doc = { activeElement: null }, listeners = new Map(), sections = []
+  let observations = 0, disconnects = 0, refresh
+  doc.defaultView = { MutationObserver: class {
+    constructor(callback) { refresh = callback }
+    observe() { observations++ }
+    disconnect() { disconnects++ }
+  } }
+  const root = { ownerDocument: doc, contains: node => node === group || sections.includes(node) || node === button,
+    querySelectorAll: () => sections, addEventListener: (key, fn) => listeners.set(key, fn),
+    removeEventListener: (key, fn) => { if (listeners.get(key) === fn) listeners.delete(key) } }
+  const group = { querySelectorAll: () => sections }
+  const button = { dataset: { agenticSectionsAction: 'toggle' }, getAttribute: () => 'group', closest() { return this } }
+  doc.getElementById = id => id === 'group' ? group : null
+  const makeSection = () => {
+    const input = { value: 'retained' }, summary = { dataset: {}, classList: { add() {} }, contains: node => node === summary,
+      focus: options => { assert.deepEqual(options, { preventScroll: true }); doc.activeElement = summary } }
+    const section = { localName: 'details', open: true, dataset: {}, ownerDocument: doc,
+      classList: { add: name => { assert.equal(name, PANEL_SECTION.section) } },
+      matches: () => true, contains: node => [input, summary].includes(node), querySelector: () => summary }
+    sections.push(section)
+    return { section, summary, input }
+  }
+  return { root, doc, makeSection, button, listeners, refresh: () => refresh(),
+    counters: () => ({ observations, disconnects }) }
+}
+
+test('group updates retain identity for unchanged state and do not mutate owner state', () => {
+  const first = new Set(['a'])
+  assert.equal(updateSectionGroup(first, 'a', true), first)
+  const next = updateSectionGroup(first, 'b', true)
+  assert.deepEqual([...first], ['a']); assert.deepEqual([...next], ['a', 'b'])
+  assert.equal(isSectionGroupCollapsed([], first), false)
+  assert.equal(isSectionGroupCollapsed(['a'], first), true)
+  assert.equal(isSectionGroupCollapsed(['a', 'b'], first), false)
+  assert.equal(PANEL_SECTION.defaultCollapsed, true)
+  assert(Object.isFrozen(PANEL_SECTION))
+})
+
+test('native installation is idempotent, follows inserted sections and fully disposes listeners', () => {
+  const f = fixture(), a = f.makeSection()
+  const dispose = installPanelSections(f.root)
+  assert.equal(installPanelSections(f.root), dispose)
+  assert.equal(a.summary.dataset.agenticSticky, 'true')
+  const b = f.makeSection(); b.section.dataset.agenticSticky = 'false'; f.refresh()
+  assert.equal(b.summary.dataset.agenticSticky, 'false')
+  f.doc.activeElement = a.input
+  f.listeners.get('click')({ target: f.button })
+  assert.equal(a.section.open, false); assert.equal(b.section.open, false)
+  assert.equal(f.doc.activeElement, a.summary); assert.equal(a.input.value, 'retained')
+  f.listeners.get('click')({ target: f.button })
+  assert.equal(a.section.open, true); assert.equal(b.section.open, true)
+  f.doc.activeElement = b.input; b.section.open = false
+  f.listeners.get('toggle')({ target: b.section })
+  assert.equal(f.doc.activeElement, b.summary)
+  dispose(); dispose()
+  assert.equal(f.listeners.size, 0); assert.deepEqual(f.counters(), { observations: 1, disconnects: 1 })
+  const second = installPanelSections(f.root); assert.notEqual(second, dispose); second()
+})
+
+test('focus recovery is local and invalid native contracts fail loudly', () => {
+  let focuses = 0
+  recoverSectionFocus({ ownerDocument: { activeElement: {} }, contains: () => false }, { focus: () => focuses++ })
+  assert.equal(focuses, 0)
+  assert.throws(() => setPanelSectionExpanded({}, true), TypeError)
+  assert.throws(() => installPanelSections({}), TypeError)
+  const f = fixture(), a = f.makeSection(); a.section.querySelector = () => null
+  assert.throws(() => installPanelSections(f.root), /direct summary/)
+})
+
+test('React adapts the owner contract and uses native buttons without duplicate key handlers', () => {
+  const adapter = readFileSync(new URL('../packages/react-panels/src/PanelSection.tsx', import.meta.url), 'utf8')
+  assert.match(adapter, /from '\.\.\/\.\.\/\.\.\/site\/panel-section.js'/)
+  assert.match(adapter, /hasExpanded \|\| !isCollapsed/)
+  assert.match(adapter, /hidden=\{isCollapsed\}/)
+  assert.match(adapter, /<button ref=\{trigger\} type="button"/)
+  assert.doesNotMatch(adapter, /onKeyDown|@agentic-base|grph-shared|lucide|localStorage|addEventListener/)
+  const css = readFileSync(new URL('../site/panel-section.css', import.meta.url), 'utf8')
+  assert.match(css, /position: sticky; inset-block-start: var\(--agentic-section-offset/)
+  assert.match(css, /overflow: auto; overscroll-behavior: contain/)
+  assert.match(css, /\[hidden\] \{ display: none !important/)
+  assert.match(css, /@media print/)
+})

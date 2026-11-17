@@ -1,5 +1,7 @@
 /** Type bridge for the adjacent Design System-owned JavaScript runtime. */
 declare module '*site/toolbar-icons.js' {
+  export function createDesignIcon(name: string, ownerDocument?: Document): SVGSVGElement
+
   export function updatePanelControlButton(
     button: HTMLButtonElement,
     control: string,
