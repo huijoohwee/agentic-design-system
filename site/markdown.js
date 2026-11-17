@@ -134,18 +134,20 @@ export function attachMarkdownEditor(field, options = {}) {
   if (!field || !['TEXTAREA', 'INPUT'].includes(field.tagName)) throw new TypeError('A text field is required')
   const doc = field.ownerDocument, container = doc.createElement('div'); container.className = 'agentic-rich-text'
   field.before(container); container.append(field)
+  const limitStatus = doc.createElement('output'); limitStatus.role = 'status'; limitStatus.ariaLive = 'polite'; limitStatus.hidden = true; container.append(limitStatus)
+  const clearLimit = () => { limitStatus.hidden = true }; field.addEventListener('input', clearLimit)
   let selection = { startOffset: field.selectionStart || 0, endOffset: field.selectionEnd || 0 }
   const capture = () => { selection = { startOffset: field.selectionStart || 0, endOffset: field.selectionEnd || 0 } }
   const toolbar = createMarkdownToolbar({ ...options, document: doc, onInteractionStart: capture, onCommand(action, value) {
     const callback = action === 'slashCommands' ? options.onSlashCommand : action === 'variableCommands' ? options.onVariableCommand : null
     if (callback) return callback()
     const result = applyMarkdownFormatAction({ text: field.value, selection, action, value })
-    if (field.maxLength >= 0 && result.nextText.length > field.maxLength) { field.setCustomValidity('Formatting exceeds this field’s character limit.'); field.reportValidity(); return }
-    field.setCustomValidity('');
+    if (field.maxLength >= 0 && result.nextText.length > field.maxLength) { limitStatus.textContent = 'Formatting exceeds this field’s character limit.'; limitStatus.hidden = false; return }
+    clearLimit();
     const prototype = field.tagName === 'TEXTAREA' ? doc.defaultView.HTMLTextAreaElement.prototype : doc.defaultView.HTMLInputElement.prototype
     Object.getOwnPropertyDescriptor(prototype, 'value').set.call(field, result.nextText); field.focus({ preventScroll: true }); field.setSelectionRange(result.nextSelection.startOffset, result.nextSelection.endOffset)
     field.dispatchEvent(new doc.defaultView.Event('input', { bubbles: true })); options.onChange?.(field.value)
   } })
   container.prepend(toolbar.element)
-  return { destroy() { toolbar.destroy(); container.before(field); container.remove() } }
+  return { destroy() { field.removeEventListener('input', clearLimit); toolbar.destroy(); container.before(field); container.remove() } }
 }
