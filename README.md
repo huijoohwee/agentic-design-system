@@ -10,8 +10,8 @@ until their owners review a migration; no adoption or cross-repository parity is
 Four candidate profiles centrally own Commerce, Base, Graph and shared interface tokens.
 Profile bytes, source revisions, generated output, rights and consumer pins are checked independently.
 The Graph grant covers its eight pinned token sources; the private classification remains in force
-outside that scope. Consumers use immutable projections and native component behavior. Base owns the
-shared KTV renderer and dropdown adapters. The Design System's `toolbar-icons.js` runtime also owns
+outside that scope. Consumers use immutable projections and native component behavior. Design System owns the
+shared KTV row APIs; Base retains dropdown adapters outside this migration. The Design System's `toolbar-icons.js` runtime also owns
 panel-control rendering and state visibility; framework hosts only bind their app callbacks and state.
 
 The central Icon Library owns the verified artwork inventory. Shared interface roles own glyph size,
@@ -65,7 +65,7 @@ For a local read-only MCP client, run `npm run mcp`; the process speaks newline-
 over stdin/stdout and reads only the checked-in catalog. Browser WebMCP registration is a progressive
 enhancement; regular search remains available when a browser does not expose that API.
 
-The shared UI profile centrally owns body typography (14px/20px), font families, responsive KTV column tracks, icon sizes and row geometry. Consumers pin its generated projection; Graph retains the shared KTV React renderer.
+The shared UI profile centrally owns body typography (14px/20px), font families, responsive KTV column tracks, icon sizes and row geometry. Consumers pin its generated projection. Design System owns the native `agentic-design-system/ktv` and React `agentic-design-system/react/ktv` row APIs; products supply typed content and callbacks.
 
 KTV sizing adapts to the shared row container; the shared profile owns tracks, the stacking breakpoint and the default field-panel width. Consumer projections remain immutable local artifacts.
 

@@ -1,12 +1,20 @@
 {
   "name": "agentic-design-system",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "private": true,
   "type": "module",
   "exports": {
     "./react/panels": {
       "types": "./packages/react-panels/src/index.ts",
       "import": "./packages/react-panels/src/index.ts"
+    },
+    "./ktv": {
+      "types": "./site/key-type-value.d.ts",
+      "import": "./site/key-type-value.js"
+    },
+    "./react/ktv": {
+      "types": "./packages/react-ktv/src/index.tsx",
+      "import": "./packages/react-ktv/src/index.tsx"
     }
   },
   "engines": {
@@ -25,7 +33,7 @@
     "lane": "agentic-os start",
     "land": "agentic-os land",
     "dev": "node scripts/dev.mjs",
-    "check:design-system": "node --test scripts/panel-controls.test.mjs scripts/react-panel-adapter.test.mjs && node scripts/design-registry.mjs check",
+    "check:design-system": "node --test scripts/panel-controls.test.mjs scripts/react-panel-adapter.test.mjs scripts/key-type-value.test.mjs && node scripts/design-registry.mjs check",
     "mcp": "node scripts/design-registry.mjs mcp"
   },
   "devDependencies": {

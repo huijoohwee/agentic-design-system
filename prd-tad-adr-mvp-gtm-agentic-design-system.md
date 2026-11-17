@@ -1,19 +1,19 @@
 ---
 title: "Agentic Design System — Shared Ownership and Singleton Tokens"
 doc_type: "PRD-TAD-ADR-MVP-GTM"
-version: "0.9.28"
-revision: "0.9.28"
+version: "0.9.29"
+revision: "0.9.29"
 date: "2026-10-29"
-updated_date: "2026-11-10"
+updated_date: "2026-11-17"
 lang: "en-US"
 frontmatter_contract: "required"
 owner: "Design-system product function"
 continuity_id: "DESIGN-TOKEN-ADOPTION-001"
-prd_revision: "0.9.28"
-tad_revision: "0.9.28"
-adr_revision: "0.9.28"
-mvp_revision: "0.9.28"
-gtm_revision: "0.9.28"
+prd_revision: "0.9.29"
+tad_revision: "0.9.29"
+adr_revision: "0.9.29"
+mvp_revision: "0.9.29"
+gtm_revision: "0.9.29"
 local_rung: "dev-proven"
 delivered_rung: "undocumented"
 lane: "authoring"
@@ -310,3 +310,17 @@ Profile source links bind exact Design System commits containing the registered 
 ### Shared KTV/icon ownership (0.9.27)
 
 The existing shared profile also projects the KTV row/cell layout, typography and responsive tracks. A central, validated SVG library owns 61 reusable Lucide 0.562.0 glyphs with retained ISC/MIT notices, exact digest and offline catalog preview. Base owns one framework/native rendering utility; Graph retains product semantic aliases and help metadata as adapters. Consumers pin this owner rather than duplicate artwork or CSS. Unsafe SVG attributes, duplicate artwork and stale projection bytes fail. Rollback restores producer pins and generated assets together; no user state is migrated. Source/local verification remains separate from Production.
+
+## Central typed rows — reference implementation (0.9.29)
+
+**PRD:** Users need to discover and edit typed facts consistently in existing panels and the Commerce SME editor. One Key–Type–Value row must expose its key, accessible type and existing value control on desktop, narrow containers and offline browsers. Current buyer demand and willingness to pay for this consistency improvement are unmeasured.
+
+**TAD:** Design System owns one immutable cell descriptor in `site/key-type-value.js`, a native DOM adapter at `agentic-design-system/ktv`, and a thin React adapter at `agentic-design-system/react/ktv`. Both reuse the existing shared-ui CSS, tracks, typography and responsive breakpoint. Products supply content, field metadata, controls, events and state. The native adapter moves existing controls without cloning, rebinding or storing them; invalid or cross-document cells fail before mutation. React remains an optional peer and is never loaded by native forms.
+
+**ADR:** Move Base’s semantic KTV renderer to Design System; Graph retains only data, help, selection and typed-control bindings. Remove Base’s KTV implementation and exports; forbid forwarding Base APIs, local KTV grids, copied markup or geometry overrides. Commerce consumes an exact immutable native projection checked by its existing release verifier. Canvas OS consumes the Graph UI and documents the same owner; it creates no separate renderer. Owner source integrates before consumer pins advance.
+
+**MVP and acceptance:** KTV-01 native controls retain identity, events, labels and values; KTV-02 invalid rows fail atomically; KTV-03 React and native share the descriptor without a reverse product dependency; KTV-04 all consumers pin the integrated owner and remove replaced implementations; KTV-05 desktop/narrow/zoom/offline live UI preserves product calculations, evidence and baseline protections. `npm run check:design-system` proves KTV-01–03 locally; consumer type/build, conformance and browser checks must supply separate evidence for KTV-04–05. Current consumer migration and live acceptance remain pending at this owner checkpoint.
+
+**GTM and budgets:** Reduce field-entry friction using existing native products before adding any offer or paid service; the first-dollar impact remains unknown. Implementation target is 60 active minutes; refreshed ceiling 40 authored files / 150 KB added plus deterministic projections below 500 KB each, at most three new runtime modules, zero third-party dependencies and zero provider effects. Existing exact shared-owner Git dependencies may advance. This is an on-demand form import; always-load instruction bytes do not increase.
+
+**Delivery and recovery:** Protected source integration, canonical sync, local browser evidence and Production activation are distinct. No deploy is selected. Rollback restores the exact prior producer and consumer pins, projections and adapters together; no user facts are migrated. Keep the existing event, validation, currency, permission and privacy semantics. Recheck each consumer after the protected owner revision becomes available, then record its exact checks and remaining gaps in the existing consumer adoption record.
