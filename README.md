@@ -9,8 +9,7 @@ until their owners review a migration; no adoption or cross-repository parity is
 
 Four candidate profiles centrally own Commerce, Base, Graph and shared interface tokens.
 Profile bytes, source revisions, generated output, rights and consumer pins are checked independently.
-The Graph grant covers its eight pinned token sources; the private classification remains in force
-outside that scope. Consumers use immutable projections and native component behavior. Design System owns the
+The Graph token grant covers its eight pinned sources; the 2026-11-17 user instruction separately authorizes transferring the shared Markdown/formatting and color-palette implementations. Other private Graph source remains outside those grants. Consumers use immutable projections and native component behavior. Design System owns the
 shared KTV row APIs; Base retains dropdown adapters outside this migration. The Design System's `toolbar-icons.js` runtime also owns
 panel-control rendering and state visibility; framework hosts only bind their app callbacks and state.
 

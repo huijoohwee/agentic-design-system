@@ -140,6 +140,8 @@ export function attachMarkdownEditor(field, options = {}) {
     const callback = action === 'slashCommands' ? options.onSlashCommand : action === 'variableCommands' ? options.onVariableCommand : null
     if (callback) return callback()
     const result = applyMarkdownFormatAction({ text: field.value, selection, action, value })
+    if (field.maxLength >= 0 && result.nextText.length > field.maxLength) { field.setCustomValidity('Formatting exceeds this field’s character limit.'); field.reportValidity(); return }
+    field.setCustomValidity('');
     const prototype = field.tagName === 'TEXTAREA' ? doc.defaultView.HTMLTextAreaElement.prototype : doc.defaultView.HTMLInputElement.prototype
     Object.getOwnPropertyDescriptor(prototype, 'value').set.call(field, result.nextText); field.focus({ preventScroll: true }); field.setSelectionRange(result.nextSelection.startOffset, result.nextSelection.endOffset)
     field.dispatchEvent(new doc.defaultView.Event('input', { bubbles: true })); options.onChange?.(field.value)
