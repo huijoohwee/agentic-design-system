@@ -12,3 +12,9 @@ export type NativeKeyTypeValueRowOptions = {
   ownerDocument?: Document
 }
 export function createKeyTypeValueRow(options: NativeKeyTypeValueRowOptions): HTMLElement
+/** One independently editable value per descriptor; IDs remain stable across updates. */
+export function validateKeyTypeValueRows<T extends { id: string; align?: 'center' | 'start' }>(rows: readonly T[]): readonly T[]
+export function createKeyTypeValueRows(options: {
+  rows: readonly (Omit<NativeKeyTypeValueRowOptions, 'ownerDocument'> & { id: string })[]
+  ownerDocument?: Document
+}): HTMLElement

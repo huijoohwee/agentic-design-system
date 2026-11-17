@@ -1,5 +1,5 @@
 import React from 'react'
-import { KTV_CONTAINER_CLASS, KTV_ROW_CLASS, KTV_ROW_PARTS, validateKeyTypeValueAlign } from '../../../site/key-type-value.js'
+import { KTV_CONTAINER_CLASS, KTV_ROW_CLASS, KTV_ROW_PARTS, validateKeyTypeValueAlign, validateKeyTypeValueRows } from '../../../site/key-type-value.js'
 
 export type KeyTypeValueRowProps = {
   keyNode: React.ReactNode; typeNode: React.ReactNode; valueNode: React.ReactNode
@@ -20,4 +20,10 @@ export function KeyTypeValueRow({ keyNode, typeNode, valueNode, align = 'center'
     className={`${KTV_ROW_CLASS} ${className}`.trim()} onClick={onClick}>
     {KTV_ROW_PARTS.map(part => React.createElement(part.tag, { key: part.slot, className: `${part.className} ${decorations[part.slot]}`.trim() }, content[part.slot]))}
   </dl></KeyTypeValueContainer>
+}
+
+/** One existing KTV row per independent value; stable IDs preserve control state on reorder. */
+export function KeyTypeValueRows({ rows }: { rows: readonly (KeyTypeValueRowProps & { id: string })[] }) {
+  validateKeyTypeValueRows(rows)
+  return <KeyTypeValueContainer>{rows.map(row => <KeyTypeValueRow {...row} key={row.id} />)}</KeyTypeValueContainer>
 }
