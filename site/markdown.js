@@ -73,7 +73,12 @@ export function applyMarkdownFormatAction({ text, selection, action, value }) {
   }
   if (action === 'colorPalette') {
     if (!/^#[0-9a-f]{6}$/i.test(value || '')) throw new TypeError('A six-digit hex colour is required')
-    return wrapMarkdownSelection(text, sel, `<span style="color:${value.toLowerCase()}">`, '</span>')
+    const open = `<span style="color:${value.toLowerCase()}">`
+    const previous = text.slice(0,a).match(/<span style="color:#[0-9a-f]{6}">$/i)
+    if (previous && text.slice(b,b+7) === '</span>') return {
+      nextText:text.slice(0,a-previous[0].length)+open+text.slice(a), nextSelection:sel,
+    }
+    return wrapMarkdownSelection(text, sel, open, '</span>')
   }
   if (['slashCommands', 'variableCommands'].includes(action)) {
     const next = action === 'slashCommands' ? '/' : '@'
