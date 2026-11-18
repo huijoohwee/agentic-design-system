@@ -1,3 +1,4 @@
+import { mountCollectionLayoutPicker } from './collection-layout.js';
 import { mountFloatingPanel } from './floating-panel.js';
 import { attachViewerSurface } from './viewer-surface.js';
 import { attachMarkdownEditor } from './markdown.js';
@@ -21,6 +22,19 @@ for (const title of ['Section mechanics', 'Retained local inputs']) {
   section.append(summary, body); sectionPreview.append(section);
 }
 document.querySelector('#catalog-grid').before(sectionPreview);
+
+const collectionPreview = document.querySelector('#collection-preview');
+const collection = collectionPreview.querySelector('.agentic-collection');
+const collectionItems = collection.querySelectorAll('.agentic-collection-item');
+const layoutPicker = mountCollectionLayoutPicker(collectionPreview.querySelector('[data-layout-picker]'), {
+  layout: 'list',
+  label: 'Collection layout',
+  onChange(layout) {
+    collection.dataset.layout = layout;
+    for (const item of collectionItems) item.dataset.layout = layout;
+    layoutPicker.setLayout(layout);
+  },
+});
 
 hydrateDesignIcons(document);
 installHoverLabels(document);

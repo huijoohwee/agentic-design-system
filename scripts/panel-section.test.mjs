@@ -95,3 +95,31 @@ test('the native preview and offline cache both admit section runtime assets', (
     assert.match(source, /panel-section\.css/)
   }
 })
+
+test('collection layout picker retains controls and reports the chosen layout to the host', async () => {
+  const { mountCollectionLayoutPicker } = await import('../site/collection-layout.js')
+  const node = () => ({
+    children: [], attrs: {}, dataset: {},
+    setAttribute(key, value) { this.attrs[key] = value },
+    append(child) { this.children.push(child) },
+    replaceChildren(child) { this.children = [child] },
+    addEventListener(key, listener) { this[key] = listener },
+    remove() { this.removed = true },
+  })
+  const host = { ...node(), ownerDocument: { createElement: node, createElementNS: node } }
+  const changes = []
+  const picker = mountCollectionLayoutPicker(host, { layout: 'list', label: 'Media layout', onChange: value => changes.push(value) })
+  const [control] = host.children
+  const [list, card, grid] = control.children
+  assert.deepEqual(control.children.map(button => button.title), ['List layout', 'Card layout', 'Grid layout'])
+  assert.equal(list.attrs['aria-pressed'], 'true')
+  grid.click()
+  assert.deepEqual(changes, ['grid'])
+  picker.setLayout('grid')
+  assert.equal(grid.attrs['aria-pressed'], 'true')
+  assert.equal(card.attrs['aria-pressed'], 'false')
+  assert.equal(list.attrs['aria-pressed'], 'false')
+  assert.throws(() => picker.setLayout('invalid'), RangeError)
+  picker.destroy()
+  assert.equal(control.removed, true)
+})

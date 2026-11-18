@@ -1,6 +1,7 @@
-const CACHE_NAME = "agentic-design-system-rich-text-v0.5.0-draft-registry-r38";
+const CACHE_NAME = "agentic-design-system-rich-text-v0.5.0-draft-registry-r39";
 const CORE_FILES = [
   "./floating-panel.js", "./inline-editor.js", "./viewer-surface.js", "./viewer-surface.css", "./markdown.js", "./markdown-parser.js", "./color.js", "./rich-text.css", "./panel-section.js", "./panel-section.css",
+  "./collection-layout.js", "./collection-layout.css",
   "./hover.js", "./hover-text.js", "./hover.css", "./key-type-value.js",
   "./", "./registry.css", "./floating-panel.css", "./toolbar.css", "./toolbar-icons.js", "./dashboard-columns.js", "./app.js?v=floating-panel-preview-8", "./registry-query.js?v=c104158", "./catalog.json", "./catalog.schema.json",
   "./icons.json", "./tokens/commerce-profile.json", "./tokens/base-profile.json", "./tokens/graph-profile.json", "./tokens/shared-ui-profile.json",

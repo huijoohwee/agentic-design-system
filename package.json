@@ -65,6 +65,11 @@
       "import": "./packages/react-viewer/src/index.tsx"
     },
     "./viewer.css": "./site/viewer-surface.css",
+    "./collection-layout": {
+      "types": "./site/collection-layout.d.ts",
+      "import": "./site/collection-layout.js"
+    },
+    "./collection-layout.css": "./site/collection-layout.css",
     "./skills-commands": {
       "types": "./site/skills-commands.d.ts",
       "import": "./site/skills-commands.js"

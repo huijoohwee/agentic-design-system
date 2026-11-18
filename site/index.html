@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="./hover.css">
   <link rel="stylesheet" href="./toolbar.css">
   <link rel="stylesheet" href="./registry.css">
+    <link rel="stylesheet" href="./collection-layout.css">
 </head>
 <body class="agentic-form-controls">
   <main class="agentic-dashboard-layout">
@@ -37,6 +38,15 @@
         <p id="search-help" class="agentic-dashboard-observation">Use / for a section, @ for an owner, or # for a product scope.</p>
       </search>
       <p id="search-status" class="agentic-dashboard-description" aria-live="polite">Loading the local registry…</p>
+      <section id="collection-preview" aria-labelledby="collection-preview-title">
+        <h2 id="collection-preview-title">List, Card, and Grid</h2>
+        <div data-layout-picker></div>
+        <ul class="agentic-collection" data-layout="list" aria-label="Example items">
+          <li class="agentic-collection-item" data-layout="list">Project brief</li>
+          <li class="agentic-collection-item" data-layout="list">Workshop notes</li>
+          <li class="agentic-collection-item" data-layout="list">Draft report</li>
+        </ul>
+      </section>
       <ul id="catalog-grid" class="agentic-dashboard-grid" data-columns="2" aria-label="Native owners and candidate token profiles"></ul>
       <p id="catalog-empty" class="agentic-dashboard-card" hidden>No matching registry records.</p>
     </section>

@@ -100,7 +100,7 @@ export function mountSkillsCommandsReference(host, entries, sourceLabel) {
   const surface = element(doc, 'section', 'agentic-skills-catalog');
   const head = element(doc, 'div'), body = element(doc, 'div', 'agentic-skills-body');
   const source = element(doc, 'p', 'agentic-skills-meta', sourceLabel);
-  const list = element(doc, 'div', 'agentic-skills-list');
+  const list = element(doc, 'div', 'agentic-collection agentic-skills-list');
   body.append(source, list);
   surface.append(head, body);
   host.replaceChildren(surface);
@@ -133,11 +133,15 @@ export function mountSkillsCommandsReference(host, entries, sourceLabel) {
       const detail = element(doc, 'details');
       detail.open = !closed.has(key);
       detail.append(element(doc, 'summary', 'agentic-skills-group', name + ' (' + records.length + ')'));
+      const rows = element(doc, 'div', 'agentic-collection');
+      rows.dataset.layout = 'list';
       for (const { token, summary } of records) {
-        const row = element(doc, 'div', 'agentic-skills-row');
+        const row = element(doc, 'div', 'agentic-collection-item agentic-skills-row');
+        row.dataset.layout = 'list';
         row.append(element(doc, 'strong', 'agentic-skills-title', token), element(doc, 'span', 'agentic-skills-meta', summary));
-        detail.append(row);
+        rows.append(row);
       }
+      detail.append(rows);
       detail.addEventListener('toggle', () => {
         if (!list.contains(detail)) return;
         if (detail.open) closed.delete(key); else closed.add(key);
