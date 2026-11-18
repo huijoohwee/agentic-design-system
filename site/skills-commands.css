@@ -2,7 +2,7 @@
   display: flex; flex-direction: column; block-size: 100%; min-block-size: 0; min-inline-size: 0;
   color: var(--agentic-panel-foreground); font-family: var(--agentic-font-sans);
 }
-.agentic-skills-header, .agentic-skills-list, .agentic-skills-body {
+.agentic-skills-header, .agentic-skills-body {
   display: grid; align-content: start; gap: var(--agentic-menu-gap); min-inline-size: 0;
 }
 .agentic-skills-header { padding: var(--agentic-menu-padding); border-block-end: var(--agentic-panel-border); }
@@ -10,15 +10,5 @@
 .agentic-skills-header [hidden] { display: none; }
 .agentic-skills-body { overflow: auto; min-block-size: 0; padding: var(--agentic-menu-padding); }
 .agentic-skills-group { cursor: pointer; padding-block: var(--agentic-control-padding-block); }
-.agentic-skills-row {
-  display: grid; align-items: center; gap: var(--agentic-menu-gap); min-inline-size: 0;
-  padding: var(--agentic-menu-padding); border: var(--agentic-panel-border); border-radius: var(--agentic-control-radius);
-}
-.agentic-skills-row[role="button"] { grid-template-columns: auto minmax(0, 1fr) auto; cursor: pointer; }
-.agentic-skills-row[role="button"]:hover { background: var(--agentic-control-hover-background); }
-.agentic-skills-row:is(:focus-visible, [aria-current="true"]) {
-  outline: var(--agentic-control-focus-width) solid var(--agentic-control-selected-foreground); outline-offset: calc(-1 * var(--agentic-control-focus-width));
-}
 .agentic-skills-title, .agentic-skills-meta { margin: 0; overflow-wrap: anywhere; }
 .agentic-skills-meta { font-weight: normal; }
-.agentic-skills-list details > .agentic-skills-row + .agentic-skills-row { margin-block-start: var(--agentic-menu-gap); }
