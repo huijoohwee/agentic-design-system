@@ -1,7 +1,8 @@
 import { createDesignIcon } from './toolbar-icons.js';
+import { mountCollectionLayoutPicker } from './collection-layout.js';
 
 export const skillsCommandsTab = Object.freeze({ key: 'skills-commands', label: 'Skills & Commands', icon: 'SquareTerminal' });
-export const initialCatalogFilters = Object.freeze({ prefix: 'all', groupBy: 'subject', query: '' });
+export const initialCatalogFilters = Object.freeze({ prefix: 'all', groupBy: 'subject', query: '', layout: 'list' });
 const prefixes = [['slash', '/', 'Slash commands'], ['hash', '#', 'Hash semantics'], ['at', '@', 'At bindings']];
 const facets = [['subject', 'S', 'Group by Subject'], ['verb', 'V', 'Group by Verb'], ['object', 'O', 'Group by Object']];
 
@@ -31,6 +32,7 @@ export function mountSkillsCommandsHeader(host, onChange) {
   const buttons = [];
   function change(field, value) {
     filters = { ...filters, [field]: value };
+    if (field === 'layout') picker.setLayout(value);
     for (const { node, key, field } of buttons) {
       node.setAttribute('aria-pressed', String(filters[field] === key || filters[field] === 'all'));
     }
@@ -76,7 +78,11 @@ export function mountSkillsCommandsHeader(host, onChange) {
   const disclosure = button('Collapse All', 'Collapse All', () => toggleGroups?.());
   disclosure.className = 'agentic-form-control';
   disclosure.hidden = true;
-  actions.append(group('Skills & Commands prefix', 'prefix', prefixes), group('Skills & Commands group by', 'groupBy', facets), searchToggle, disclosure);
+  const pickerHost = element(doc, 'div');
+  const picker = mountCollectionLayoutPicker(pickerHost, {
+    layout: filters.layout, label: 'Skills & Commands layout', onChange: value => change('layout', value),
+  });
+  actions.append(group('Skills & Commands prefix', 'prefix', prefixes), group('Skills & Commands group by', 'groupBy', facets), pickerHost, searchToggle, disclosure);
   header.append(heading, subtitle, actions, search);
   host.replaceChildren(header);
   return {
@@ -87,7 +93,7 @@ export function mountSkillsCommandsHeader(host, onChange) {
       disclosure.textContent = disclosure.title = label;
       disclosure.setAttribute('aria-label', label);
     },
-    destroy() { header.remove(); },
+    destroy() { picker.destroy(); header.remove(); },
   };
 }
 
@@ -106,7 +112,7 @@ export function mountSkillsCommandsReference(host, entries, sourceLabel) {
   host.replaceChildren(surface);
   const closed = new Set();
   const header = mountSkillsCommandsHeader(head, render);
-  function render({ prefix, groupBy, query }) {
+  function render({ prefix, groupBy, query, layout }) {
     const groups = new Map();
     const symbol = prefixes.find(([key]) => key === prefix)?.[1];
     const needle = query.trim().toLowerCase();
@@ -134,11 +140,15 @@ export function mountSkillsCommandsReference(host, entries, sourceLabel) {
       detail.open = !closed.has(key);
       detail.append(element(doc, 'summary', 'agentic-skills-group', name + ' (' + records.length + ')'));
       const rows = element(doc, 'div', 'agentic-collection');
-      rows.dataset.layout = 'list';
+      rows.dataset.layout = layout;
       for (const { token, summary } of records) {
         const row = element(doc, 'div', 'agentic-collection-item agentic-skills-row');
-        row.dataset.layout = 'list';
-        row.append(element(doc, 'strong', 'agentic-skills-title', token), element(doc, 'span', 'agentic-skills-meta', summary));
+        row.dataset.layout = layout;
+        const symbol = element(doc, 'span', layout === 'card' ? 'agentic-collection-preview' : 'agentic-collection-leading', token[0]);
+        symbol.setAttribute('aria-hidden', 'true');
+        const content = element(doc, 'div');
+        content.append(element(doc, 'div', 'agentic-collection-title', token), element(doc, 'div', 'agentic-skills-meta', summary));
+        row.append(symbol, content);
         rows.append(row);
       }
       detail.append(rows);
