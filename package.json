@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./floating-panel": "./site/floating-panel.js",
     "./inline-editor": {
       "types": "./site/inline-editor.d.ts",
       "import": "./site/inline-editor.js"
