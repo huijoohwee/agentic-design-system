@@ -18,7 +18,7 @@ export function mountSkillsCommandsHeader(host, onChange) {
   const doc = host.ownerDocument;
   let filters = initialCatalogFilters, toggleGroups;
   const header = element(doc, 'header', 'agentic-skills-header');
-  const heading = element(doc, 'strong', 'agentic-panel-section-title', skillsCommandsTab.label);
+  const heading = element(doc, 'h2', 'agentic-panel-section-title', skillsCommandsTab.label);
   const subtitle = element(doc, 'span', 'agentic-skills-meta', '/ # @ invocation catalog');
   const actions = element(doc, 'div', 'agentic-panel-section-actions');
   function button(label, face, click) {
@@ -106,7 +106,7 @@ export function mountSkillsCommandsReference(host, entries, sourceLabel) {
   const surface = element(doc, 'section', 'agentic-skills-catalog');
   const head = element(doc, 'div'), body = element(doc, 'div', 'agentic-skills-body');
   const source = element(doc, 'p', 'agentic-skills-meta', sourceLabel);
-  const list = element(doc, 'div', 'agentic-collection agentic-skills-list');
+  const list = element(doc, 'div', 'agentic-collection agentic-skills-groups');
   body.append(source, list);
   surface.append(head, body);
   host.replaceChildren(surface);
@@ -136,9 +136,11 @@ export function mountSkillsCommandsReference(host, entries, sourceLabel) {
     }
     for (const [name, records] of groups) {
       const key = groupBy + ':' + name;
-      const detail = element(doc, 'details');
+      const detail = element(doc, 'details', 'agentic-skills-group-section');
       detail.open = !closed.has(key);
-      detail.append(element(doc, 'summary', 'agentic-skills-group', name + ' (' + records.length + ')'));
+      const summary = element(doc, 'summary', 'agentic-skills-group');
+      summary.append(element(doc, 'h3', 'agentic-skills-group-label', name + ' (' + records.length + ')'));
+      detail.append(summary);
       const rows = element(doc, 'div', 'agentic-collection');
       rows.dataset.layout = layout;
       for (const { token, summary } of records) {
