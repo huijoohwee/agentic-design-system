@@ -10,7 +10,7 @@ import { prepareLocalDevHtml } from "./dev-csp.mjs";
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 execFileSync(process.execPath, ['--test', 'scripts/key-type-value.test.mjs', 'scripts/hover.test.mjs', 'scripts/panel-section.test.mjs', 'scripts/markdown.test.mjs', 'scripts/viewer-surface.test.mjs'], { cwd: root, stdio: 'inherit' });
 const expectedFiles = [
-  "site/inline-editor.js", "site/inline-editor.d.ts",
+  "site/floating-panel.js", "site/inline-editor.js", "site/inline-editor.d.ts",
   "site/viewer-surface.js", "site/viewer-surface.d.ts", "site/viewer-surface.css", "packages/react-viewer/src/index.tsx", "scripts/viewer-surface.test.mjs",
   "site/markdown.js", "site/markdown.d.ts", "site/markdown-parser.js", "site/markdown-parser.d.ts", "site/color.js", "site/color.d.ts", "site/rich-text.css", "packages/react-rich-text/src/index.tsx", "scripts/markdown.test.mjs",
   ".agentic-os.json",
@@ -122,16 +122,12 @@ async function assertFloatingPanelOwnerContract(indexHtml) {
   const triggerIdCount = [...indexHtml.matchAll(/\bid="floating-panel-preview-trigger"/gu)].length;
   const panelIdCount = [...indexHtml.matchAll(/\bid="panel-preview"/gu)].length;
   const triggerUsesSharedDock = /<button\b(?=[^>]*\bid="floating-panel-preview-trigger")(?=[^>]*\bdata-icon-only)(?=[^>]*\bdata-dock-edge="end")(?=[^>]*\baria-label="FloatingPanel")[^>]*>\s*<svg\b[^>]*data-agentic-design-icon="SlidersHorizontal"[^>]*><\/svg>\s*<\/button>/u.test(indexHtml);
-  const closeUsesSemanticRole = /<button\b(?=[^>]*\bdata-agentic-panel-control="close")(?=[^>]*\bdata-panel-close)[^>]*>\s*<\/button>/u.test(indexHtml);
-  const tabKeys = [...indexHtml.matchAll(/data-agentic-floating-panel-tab-key="([^"]+)"/gu)].map(([, key]) => key);
-  const tabControls = [...indexHtml.matchAll(/role="tab"[^>]*aria-controls="([^"]+)"/gu)].map(([, id]) => id);
-  const tabPanels = [...indexHtml.matchAll(/<section\b(?=[^>]*role="tabpanel")(?=[^>]*id="([^"]+)")/gu)].map(([, id]) => id);
-  if (triggerIdCount !== 1 || panelIdCount !== 1 || !triggerUsesSharedDock || !closeUsesSemanticRole
-    || [...indexHtml.matchAll(/role="tablist"/gu)].length !== 1
-    || tabKeys.length !== 3 || new Set(tabKeys).size !== tabKeys.length
-    || tabControls.length !== tabKeys.length || new Set(tabControls).size !== tabControls.length
-    || JSON.stringify([...tabControls].sort()) !== JSON.stringify([...tabPanels].sort())) {
-    fail("FloatingPanel preview must use one shared top-right trigger, one shell, and unique icon tabs with matching panels");
+  const tabKeys = [...indexHtml.matchAll(/data-panel-tab="([^"]+)"/gu)].map(([, key]) => key);
+  const panelRuntime = await readFile(resolve(root, 'site/floating-panel.js'), 'utf8');
+  if (triggerIdCount !== 1 || panelIdCount !== 1 || !triggerUsesSharedDock
+    || tabKeys.join(',') !== 'agent-tools,console,setup-guide' || /role="tablist"/u.test(indexHtml)
+    || !panelRuntime.includes('updatePanelControlGroup(controls, { actions: { close } })')) {
+    fail("FloatingPanel preview must supply its three tab contents to the shared native shell and controls");
   }
 
   const controlRuntime = await readFile(resolve(root, "site/toolbar-icons.js"), "utf8");
@@ -152,6 +148,7 @@ async function assertFloatingPanelOwnerContract(indexHtml) {
     || !controlRuntime.includes("cannot apply consumer visual overrides")
     || !controlRuntime.includes("cannot contain consumer controls")
     || !appRuntime.includes("hydratePanelControls(document)")
+    || !appRuntime.includes("mountFloatingPanel(document.querySelector(")
     || /aria-label="Close FloatingPanel"|title="Close FloatingPanel"/u.test(indexHtml)) {
     fail("Panel controls must get their icon and accessible name from one semantic role, without consumer overrides");
   }
