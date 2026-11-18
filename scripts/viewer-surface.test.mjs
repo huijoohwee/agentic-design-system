@@ -29,6 +29,23 @@ test('interactive links and double click do not implicitly activate',()=>{
  const f=fixture(),s=attachViewerSurface(f.root);f.events.get('click')({detail:1,target:{closest:()=>({})}});assert.equal(s.editing,false)
  f.events.get('click')({detail:2,target:{closest:()=>null}});assert.equal(s.editing,false);s.destroy()
 })
+test('Enter activates only the focused editable surface and preserves descendant actions', () => {
+  for (const editable of [true, false]) {
+    const f = fixture(), surface = attachViewerSurface(f.root, { editable })
+    const pressEnter = target => {
+      let prevented = false
+      f.events.get('keydown')({ key: 'Enter', target, preventDefault() { prevented = true } })
+      return prevented
+    }
+    for (const tagName of ['A', 'BUTTON']) {
+      assert.equal(pressEnter({ tagName }), false)
+      assert.equal(surface.editing, false)
+    }
+    assert.equal(pressEnter(f.root), editable)
+    assert.equal(surface.editing, editable)
+    surface.destroy()
+  }
+})
 test('cancellation delegates source restoration without rewriting view DOM',()=>{
  const f=fixture(),cancel=[];const s=attachViewerSurface(f.root,{onCancel:state=>cancel.push(state)});s.setEditing(true);f.root.textContent='Draft';f.events.get('input')();s.cancel();assert.deepEqual(cancel,[{dirty:true,baseline:'Rendered text'}]);s.destroy()
 })
