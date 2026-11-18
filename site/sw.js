@@ -1,4 +1,4 @@
-const CACHE_NAME = "agentic-design-system-rich-text-v0.5.0-draft-registry-r39";
+const CACHE_NAME = "agentic-design-system-rich-text-v0.5.0-draft-registry-r40";
 const CORE_FILES = [
   "./floating-panel.js", "./inline-editor.js", "./viewer-surface.js", "./viewer-surface.css", "./markdown.js", "./markdown-parser.js", "./color.js", "./rich-text.css", "./panel-section.js", "./panel-section.css",
   "./collection-layout.js", "./collection-layout.css",
