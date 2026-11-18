@@ -5,15 +5,16 @@ import '../../../site/vendor/shared-ui-profile.css'
 import '../../../site/panel-section.css'
 
 const classes = (...values: Array<string | false | undefined>) => values.filter(Boolean).join(' ')
+type HeadingTag = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
 export type SettingsSectionHeaderProps = Omit<React.HTMLAttributes<HTMLElement>, 'title' | 'children'> & {
   title: React.ReactNode; actions?: React.ReactNode; ariaLabel?: string; fontClassName?: string
-  titleClassName?: string; actionsClassName?: string; stickyHeader?: boolean
+  titleClassName?: string; actionsClassName?: string; stickyHeader?: boolean; headingAs?: HeadingTag
 }
 export function SettingsSectionHeader({ title, actions, ariaLabel, fontClassName, className,
-  titleClassName, actionsClassName, stickyHeader = false, ...props }: SettingsSectionHeaderProps) {
+  titleClassName, actionsClassName, stickyHeader = false, headingAs: Title = 'section', ...props }: SettingsSectionHeaderProps) {
   return <header {...props} aria-label={ariaLabel ?? props['aria-label']} data-agentic-sticky={stickyHeader}
     className={classes(PANEL_SECTION.header, fontClassName, className)}>
-    <section className={classes(PANEL_SECTION.title, titleClassName)}>{title}</section>
+    <Title className={classes(PANEL_SECTION.title, titleClassName)}>{title}</Title>
     {actions != null && <section className={classes(PANEL_SECTION.actions, actionsClassName)}>{actions}</section>}
   </header>
 }
@@ -58,11 +59,11 @@ export type CollapsibleSectionProps = {
   title: React.ReactNode; children: React.ReactNode; actions?: React.ReactNode
   defaultCollapsed?: boolean; collapsed?: boolean; onToggle?: (collapsed: boolean) => void
   id?: string; className?: string; headerClassName?: string; stickyHeader?: boolean
-  stickyOffset?: string; flushTop?: boolean; toolbarAligned?: boolean
+  stickyOffset?: string; flushTop?: boolean; toolbarAligned?: boolean; headingAs?: HeadingTag
 }
 /** Mount on first expansion, then retain children and scroll positions until owner unmount. */
 export function CollapsibleSection({ title, children, actions, defaultCollapsed = PANEL_SECTION.defaultCollapsed,
-  collapsed, onToggle, id, className, headerClassName, stickyHeader = true, stickyOffset, flushTop = false,
+  collapsed, onToggle, id, className, headerClassName, stickyHeader = true, stickyOffset, flushTop = false, headingAs,
 }: CollapsibleSectionProps) {
   const generatedId = useId(), contentId = id || `section-${generatedId}`
   const [innerCollapsed, setInnerCollapsed] = useState(defaultCollapsed)
@@ -80,7 +81,7 @@ export function CollapsibleSection({ title, children, actions, defaultCollapsed 
   }
   return <section className={classes(PANEL_SECTION.section, className)} data-agentic-flush-top={flushTop}
     style={stickyOffset === undefined ? undefined : { '--agentic-section-offset': stickyOffset } as React.CSSProperties}>
-    <SettingsSectionHeader stickyHeader={stickyHeader} className={headerClassName} actions={actions}
+    <SettingsSectionHeader stickyHeader={stickyHeader} className={headerClassName} actions={actions} headingAs={headingAs}
       title={<SectionToggle ref={trigger} expanded={!isCollapsed} controls={contentId} onToggle={toggle}>
         {title}
       </SectionToggle>} />

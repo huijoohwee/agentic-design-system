@@ -6,9 +6,16 @@
   display: grid; align-content: start; gap: var(--agentic-menu-gap); min-inline-size: 0;
 }
 .agentic-skills-header { padding: var(--agentic-menu-padding); border-block-end: var(--agentic-panel-border); }
+.agentic-skills-header > h2 { margin: 0; font-size: inherit; }
 .agentic-skills-header .agentic-panel-section-actions { justify-content: flex-start; flex-wrap: wrap; }
 .agentic-skills-header [hidden] { display: none; }
 .agentic-skills-body { overflow: auto; min-block-size: 0; padding: var(--agentic-menu-padding); }
-.agentic-skills-group { cursor: pointer; padding-block: var(--agentic-control-padding-block); }
+.agentic-collection.agentic-skills-groups { gap: 0; }
+.agentic-skills-groups:not(:empty) { border-block-start: var(--agentic-panel-border); }
+.agentic-skills-group-section { border-block-end: var(--agentic-panel-border); }
+.agentic-panel-section.agentic-skills-group-section { padding-inline: 0; }
+.agentic-skills-group-section > :is(.agentic-panel-section-body, .agentic-collection) { padding-inline: var(--agentic-control-padding-inline); }
+.agentic-skills-group { cursor: pointer; padding: var(--agentic-control-padding-block) var(--agentic-control-padding-inline); }
+.agentic-skills-group-label { display: inline-flex; align-items: baseline; gap: var(--agentic-control-padding-inline); margin: 0; font: inherit; font-weight: 600; text-transform: uppercase; }
 .agentic-skills-title, .agentic-skills-meta { margin: 0; overflow-wrap: anywhere; }
 .agentic-skills-meta { font-weight: normal; }

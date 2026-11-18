@@ -1,5 +1,6 @@
 /* Shared section mechanics; consumers supply only content, state and host geometry. */
 .agentic-panel-section { scroll-margin-block-start: var(--agentic-section-offset, 0px); }
+.agentic-panel-section-header > :is(h1,h2,h3,h4,h5,h6).agentic-panel-section-title { margin: 0; font-size: inherit; }
 .agentic-panel-section-header[data-agentic-sticky="true"] {
   position: sticky; inset-block-start: var(--agentic-section-offset, 0px); z-index: 1;
   background: var(--panel-bg, var(--agentic-base-surface, var(--agentic-surface, Canvas)));
