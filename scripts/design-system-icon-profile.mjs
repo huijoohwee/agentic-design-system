@@ -366,6 +366,18 @@ ${field} {
   padding-block: 0; padding-inline: var(--agentic-control-padding-inline); border: var(--agentic-control-border); border-radius: var(--agentic-control-radius);
   font-family: var(--agentic-font-sans); font-size: var(--agentic-font-size-body); line-height: var(--agentic-line-height-body);
 }
+[data-agentic-inline-editing] { position: relative; }
+[data-agentic-inline-editing] > input.agentic-inline-editor {
+  box-sizing: border-box; position: absolute; inset: var(--agentic-control-focus-width);
+  inline-size: calc(100% - 2 * var(--agentic-control-focus-width)); block-size: calc(100% - 2 * var(--agentic-control-focus-width));
+  min-inline-size: 0; min-block-size: 0; margin: 0; padding: 0 var(--agentic-control-padding-inline);
+  border: 0; border-radius: 0; background: var(--agentic-panel-background); color: var(--agentic-panel-foreground);
+  font: inherit; text-align: start;
+}
+[data-agentic-inline-editing] > input.agentic-inline-editor:focus {
+  outline: var(--agentic-control-focus-width) solid var(--agentic-control-focus, Highlight);
+  outline-offset: calc(-1 * var(--agentic-control-focus-width));
+}
 textarea.agentic-form-control, .agentic-form-controls :where(textarea) {
   block-size: auto; padding-block: var(--agentic-control-padding-block); resize: vertical;
 }

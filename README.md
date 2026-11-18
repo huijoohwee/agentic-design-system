@@ -74,6 +74,8 @@ In a grid with roving keyboard focus, apply `agentic-grid-cell` to native cells 
 
 To pair a named reference with grid cells, set the same `data-agentic-reference` value (1, 2 or 3) on an `agentic-reference-label` and each corresponding `agentic-grid-cell`. Wrap labels in an `agentic-reference-list` for responsive spacing. The slots use distinct line patterns as well as themed colors. Include a readable address or name for every reference. The host assigns slots and clears them when inspection ends.
 
+For in-place text editing, import `mountInlineEditor` from `agentic-design-system/inline-editor` and load the shared UI profile. Pass a host, the initial value, an accessible label and callbacks for input, commit and cancel. Focus the returned native input when editing starts. Enter requests a commit, Escape requests cancellation, and composition retains native keyboard handling. Call `destroy()` after accepting or cancelling. The host controls persistence and can keep the draft open when validation fails.
+
 Dropdowns and textboxes reuse the generated `agentic-form-control` utility; native fields opt in through `agentic-form-controls`. Shared geometry is 28px desktop and 48px on coarse pointers or viewports up to 768px, with 8px inline padding, a 6px radius and body typography. Focus color stays with the local theme; native select behavior, labels, validation and Graph menu behavior stay with their existing owners.
 
 Opened dropdown menus also reuse the generated shared surface, option, hover, selected, focus and touch styles. Base owns the neutral menu behavior and native/React adapters; this registry adds no runtime dependency on Base.

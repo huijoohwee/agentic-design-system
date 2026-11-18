@@ -307,7 +307,7 @@
         "consumerPins": [],
         "projection": {
           "path": "./vendor/shared-ui-profile.css",
-          "digest": "sha256:b4b71286f842ab35c8e93d5ac744278726bd613bec01361dc55f16cc3d990e95"
+          "digest": "sha256:c3068c9a0087aa0dda0a7c420f306f1c080a75021253352e9dde13ef9758d051"
         }
       }
     ]
