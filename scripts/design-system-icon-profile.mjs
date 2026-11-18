@@ -19,6 +19,18 @@ const channel = String.raw`(?:0|[1-9][0-9]{0,2})(?:\.[0-9]+)?`;
 const oklch = String.raw`oklch\(${channel}% ${channel} ${channel}(?: / 0\.[0-9]+)?\)`;
 const color = String.raw`(?:${oklch}|#[a-f0-9]{6}|rgb\(${channel} ${channel} ${channel}(?: / 0\.[0-9]+)?\))`;
 const THEMED_COLOR = new RegExp(String.raw`^light-dark\(${color}, ${color}\)$`, "iu");
+const panelThemeRoles = new Map([
+  ["surface.panel.background", "--kg-panel-bg"],
+  ["surface.panel.foreground", "--kg-text-primary"],
+  ["surface.panel.border-color", "--kg-border"],
+]);
+
+function validThemedColor(key, value) {
+  const role = panelThemeRoles.get(key);
+  if (!role) return THEMED_COLOR.test(value);
+  const prefix = `var(${role}, `;
+  return value.startsWith(prefix) && value.endsWith(")") && THEMED_COLOR.test(value.slice(prefix.length, -1));
+}
 const EXPECTED = Object.freeze([
   [
     "icon.size.compact",
@@ -244,7 +256,7 @@ export function validateSharedUiProfile(source) {
         || token.type === "number" && (!/^[0-9]+(?:\.[0-9]+)?$/u.test(token.value) || Number(token.value) < 0.5 || Number(token.value) > 10000)
         || token.type === "border" && !BORDER.test(token.value)
         || token.type === "shadow" && !TOOLBAR_SHADOW.test(token.value)
-        || token.type === "themed-color" && !THEMED_COLOR.test(token.value)
+        || token.type === "themed-color" && !validThemedColor(token.key, token.value)
         || token.type === "font-family" && !/^[A-Za-z0-9 ,._-]+$/u.test(token.value)
         || token.type === "grid-template" && (!/^[A-Za-z0-9()., %-]+$/u.test(token.value) || /url|expression|\b(?:auto|none)\b/iu.test(token.value))) || keys.has(token.key) || variables.has(token.cssVar)) fail(`invalid token ${token.key ?? ""}`);
     keys.add(token.key);
@@ -272,9 +284,9 @@ ${declarations.join("\n")}
 .agentic-toggle-group {
   box-sizing: border-box; display: inline-flex; align-items: stretch;
   min-inline-size: 0; max-inline-size: 100%; block-size: var(--agentic-control-height); overflow-x: auto;
-  scrollbar-width: none; border: var(--agentic-control-border);
-  border-radius: var(--agentic-control-radius); background: var(--agentic-base-surface, var(--kg-panel-bg, Canvas));
-  color: var(--agentic-base-muted, var(--kg-text-secondary, CanvasText));
+  scrollbar-width: none; border: var(--agentic-panel-control-border, var(--agentic-control-border));
+  border-radius: var(--agentic-control-radius); background: var(--agentic-panel-background);
+  color: var(--agentic-panel-foreground);
   font: 500 var(--kg-text-xs, .75rem)/var(--kg-text-xs-line, 1rem) var(--agentic-font-sans);
 }
 .agentic-toggle-group > button {
@@ -354,7 +366,7 @@ ${annotationTarget} {
 .agentic-icon-color { color: var(--agentic-base-muted, var(--kg-text-secondary, CanvasText)); }
 .agentic-icon-hover:is(:hover, :focus-visible) { background: var(--agentic-control-hover-background); }
 .agentic-icon-padding { padding: var(--agentic-control-padding-block); }
-.agentic-icon-pill, .agentic-icon-badge { display: inline-flex; align-items: center; justify-content: center; gap: var(--agentic-control-padding-block); min-inline-size: 0; max-inline-size: 100%; box-sizing: border-box; min-block-size: var(--agentic-control-height); padding: 0 var(--agentic-control-padding-inline); border: var(--agentic-control-border); border-radius: var(--agentic-control-radius); white-space: nowrap; }
+.agentic-icon-pill, .agentic-icon-badge { display: inline-flex; align-items: center; justify-content: center; gap: var(--agentic-control-padding-block); min-inline-size: 0; max-inline-size: 100%; box-sizing: border-box; min-block-size: var(--agentic-control-height); padding: 0 var(--agentic-control-padding-inline); border: var(--agentic-panel-control-border, var(--agentic-control-border)); border-radius: var(--agentic-control-radius); white-space: nowrap; }
 .agentic-icon-text, .agentic-icon-pill, .agentic-icon-badge { font: var(--agentic-font-size-body)/var(--agentic-line-height-body) var(--agentic-font-sans); }
 @container agentic-ktv (width < ${profile.tokens.find(token => token.key === "layout.ktv.stack-breakpoint").value}) {
   .agentic-ktv-row { grid-template-columns: var(--agentic-ktv-columns-narrow); }
@@ -363,7 +375,7 @@ ${annotationTarget} {
 ${field} {
   box-sizing: border-box; min-inline-size: 0; max-inline-size: 100%;
   block-size: var(--agentic-control-height); min-block-size: var(--agentic-control-height);
-  padding-block: 0; padding-inline: var(--agentic-control-padding-inline); border: var(--agentic-control-border); border-radius: var(--agentic-control-radius);
+  padding-block: 0; padding-inline: var(--agentic-control-padding-inline); border: var(--agentic-panel-control-border, var(--agentic-control-border)); border-radius: var(--agentic-control-radius);
   font-family: var(--agentic-font-sans); font-size: var(--agentic-font-size-body); line-height: var(--agentic-line-height-body);
 }
 [data-agentic-inline-editing] { position: relative; }
@@ -392,7 +404,7 @@ textarea.agentic-form-control, .agentic-form-controls :where(textarea) {
   display: flex; flex-direction: column; gap: var(--agentic-menu-gap); min-inline-size: 0;
   color: var(--agentic-base-text, var(--kg-text-primary, CanvasText));
   background: var(--agentic-base-surface, var(--kg-panel-bg, Canvas));
-  border: var(--agentic-control-border);
+  border: var(--agentic-panel-control-border, var(--agentic-control-border));
   border-radius: var(--agentic-control-radius); box-shadow: var(--kg-shadow-overlay, 0 8px 24px rgb(0 0 0 / .12));
   font: var(--agentic-font-size-body)/var(--agentic-line-height-body) var(--agentic-font-sans);
   max-block-size: calc(100dvh - var(--agentic-menu-edge-gap) - var(--agentic-menu-edge-gap));

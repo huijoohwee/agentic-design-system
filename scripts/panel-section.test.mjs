@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { readFileSync } from 'node:fs'
+import { validateSharedUiProfile } from './design-system-icon-profile.mjs'
 import { PANEL_SECTION, recoverSectionFocus, isSectionGroupCollapsed, updateSectionGroup,
   installPanelSections, setPanelSectionExpanded } from '../site/panel-section.js'
 
@@ -93,6 +94,27 @@ test('the native preview and offline cache both admit section runtime assets', (
     const source = readFileSync(new URL(path, import.meta.url), 'utf8')
     assert.match(source, /panel-section\.js/)
     assert.match(source, /panel-section\.css/)
+  }
+})
+
+test('panel surfaces use the active profile and share one border with their controls', () => {
+  const read = path => readFileSync(new URL(path, import.meta.url), 'utf8')
+  const profile = validateSharedUiProfile(read('../site/tokens/shared-ui-profile.json'))
+  const surface = profile.tokens.find(token => token.key === 'surface.panel.background')
+  surface.value = surface.value.replace('--kg-panel-bg', '--kg-border')
+  assert.throws(() => validateSharedUiProfile(JSON.stringify(profile)), /Invalid shared UI profile/)
+
+  const controls = read('../site/vendor/shared-ui-profile.css')
+  assert.ok(read('../site/floating-panel.css').includes('--agentic-panel-control-border: var(--agentic-panel-border)'))
+  assert.ok(controls.includes('border: var(--agentic-panel-control-border, var(--agentic-control-border))'))
+  for (const [path, selector] of [
+    ['../site/floating-panel.css', '.agentic-base-floating-panel {'],
+    ['../site/collection-layout.css', '.agentic-collection-item {'],
+    ['../site/panel-section.css', '.agentic-panel-section-header[data-agentic-sticky="true"] {'],
+    ['../site/vendor/shared-ui-profile.css', '.agentic-toggle-group {'],
+  ]) {
+    const rule = read(path).split(selector)[1]?.split('}')[0]
+    assert.ok(rule?.includes('background: var(--agentic-panel-background)'), path)
   }
 })
 
