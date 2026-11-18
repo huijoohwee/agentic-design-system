@@ -1,5 +1,6 @@
 export const skillsCommandsTab: Readonly<{ key: 'skills-commands'; label: 'Skills & Commands'; icon: 'SquareTerminal' }>;
 export interface CatalogFilters {
+  layout: import('./collection-layout.js').CollectionLayout;
   prefix: 'all' | 'slash' | 'hash' | 'at';
   groupBy: 'subject' | 'verb' | 'object';
   query: string;

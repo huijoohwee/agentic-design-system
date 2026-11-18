@@ -6,7 +6,7 @@
   display: grid; align-content: start; gap: var(--agentic-menu-gap); min-inline-size: 0;
 }
 .agentic-skills-header { padding: var(--agentic-menu-padding); border-block-end: var(--agentic-panel-border); }
-.agentic-skills-header .agentic-panel-section-actions { justify-content: flex-start; }
+.agentic-skills-header .agentic-panel-section-actions { justify-content: flex-start; flex-wrap: wrap; }
 .agentic-skills-header [hidden] { display: none; }
 .agentic-skills-body { overflow: auto; min-block-size: 0; padding: var(--agentic-menu-padding); }
 .agentic-skills-group { cursor: pointer; padding-block: var(--agentic-control-padding-block); }
