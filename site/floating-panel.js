@@ -89,7 +89,7 @@ export function mountFloatingPanel(trigger, root, {
     if (!tabs.size) build();
     root.hidden = false;
     trigger.setAttribute('aria-expanded', 'true');
-    select(selected, true);
+    select(activeKey ?? selected, true);
   }
   function close() {
     if (root.hidden) return;
