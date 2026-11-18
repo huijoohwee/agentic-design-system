@@ -64,7 +64,12 @@
       "types": "./packages/react-viewer/src/index.tsx",
       "import": "./packages/react-viewer/src/index.tsx"
     },
-    "./viewer.css": "./site/viewer-surface.css"
+    "./viewer.css": "./site/viewer-surface.css",
+    "./skills-commands": {
+      "types": "./site/skills-commands.d.ts",
+      "import": "./site/skills-commands.js"
+    },
+    "./skills-commands.css": "./site/skills-commands.css"
   },
   "engines": {
     "node": ">=20.11"

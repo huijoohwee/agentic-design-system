@@ -17,3 +17,7 @@ Agentic Design System owns the semantic panel-control map, icon rendering runtim
 Consumer projections bind the exact Design System revision and file digests. Rollback restores those exact prior files and pins together. This source contract does not select package publication, deployment, or production activation.
 
 For a native browser, import `mountFloatingPanel` from `agentic-design-system/floating-panel`. Pass the opening button, a hidden container with a unique ID, and a label. Each direct child supplies a stable `data-panel-tab` key, `data-panel-label`, optional registry `data-panel-icon`, and the product content. The component builds the shell on first open, handles tab navigation and provides the shared Close control. A host that edits text can supply `returnFocus` to restore its editor selection.
+
+### Skills & Commands
+
+Import the tab metadata and catalog header from `agentic-design-system/skills-commands` and its styles from `agentic-design-system/skills-commands.css`. The header owns prefix selection, Subject/Verb/Object grouping, search and bulk disclosure. Interactive hosts supply rows, disclosure state, catalog provenance and activation handlers. Use the shared catalog, body, list, row, title and metadata classes for their layout. A read-only host can use `mountSkillsCommandsReference` for the entire tab. Both adapters work with local data and preserve product authorization boundaries.
