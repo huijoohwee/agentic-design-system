@@ -11,7 +11,8 @@ export type SettingsSectionHeaderProps = Omit<React.HTMLAttributes<HTMLElement>,
   titleClassName?: string; actionsClassName?: string; stickyHeader?: boolean; headingAs?: HeadingTag
 }
 export function SettingsSectionHeader({ title, actions, ariaLabel, fontClassName, className,
-  titleClassName, actionsClassName, stickyHeader = false, headingAs: Title = 'section', ...props }: SettingsSectionHeaderProps) {
+  titleClassName, actionsClassName, stickyHeader = false, headingAs, ...props }: SettingsSectionHeaderProps) {
+  const Title = headingAs ?? 'section'
   return <header {...props} aria-label={ariaLabel ?? props['aria-label']} data-agentic-sticky={stickyHeader}
     className={classes(PANEL_SECTION.header, fontClassName, className)}>
     <Title className={classes(PANEL_SECTION.title, titleClassName)}>{title}</Title>
