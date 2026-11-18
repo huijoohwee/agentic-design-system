@@ -293,12 +293,30 @@ ${annotationTarget} {
   outline: var(--agentic-control-focus-width) solid var(--agentic-control-selected-foreground);
   outline-offset: var(--agentic-control-focus-offset);
 }
+/* A reference label and its target use the same slot. Line patterns also work without color. */
+[data-agentic-reference="1"] { --agentic-reference-color: var(--agentic-dashboard-primary); --agentic-reference-line: solid; }
+[data-agentic-reference="2"] { --agentic-reference-color: var(--agentic-dashboard-secondary); --agentic-reference-line: dashed; }
+[data-agentic-reference="3"] { --agentic-reference-color: var(--agentic-dashboard-success); --agentic-reference-line: dotted; }
+.agentic-reference-list:not([hidden]) {
+  display: flex; flex-wrap: wrap; gap: var(--agentic-control-padding-inline); align-items: baseline;
+}
+.agentic-reference-label[data-agentic-reference] {
+  color: var(--agentic-reference-color); font: inherit; font-weight: 600;
+  border-block-end: var(--agentic-control-focus-width) var(--agentic-reference-line) currentColor;
+}
+.agentic-grid-cell[data-agentic-reference] { position: relative; }
+.agentic-grid-cell[data-agentic-reference]::before {
+  content: ""; position: absolute; inset: var(--agentic-control-focus-width); pointer-events: none;
+  border: var(--agentic-control-focus-width) var(--agentic-reference-line) var(--agentic-reference-color);
+}
 .agentic-toggle-group > button:focus-visible { outline: var(--agentic-control-focus-width) solid var(--agentic-control-focus, Highlight); outline-offset: calc(-1 * var(--agentic-control-focus-width)); }
 .agentic-toggle-group > button:disabled { opacity: .5; cursor: not-allowed; }
 @media (forced-colors: active) {
   ${selected} { color: HighlightText; background: Highlight; forced-color-adjust: none; }
   ${activeCell}::after { border-color: currentColor; }
   ${annotationTarget} { outline-color: Highlight; }
+  .agentic-reference-label[data-agentic-reference], .agentic-grid-cell[data-agentic-reference]::before { --agentic-reference-color: CanvasText; }
+  ${activeCell}[data-agentic-reference]::before { --agentic-reference-color: HighlightText; }
 }
 .agentic-checkbox-group {
   display: inline-flex; align-items: center; gap: var(--agentic-control-padding-block);

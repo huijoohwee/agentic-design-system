@@ -72,6 +72,8 @@ Each KTV row represents one independently editable value. Range minimum and maxi
 
 In a grid with roving keyboard focus, apply `agentic-grid-cell` to native cells with `role="gridcell"`. The selected cell with `tabindex="0"` receives an inset blue perimeter even while focus is in a separate editor. Use `agentic-control-selected` for the selected fill. To mark a region for annotation, set `data-agentic-annotation-target="true"` on the region and remove it to clear the outer outline. The host owns both states. The rings use the shared selection color and width tokens, preserve layout and pointer hits, and adapt to forced colors.
 
+To pair a named reference with grid cells, set the same `data-agentic-reference` value (1, 2 or 3) on an `agentic-reference-label` and each corresponding `agentic-grid-cell`. Wrap labels in an `agentic-reference-list` for responsive spacing. The slots use distinct line patterns as well as themed colors. Include a readable address or name for every reference. The host assigns slots and clears them when inspection ends.
+
 Dropdowns and textboxes reuse the generated `agentic-form-control` utility; native fields opt in through `agentic-form-controls`. Shared geometry is 28px desktop and 48px on coarse pointers or viewports up to 768px, with 8px inline padding, a 6px radius and body typography. Focus color stays with the local theme; native select behavior, labels, validation and Graph menu behavior stay with their existing owners.
 
 Opened dropdown menus also reuse the generated shared surface, option, hover, selected, focus and touch styles. Base owns the neutral menu behavior and native/React adapters; this registry adds no runtime dependency on Base.
