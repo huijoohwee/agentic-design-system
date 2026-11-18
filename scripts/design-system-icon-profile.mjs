@@ -257,6 +257,8 @@ export function validateSharedUiProfile(source) {
 export function renderSharedUiCss(profile, sourceRevision, profileDigest) {
   if (!/^[a-f0-9]{40}$/u.test(sourceRevision ?? "") || !/^[a-f0-9]{64}$/u.test(profileDigest ?? "")) fail("projection binding");
   const selected = ':is(.agentic-control-selected, .agentic-toggle-group > button[aria-pressed="true"])';
+  const activeCell = '.agentic-grid-cell[role="gridcell"][aria-selected="true"][tabindex="0"]';
+  const annotationTarget = '[data-agentic-annotation-target="true"]';
   const declarations = profile.tokens.map(token => `  ${token.cssVar}: ${token.value};`);
   declarations.push("  --agentic-ktv-panel-width: var(--agentic-panel-width);");
   declarations.push("  --agentic-floating-panel-radius: var(--agentic-panel-radius);");
@@ -282,10 +284,21 @@ ${declarations.join("\n")}
 }
 .agentic-toggle-group > button:where(:enabled:hover) { background: var(--agentic-control-hover-background); }
 ${selected} { color: var(--agentic-control-selected-foreground); background-color: var(--agentic-control-selected-background); }
+${activeCell} { position: relative; }
+${activeCell}::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  border: var(--agentic-control-focus-width) solid var(--agentic-control-selected-foreground);
+}
+${annotationTarget} {
+  outline: var(--agentic-control-focus-width) solid var(--agentic-control-selected-foreground);
+  outline-offset: var(--agentic-control-focus-offset);
+}
 .agentic-toggle-group > button:focus-visible { outline: var(--agentic-control-focus-width) solid var(--agentic-control-focus, Highlight); outline-offset: calc(-1 * var(--agentic-control-focus-width)); }
 .agentic-toggle-group > button:disabled { opacity: .5; cursor: not-allowed; }
 @media (forced-colors: active) {
   ${selected} { color: HighlightText; background: Highlight; forced-color-adjust: none; }
+  ${activeCell}::after { border-color: currentColor; }
+  ${annotationTarget} { outline-color: Highlight; }
 }
 .agentic-checkbox-group {
   display: inline-flex; align-items: center; gap: var(--agentic-control-padding-block);
