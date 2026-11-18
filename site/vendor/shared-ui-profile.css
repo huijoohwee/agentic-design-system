@@ -87,10 +87,21 @@
 }
 .agentic-toggle-group > button:where(:enabled:hover) { background: var(--agentic-control-hover-background); }
 :is(.agentic-control-selected, .agentic-toggle-group > button[aria-pressed="true"]) { color: var(--agentic-control-selected-foreground); background-color: var(--agentic-control-selected-background); }
+.agentic-grid-cell[role="gridcell"][aria-selected="true"][tabindex="0"] { position: relative; }
+.agentic-grid-cell[role="gridcell"][aria-selected="true"][tabindex="0"]::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  border: var(--agentic-control-focus-width) solid var(--agentic-control-selected-foreground);
+}
+[data-agentic-annotation-target="true"] {
+  outline: var(--agentic-control-focus-width) solid var(--agentic-control-selected-foreground);
+  outline-offset: var(--agentic-control-focus-offset);
+}
 .agentic-toggle-group > button:focus-visible { outline: var(--agentic-control-focus-width) solid var(--agentic-control-focus, Highlight); outline-offset: calc(-1 * var(--agentic-control-focus-width)); }
 .agentic-toggle-group > button:disabled { opacity: .5; cursor: not-allowed; }
 @media (forced-colors: active) {
   :is(.agentic-control-selected, .agentic-toggle-group > button[aria-pressed="true"]) { color: HighlightText; background: Highlight; forced-color-adjust: none; }
+  .agentic-grid-cell[role="gridcell"][aria-selected="true"][tabindex="0"]::after { border-color: currentColor; }
+  [data-agentic-annotation-target="true"] { outline-color: Highlight; }
 }
 .agentic-checkbox-group {
   display: inline-flex; align-items: center; gap: var(--agentic-control-padding-block);
