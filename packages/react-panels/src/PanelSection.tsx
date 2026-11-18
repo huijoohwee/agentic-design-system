@@ -17,16 +17,42 @@ export function SettingsSectionHeader({ title, actions, ariaLabel, fontClassName
     {actions != null && <section className={classes(PANEL_SECTION.actions, actionsClassName)}>{actions}</section>}
   </header>
 }
-function SectionChevron() {
+function SectionIcon({ name }: { name: 'Link2' | 'ChevronDown' }) {
   const ref = useRef<HTMLSpanElement>(null)
   useEffect(() => {
     const host = ref.current
     if (!host) return
-    const icon = createDesignIcon('ChevronDown', host.ownerDocument)
+    const icon = createDesignIcon(name, host.ownerDocument)
     host.append(icon)
     return () => icon.remove()
-  }, [])
+  }, [name])
   return <span ref={ref} aria-hidden="true" />
+}
+type SectionToggleProps = {
+  expanded: boolean; onToggle: () => void; controls?: string; children?: React.ReactNode
+}
+const SectionToggle = React.forwardRef<HTMLButtonElement, SectionToggleProps>(function SectionToggle(
+  { expanded, controls, onToggle, children }, trigger,
+) {
+  const label = children == null ? (expanded ? PANEL_SECTION.collapse : PANEL_SECTION.expand) : undefined
+  return <button ref={trigger} type="button" role="button" aria-expanded={expanded} aria-controls={controls}
+    aria-label={label} title={label} className={children == null ? 'agentic-heading-action' : 'agentic-panel-section-toggle'}
+    onClick={onToggle}>
+    {children != null && <span>{children}</span>}<SectionIcon name="ChevronDown" />
+  </button>
+})
+
+/** Keep document editing, fragment navigation and folding on separate native targets. */
+export function HeadingActions({ headingId, expanded = true, onToggle }: {
+  headingId: string; expanded?: boolean; onToggle?: () => void
+}) {
+  return <span className="agentic-heading-actions" contentEditable={false}
+    onClick={event => event.stopPropagation()} onDoubleClick={event => event.stopPropagation()}>
+    <a className="agentic-heading-action" href={`#${encodeURIComponent(headingId)}`} aria-label="Permalink" title="Permalink">
+      <SectionIcon name="Link2" />
+    </a>
+    {onToggle && <SectionToggle expanded={expanded} onToggle={onToggle} />}
+  </span>
 }
 export type CollapsibleSectionProps = {
   title: React.ReactNode; children: React.ReactNode; actions?: React.ReactNode
@@ -55,10 +81,9 @@ export function CollapsibleSection({ title, children, actions, defaultCollapsed 
   return <section className={classes(PANEL_SECTION.section, className)} data-agentic-flush-top={flushTop}
     style={stickyOffset === undefined ? undefined : { '--agentic-section-offset': stickyOffset } as React.CSSProperties}>
     <SettingsSectionHeader stickyHeader={stickyHeader} className={headerClassName} actions={actions}
-      title={<button ref={trigger} type="button" role="button" className="agentic-panel-section-toggle"
-        aria-expanded={!isCollapsed} aria-controls={contentId} onClick={toggle}>
-        <span>{title}</span><SectionChevron />
-      </button>} />
+      title={<SectionToggle ref={trigger} expanded={!isCollapsed} controls={contentId} onToggle={toggle}>
+        {title}
+      </SectionToggle>} />
     <section ref={body} id={contentId} hidden={isCollapsed} className={classes(PANEL_SECTION.body, isCollapsed && 'hidden')}>
       {hasExpanded || !isCollapsed ? children : null}
     </section>
