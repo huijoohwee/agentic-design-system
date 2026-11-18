@@ -4,6 +4,10 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./inline-editor": {
+      "types": "./site/inline-editor.d.ts",
+      "import": "./site/inline-editor.js"
+    },
     "./react/panels": {
       "types": "./packages/react-panels/src/index.ts",
       "import": "./packages/react-panels/src/index.ts"
