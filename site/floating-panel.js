@@ -2,7 +2,7 @@ import { createDesignIcon, updatePanelControlGroup } from './toolbar-icons.js';
 
 /** Mount the native shell around product-owned tab contents. Build its chrome on first open. */
 export function mountFloatingPanel(trigger, root, {
-  label, tablistLabel = label, activeKey, placement = 'viewport-overlay', returnFocus = () => trigger.focus(),
+  label, tablistLabel = label, activeKey, placement = 'viewport-overlay', returnFocus = () => trigger.focus(), onChange,
 }) {
   const doc = root.ownerDocument;
   const pages = [...root.children];
@@ -18,8 +18,11 @@ export function mountFloatingPanel(trigger, root, {
     return node;
   };
   const tabs = new Map();
-  function select(key, focus) {
+  function select(key, focus = false) {
+    if (!keys.includes(key)) throw new RangeError('Unknown FloatingPanel tab');
+    const changed = selected !== key;
     selected = key;
+    if (!tabs.size) return;
     for (const [index, page] of pages.entries()) {
       const active = keys[index] === key;
       const tab = tabs.get(keys[index]);
@@ -32,6 +35,7 @@ export function mountFloatingPanel(trigger, root, {
     const rail = tab.parentElement;
     const box = tab.getBoundingClientRect(), clip = rail.getBoundingClientRect();
     rail.scrollLeft += Math.min(0, box.left - clip.left) + Math.max(0, box.right - clip.right);
+    if (changed && !root.hidden) onChange?.({ open: true, key });
   }
   function build() {
     const dialog = element('aside', 'agentic-base-floating-panel agentic-form-controls');
@@ -85,20 +89,26 @@ export function mountFloatingPanel(trigger, root, {
     dialog.append(inner);
     root.replaceChildren(dialog);
   }
-  function open() {
+  function open(key = activeKey ?? selected, { focus = true } = {}) {
+    if (!keys.includes(key)) throw new RangeError('Unknown FloatingPanel tab');
     if (!tabs.size) build();
+    const wasHidden = root.hidden;
     root.hidden = false;
+    // A newly opened panel emits just the open transition, even when it targets a different tab.
+    if (wasHidden) selected = key;
+    select(key, focus);
     trigger.setAttribute('aria-expanded', 'true');
-    select(activeKey ?? selected, true);
+    if (wasHidden) onChange?.({ open: true, key });
   }
-  function close() {
+  function close(restoreFocus = true) {
     if (root.hidden) return;
     root.hidden = true;
     trigger.setAttribute('aria-expanded', 'false');
-    returnFocus();
+    onChange?.({ open: false, key: selected });
+    if (restoreFocus) returnFocus();
   }
   function escape(event) {
-    if (event.key !== 'Escape' || event.isComposing || root.hidden) return;
+    if (event.key !== 'Escape' || event.isComposing || event.defaultPrevented || root.hidden || event.composedPath().some(node => node.matches?.('dialog[open]'))) return;
     event.preventDefault();
     event.stopPropagation();
     close();
@@ -112,5 +122,5 @@ export function mountFloatingPanel(trigger, root, {
   trigger.addEventListener('click', () => root.hidden ? open() : close());
   root.addEventListener('keydown', escape);
   trigger.addEventListener('keydown', escape);
-  return { open, close };
+  return { open, close, select, get activeKey() { return selected; }, get isOpen() { return !root.hidden; } };
 }
