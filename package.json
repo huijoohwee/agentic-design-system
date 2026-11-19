@@ -75,6 +75,7 @@
       "types": "./site/skills-commands.d.ts",
       "import": "./site/skills-commands.js"
     },
+    "./panel-tab-layout.css": "./site/skills-commands.css",
     "./skills-commands.css": "./site/skills-commands.css"
   },
   "engines": {
