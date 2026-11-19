@@ -21,3 +21,7 @@ For a native browser, import `mountFloatingPanel` from `agentic-design-system/fl
 ### Skills & Commands
 
 Import the tab metadata and catalog header from `agentic-design-system/skills-commands` and its styles from `agentic-design-system/skills-commands.css`. The header owns prefix selection, Subject/Verb/Object grouping, search and bulk disclosure. Interactive hosts supply rows, disclosure state, catalog provenance and activation handlers. Use the shared catalog, body, list, row, title and metadata classes for their layout. A read-only host can use `mountSkillsCommandsReference` for the entire tab. Both adapters work with local data and preserve product authorization boundaries.
+
+## Tab content
+
+Use `agentic-panel-tab-layout` for the full-height content surface. Place `PanelTabHeader` and `agentic-panel-tab-body` as siblings. The heading, optional subtitle and wrapping actions stay visible while the body scrolls. Put projections and collapsible sections inside that body. The native Skills & Commands catalog shares these styles. Plain DOM consumers can import `agentic-design-system/panel-tab-layout.css` and use the same classes.

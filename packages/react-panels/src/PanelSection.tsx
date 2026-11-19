@@ -3,9 +3,23 @@ import { PANEL_SECTION, recoverSectionFocus, isSectionGroupCollapsed, updateSect
 import { createDesignIcon } from '../../../site/toolbar-icons.js'
 import '../../../site/vendor/shared-ui-profile.css'
 import '../../../site/panel-section.css'
+import '../../../site/skills-commands.css'
 
 const classes = (...values: Array<string | false | undefined>) => values.filter(Boolean).join(' ')
 type HeadingTag = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
+type PanelTabHeaderProps = Omit<React.HTMLAttributes<HTMLElement>, 'title' | 'children' | 'className'> & {
+  title: React.ReactNode
+  subtitle?: React.ReactNode
+  actions?: React.ReactNode
+  actionsLabel?: string
+}
+export function PanelTabHeader({ title, subtitle, actions, actionsLabel, ...props }: PanelTabHeaderProps) {
+  return <header {...props} className="agentic-panel-tab-header">
+    <h2 className={PANEL_SECTION.title}>{title}</h2>
+    {subtitle && <span className="agentic-panel-tab-subtitle">{subtitle}</span>}
+    {actions && <div className={PANEL_SECTION.actions} role={actionsLabel ? 'group' : undefined} aria-label={actionsLabel}>{actions}</div>}
+  </header>
+}
 export type SettingsSectionHeaderProps = Omit<React.HTMLAttributes<HTMLElement>, 'title' | 'children'> & {
   title: React.ReactNode; actions?: React.ReactNode; ariaLabel?: string; fontClassName?: string
   titleClassName?: string; actionsClassName?: string; stickyHeader?: boolean; headingAs?: HeadingTag
