@@ -77,7 +77,15 @@
       "import": "./site/skills-commands.js"
     },
     "./panel-tab-layout.css": "./site/skills-commands.css",
-    "./skills-commands.css": "./site/skills-commands.css"
+    "./skills-commands.css": "./site/skills-commands.css",
+    "./dashboard": {
+      "types": "./site/dashboard.d.mts",
+      "import": "./site/dashboard.mjs"
+    },
+    "./react/dashboard": {
+      "types": "./packages/react-dashboard/src/index.ts",
+      "import": "./packages/react-dashboard/src/index.ts"
+    }
   },
   "engines": {
     "node": ">=20.11"
@@ -99,7 +107,7 @@
     "lane": "agentic-os start",
     "land": "agentic-os land",
     "dev": "node scripts/dev.mjs",
-    "check:design-system": "node --test scripts/panel-controls.test.mjs scripts/react-panel-adapter.test.mjs scripts/key-type-value.test.mjs scripts/hover.test.mjs scripts/panel-section.test.mjs scripts/markdown.test.mjs scripts/viewer-surface.test.mjs && node scripts/design-registry.mjs check",
+    "check:design-system": "node --test scripts/panel-controls.test.mjs scripts/react-panel-adapter.test.mjs scripts/key-type-value.test.mjs scripts/hover.test.mjs scripts/panel-section.test.mjs scripts/markdown.test.mjs scripts/viewer-surface.test.mjs scripts/dashboard-renderer.test.mjs && node scripts/design-registry.mjs check",
     "mcp": "node scripts/design-registry.mjs mcp"
   },
   "devDependencies": {
