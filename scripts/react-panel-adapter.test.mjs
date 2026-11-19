@@ -48,7 +48,7 @@ test('React bridges reuse Design System runtime and canonical contracts', async 
   assert.match(shell, /\.\.\/\.\.\/\.\.\/site\/toolbar\.css/)
   assert.match(shell, /theme = 'inherit'/)
   assert.match(shell, /colorScheme: theme === 'system' \? 'light dark' : theme/)
-  assert.match(shell, /\{minimized \? null : children\}/)
+  assert.match(shell, /\{minimized \? null : <div className="agentic-panel-body">\{children\}<\/div>\}/)
   assert.doesNotMatch(shell, /'width'|'height'|'minWidth'|'maxWidth'/)
   assert.match(tabs, /role="tablist"/)
   assert.match(button, /updatePanelControlButton\(/)
