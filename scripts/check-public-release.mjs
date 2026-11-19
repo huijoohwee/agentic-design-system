@@ -10,7 +10,7 @@ import { prepareLocalDevHtml } from "./dev-csp.mjs";
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 execFileSync(process.execPath, ['--test', 'scripts/key-type-value.test.mjs', 'scripts/hover.test.mjs', 'scripts/panel-section.test.mjs', 'scripts/markdown.test.mjs', 'scripts/viewer-surface.test.mjs'], { cwd: root, stdio: 'inherit' });
 const expectedFiles = [
-  "site/skills-commands.js", "site/skills-commands.d.ts", "site/skills-commands.css",
+  "site/panels.css", "site/skills-commands.js", "site/skills-commands.d.ts", "site/skills-commands.css",
   "site/floating-panel.js", "site/inline-editor.js", "site/inline-editor.d.ts",
   "site/viewer-surface.js", "site/viewer-surface.d.ts", "site/viewer-surface.css", "packages/react-viewer/src/index.tsx", "scripts/viewer-surface.test.mjs",
   "site/markdown.js", "site/markdown.d.ts", "site/markdown-parser.js", "site/markdown-parser.d.ts", "site/color.js", "site/color.d.ts", "site/rich-text.css", "packages/react-rich-text/src/index.tsx", "scripts/markdown.test.mjs",
@@ -180,7 +180,7 @@ async function assertFloatingPanelOwnerContract(indexHtml) {
     fail("Shared controls must use one canonical hover-background token");
   }
 
-  const duplicatePanelRule = /\.(?:agentic-base-floating-panel(?:-[a-z0-9-]+)?|agentic-floating-panel-(?:tabs|tab|title|body|dock))\b/iu;
+  const duplicatePanelRule = /\.(?:agentic-panel-(?:surface|header|body|main|bottom)(?:-[a-z0-9-]+)?|agentic-base-floating-panel(?:-[a-z0-9-]+)?|agentic-floating-panel-(?:tabs|tab|title|body|dock))\b/iu;
   for (const path of expectedFiles.filter(file => file.endsWith(".css") && file !== "site/floating-panel.css")) {
     const stylesheet = await readFile(resolve(root, path), "utf8");
     if (duplicatePanelRule.test(stylesheet)) fail(`${path} duplicates the central FloatingPanel stylesheet owner`);

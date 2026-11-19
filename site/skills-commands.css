@@ -17,7 +17,6 @@
 .agentic-skills-group-section { border-block-end: var(--agentic-panel-border); }
 .agentic-panel-tab-body .agentic-panel-section, .agentic-panel-section.agentic-skills-group-section { padding-inline: 0; }
 .agentic-skills-group-section > :is(.agentic-panel-section-body, .agentic-collection) { padding-inline: var(--agentic-control-padding-inline); }
-.agentic-skills-group { cursor: pointer; padding: var(--agentic-control-padding-block) var(--agentic-control-padding-inline); }
 .agentic-skills-group-label { display: inline-flex; align-items: baseline; gap: var(--agentic-control-padding-inline); margin: 0; font: inherit; font-weight: 600; text-transform: uppercase; }
 .agentic-panel-tab-subtitle, .agentic-skills-title, .agentic-skills-meta { margin: 0; overflow-wrap: anywhere; }
 .agentic-panel-tab-subtitle, .agentic-skills-meta { font-weight: normal; }

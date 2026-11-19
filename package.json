@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./panels.css": "./site/panels.css",
     "./profile.css": "./site/vendor/shared-ui-profile.css",
     "./floating-panel": "./site/floating-panel.js",
     "./inline-editor": {

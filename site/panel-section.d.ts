@@ -7,3 +7,4 @@ export function isSectionGroupCollapsed(keys: readonly string[], collapsedKeys: 
 export function updateSectionGroup(previous: ReadonlySet<string>, key: string, collapsed: boolean): ReadonlySet<string>
 export function setPanelSectionExpanded(section: HTMLDetailsElement, expanded: boolean): void
 export function installPanelSections(root?: Document | Element): () => void
+export function createPanelSectionSummary(doc: Document, label: string | Node, level?: number): HTMLElement

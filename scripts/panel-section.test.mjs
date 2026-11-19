@@ -154,3 +154,20 @@ test('native and React tabs share heading, body and group insets', () => {
   assert.match(css, /\.agentic-panel-tab-body \.agentic-panel-section, \.agentic-panel-section\.agentic-skills-group-section \{ padding-inline: 0;/)
   assert.match(css, /data-agentic-tab-viewport="true"\] \{ grid-template-rows: minmax\(0, 1fr\)/)
 })
+
+
+test('offline panel entry resolves the complete source family once and in cascade order', () => {
+  const site = new URL('../site/', import.meta.url)
+  const manifest = JSON.parse(readFileSync(new URL('../package.json', import.meta.url)))
+  assert.equal(manifest.exports['./panels.css'], './site/panels.css')
+  const entry = readFileSync(new URL('panels.css', site), 'utf8')
+  const paths = [...entry.matchAll(/^@import "\.\/(.+?)";$/gm)].map(match => match[1])
+  assert.deepEqual(paths, ['vendor/shared-ui-profile.css', 'toolbar.css', 'floating-panel.css',
+    'panel-section.css', 'collection-layout.css', 'skills-commands.css'])
+  assert.doesNotMatch(entry, /[{}]/)
+  const worker = readFileSync(new URL('sw.js', site), 'utf8')
+  for (const path of ['panels.css', ...paths]) {
+    assert.ok(readFileSync(new URL(path, site)).length)
+    assert.ok(worker.includes(`"./${path}"`), path)
+  }
+})
