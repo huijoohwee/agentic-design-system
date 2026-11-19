@@ -39,6 +39,7 @@ function SectionIcon({ name }: { name: 'Link2' | 'ChevronDown' }) {
     const host = ref.current
     if (!host) return
     const icon = createDesignIcon(name, host.ownerDocument)
+    if (name === 'ChevronDown') icon.classList.add('agentic-disclosure-chevron')
     host.append(icon)
     return () => icon.remove()
   }, [name])

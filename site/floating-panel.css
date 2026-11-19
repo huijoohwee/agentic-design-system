@@ -193,7 +193,6 @@
     grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(8rem, 1fr) minmax(8rem, 0.8fr) minmax(7rem, min(30vh, var(--agentic-panel-bottom-height)));
     grid-template-areas: "stage" "main" "bottom";
   }
-  .agentic-panel-main { inline-size: 100%; }
   .agentic-editor-workspace-preview { block-size: 34rem; }
   .agentic-panel-main-dock {
     inset-inline: max(var(--agentic-menu-edge-gap), env(safe-area-inset-left)) max(var(--agentic-menu-edge-gap), env(safe-area-inset-right));

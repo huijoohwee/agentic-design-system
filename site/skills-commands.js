@@ -1,4 +1,5 @@
 import { createDesignIcon } from './toolbar-icons.js';
+import { PANEL_SECTION, createPanelSectionSummary, setPanelSectionExpanded } from './panel-section.js';
 import { mountCollectionLayoutPicker } from './collection-layout.js';
 
 export const skillsCommandsTab = Object.freeze({ key: 'skills-commands', label: 'Skills & Commands', icon: 'SquareTerminal' });
@@ -75,7 +76,7 @@ export function mountSkillsCommandsHeader(host, onChange) {
     event.stopPropagation();
     showSearch(false);
   });
-  const disclosure = button('Collapse All', 'Collapse All', () => toggleGroups?.());
+  const disclosure = button(PANEL_SECTION.collapseAll, PANEL_SECTION.collapseAll, () => toggleGroups?.());
   disclosure.className = 'agentic-form-control';
   disclosure.hidden = true;
   const pickerHost = element(doc, 'div');
@@ -89,7 +90,7 @@ export function mountSkillsCommandsHeader(host, onChange) {
     setDisclosure(hasGroups, collapsed, toggle) {
       toggleGroups = toggle;
       disclosure.hidden = !hasGroups;
-      const label = collapsed ? 'Expand All' : 'Collapse All';
+      const label = collapsed ? PANEL_SECTION.expandAll : PANEL_SECTION.collapseAll;
       disclosure.textContent = disclosure.title = label;
       disclosure.setAttribute('aria-label', label);
     },
@@ -128,7 +129,7 @@ export function mountSkillsCommandsReference(host, entries, sourceLabel) {
       const collapsed = sections.every(({ detail }) => !detail.open);
       header.setDisclosure(sections.length > 0, collapsed, () => {
         for (const { key, detail } of sections) {
-          detail.open = collapsed;
+          setPanelSectionExpanded(detail, collapsed);
           if (collapsed) closed.delete(key); else closed.add(key);
         }
         updateDisclosure();
@@ -136,10 +137,12 @@ export function mountSkillsCommandsReference(host, entries, sourceLabel) {
     }
     for (const [name, records] of groups) {
       const key = groupBy + ':' + name;
-      const detail = element(doc, 'details', 'agentic-skills-group-section');
+      const detail = element(doc, 'details', PANEL_SECTION.section + ' agentic-skills-group-section');
+      detail.dataset.agenticSection = '';
       detail.open = !closed.has(key);
-      const summary = element(doc, 'summary', 'agentic-skills-group');
-      summary.append(element(doc, 'h3', 'agentic-skills-group-label', name + ' (' + records.length + ')'));
+      const label = element(doc, 'span', 'agentic-skills-group-label', name + ' (' + records.length + ')');
+      const summary = createPanelSectionSummary(doc, label);
+      summary.dataset.agenticSticky = 'true';
       detail.append(summary);
       const rows = element(doc, 'div', 'agentic-collection');
       rows.dataset.layout = layout;
