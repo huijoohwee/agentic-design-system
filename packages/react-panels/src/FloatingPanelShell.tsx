@@ -32,7 +32,7 @@ export const FloatingPanelShell = React.forwardRef<HTMLElement, FloatingPanelShe
         aria-label={ariaLabel}>
         <header className={['agentic-panel-header', 'agentic-base-floating-panel-header', !pinned ? 'agentic-base-floating-panel-draggable' : ''].filter(Boolean).join(' ')}
           onPointerDown={onHeaderPointerDown}>{header}</header>
-        {minimized ? null : children}
+        {minimized ? null : <div className="agentic-panel-body">{children}</div>}
       </section>
     </aside>
   </section>
