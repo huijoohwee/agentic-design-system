@@ -145,3 +145,12 @@ test('collection layout picker retains controls and reports the chosen layout to
   picker.destroy()
   assert.equal(control.removed, true)
 })
+
+test('native and React tabs share heading, body and group insets', () => {
+  const css = readFileSync(new URL('../site/skills-commands.css', import.meta.url), 'utf8')
+  for (const role of ['header', 'body']) {
+    assert.match(css, new RegExp(`:(?:is|where)\\(\\.agentic-panel-tab-${role}, \\.agentic-skills-${role}\\) \\{[^}]*padding: var\\(--agentic-menu-padding\\)`))
+  }
+  assert.match(css, /\.agentic-panel-tab-body \.agentic-panel-section, \.agentic-panel-section\.agentic-skills-group-section \{ padding-inline: 0;/)
+  assert.match(css, /data-agentic-tab-viewport="true"\] \{ grid-template-rows: minmax\(0, 1fr\)/)
+})

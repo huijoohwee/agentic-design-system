@@ -25,3 +25,5 @@ Import the tab metadata and catalog header from `agentic-design-system/skills-co
 ## Tab content
 
 Use `agentic-panel-tab-layout` for the full-height content surface. Place `PanelTabHeader` and `agentic-panel-tab-body` as siblings. The heading, optional subtitle and wrapping actions stay visible while the body scrolls. Put projections and collapsible sections inside that body. The native Skills & Commands catalog shares these styles. Plain DOM consumers can import `agentic-design-system/panel-tab-layout.css` and use the same classes.
+
+For a split editor or transport that manages its own viewport, put its single root inside the tab body and set `data-agentic-tab-viewport="true"` on the body. The editor receives the available height while the tab retains the shared insets.
