@@ -1,3 +1,4 @@
+import { createTabList } from '../site/floating-panel.js'
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import test from 'node:test'
@@ -18,6 +19,7 @@ class ElementMock {
     }
   }
 
+  getBoundingClientRect() { return { left: 0, right: 100 } }
   get className() { return [...this.classes].join(' ') }
   set className(value) { this.classes = new Set(String(value).split(/\s+/u).filter(Boolean)) }
   get title() { return this.getAttribute('title') ?? '' }
@@ -174,4 +176,25 @@ test('MainPanel and FloatingPanel retain shared viewport dimensions when other p
   assert.match(panelCss, /\.agentic-panel-main--open\.agentic-panel-main\s*\{\s*block-size:\s*min\(var\(--agentic-panel-main-height\)/u)
   assert.match(panelCss, /\.agentic-panel-bottom\s*\{[^}]*block-size:\s*min\(var\(--agentic-panel-bottom-height\)/u)
   assert.doesNotMatch(panelCss, /agentic-floating-panel-available-height|data-agentic-floating-panel-avoid-bottom/u)
+})
+
+test('a standalone worksheet rail binds selected tabs to their panels and reports a single transition', () => {
+  const root = documentMock.createElement('section')
+  root.id = 'worksheets'
+  for (const key of ['source', 'chart']) {
+    const page = documentMock.createElement('section')
+    page.dataset.panelTab = key
+    page.dataset.panelLabel = key
+    root.append(page)
+  }
+  const events = []
+  const list = createTabList(root, { label: 'Worksheets', activeKey: 'chart', onChange: key => events.push(key) })
+  assert.equal(list.rail.getAttribute('role'), 'tablist')
+  assert.equal(list.rail.children[1].getAttribute('aria-controls'), root.children[1].id)
+  assert.deepEqual(root.children.map(page => page.hidden), [true, false])
+  list.select('source')
+  list.select('source')
+  assert.deepEqual(events, ['source'])
+  assert.deepEqual(list.rail.children.map(tab => tab.tabIndex), [0, -1])
+  assert.throws(() => list.select('unknown'), RangeError)
 })
