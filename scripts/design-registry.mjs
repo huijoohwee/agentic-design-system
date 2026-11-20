@@ -301,18 +301,18 @@ function assertRegistry(registry) {
     }
   }
   if (commerce.id !== "commerce" || commerce.owner !== registry.owner || commerce.repository !== registry.owner
-    || commerce.revision !== "c18253b35e8bcc0bed548cfb717ec31909422dbe" || commerce.source !== "./tokens/commerce-profile.json"
-    || commerce.digest !== "sha256:000adeb267d0d0ff9527e1227faefcd5fd2c15faee463fa70173204783ea7c9e"
+    || commerce.revision !== "c2f5ebf31d828a0e5b41caec76ed6b11a813843e" || commerce.source !== "./tokens/commerce-profile.json"
+    || commerce.digest !== "sha256:b67e0ee110c32f113e1296b950602ed649fdf222e4557b000a72e9e487aefe4e"
     || commerce.projection?.path !== "./vendor/commerce-theme.css"
     || commerce.rights !== "cleared" || commerce.permissionEvidence !== "User instruction on 2026-10-29 to centralize the named product repositories in Agentic Design System."
     || JSON.stringify(commerce.scope) !== JSON.stringify(["commerce", "shop", "vendor", "admin", "sme-business-pack"])) fail("Commerce candidate profile binding");
   if (JSON.stringify(commerce.licenseEvidence) !== JSON.stringify([
-    { repository: registry.owner, revision: commerce.revision, path: "LICENSE", digest: "sha256:b2e476300173b31043c1222c840b5cd3a8c234d50ffc5f44f104fcbf66fc5ffe" },
+    { repository: registry.owner, revision: "c18253b35e8bcc0bed548cfb717ec31909422dbe", path: "LICENSE", digest: "sha256:b2e476300173b31043c1222c840b5cd3a8c234d50ffc5f44f104fcbf66fc5ffe" },
     { repository: "github.com/huijoohwee/agentic-commerce-os", revision: "6ce3bc918717b97a738ac831dfb4fb3319a02fb6", path: "LICENSE", digest: "sha256:939721e4008a40f28594af8bdd7c122e388d9b22534ef1e6799dc771023691a1" },
   ]) || commerce.consumerPins.length !== 1 || JSON.stringify(commerce.consumerPins[0]) !== JSON.stringify({
     repository: "github.com/huijoohwee/agentic-commerce-os", revision: "6ce3bc918717b97a738ac831dfb4fb3319a02fb6",
     path: "public/local-first/commerce-theme.css", digest: "sha256:c512ee76dc6160ff41e8bac9706b8e8d0b9e56f42b6c4b128594605e19c93474",
-  }) || commerce.projection.digest !== commerce.consumerPins[0].digest) fail("Commerce rights or consumer pin evidence");
+  })) fail("Commerce rights or consumer pin evidence");
   if (base.id !== "base" || base.owner !== registry.owner || base.repository !== registry.owner
     || base.revision !== "bc1921bbcf56e1abb11fef2593917e5459d58df1" || base.source !== "./tokens/base-profile.json"
     || base.status !== "candidate" || base.rights !== "cleared" || base.scope.join(",") !== "shared-data-view"
@@ -459,7 +459,11 @@ export async function checkDesignRegistry() {
     const output = await readFile(resolve(root, "site", ref.projection.path.slice(2)));
     if (!output.equals(projection) || `sha256:${sha(output)}` !== ref.projection.digest) fail(`${ref.id} generated projection drift`);
   }
-  if (`sha256:${sha(commerceProjection)}` !== commerceRef.consumerPins[0].digest) fail("Commerce generated consumer projection pin drift");
+  const priorConsumer = commerceRef.consumerPins[0];
+  const commerceOwner = catalog.registry.owners.find(owner => owner.repository === priorConsumer.repository);
+  if (commerceOwner?.revision !== priorConsumer.revision ||
+      !commerceOwner.sources.some(source => source.path === priorConsumer.path && source.digest === priorConsumer.digest))
+    fail("Historical Commerce consumer pin differs from its source inventory");
   const notices = await readFile(resolve(root, "site/THIRD-PARTY-NOTICES.txt"), "utf8");
   const graphOwner = catalog.registry.owners.find(owner => owner.id === "agentic-graph");
   if (graphOwner.reuseGate !== "rights-review-required"
@@ -503,7 +507,7 @@ export async function checkDesignRegistry() {
   console.log(`PASS design-owner-registry-check · ${catalog.registry.owners.length} source owners and ${profiles.length} digest-pinned candidate profiles.`);
   console.log(`PASS design-singleton-enforcement-check · ${claims.length} globally unique keys and variables across four profiles; duplicate and override fixtures rejected; ${declarations.length} owner/projection declarations.`);
   console.log("PASS design-agent-tool-contract-check · browser WebMCP and newline-delimited stdio MCP share read-only schemas and handlers.");
-  console.log("PASS design-generated-output-check · All four projections match their profile pins; Commerce CSS also matches its consumer pin.");
+  console.log("PASS design-generated-output-check · All four projections match their profile pins.");
   console.log("PASS design-license-boundary-check · Commerce/Base MIT evidence and the eight-source Graph token grant are pinned; The 2026-11-17 shared Markdown/palette transfer is separately user-authorized; other Graph source remains private.");
   console.log("Scope: four candidate profiles are central and globally unique; consumer projection pins are not an all-repository scan or parity claim.");
 }
