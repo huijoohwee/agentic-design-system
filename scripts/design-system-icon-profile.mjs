@@ -8,6 +8,7 @@ import { dashboardLayoutCss } from "./dashboard-layout-css.mjs";
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const profilePath = resolve(root, "site/tokens/shared-ui-profile.json");
 const outputPath = resolve(root, "site/vendor/shared-ui-profile.css");
+const typographyPath = resolve(root, "site/vendor/typography.css");
 const TOKEN_KEY = /^[a-z][a-z0-9.-]{0,95}$/u;
 const CSS_VAR = /^--agentic-[a-z0-9-]{1,64}$/u;
 const DIMENSION = /^(?:0|[0-9]+(?:\.[0-9]+)?)(?:px|rem|em)$/u;
@@ -266,6 +267,26 @@ export function validateSharedUiProfile(source) {
   return profile;
 }
 
+export function renderTypographyCss(profile) {
+  // Standalone surfaces use the same validated defaults without redeclaring the tokens.
+  const font = key => {
+    const { cssVar, value } = profile.tokens.find(token => token.key === 'typography.' + key);
+    return `var(${cssVar}, ${value})`;
+  };
+  const data = '[data-agentic-typography] :where(dd, code, pre, samp, kbd, time)';
+  return `:where([data-agentic-typography]) {
+  font: ${font('body.size')}/${font('body.line-height')} ${font('family.sans')};
+}
+.agentic-mono, .agentic-mono-detail, ${data} {
+  font-family: ${font('family.mono')}; font-variant-numeric: tabular-nums;
+}
+.agentic-text-detail, .agentic-mono-detail, ${data},
+.agentic-dashboard-eyebrow, .agentic-dashboard-description, .agentic-dashboard-detail {
+  font-size: .75rem; line-height: 1rem;
+}
+`;
+}
+
 export function renderSharedUiCss(profile, sourceRevision, profileDigest) {
   if (!/^[a-f0-9]{40}$/u.test(sourceRevision ?? "") || !/^[a-f0-9]{64}$/u.test(profileDigest ?? "")) fail("projection binding");
   const selected = ':is(.agentic-control-selected, .agentic-toggle-group > button[aria-pressed="true"])';
@@ -278,11 +299,8 @@ export function renderSharedUiCss(profile, sourceRevision, profileDigest) {
   const nativeField = `:is(.agentic-form-controls :where(${input}, select, textarea), .agentic-input-controls :where(${input}, select))`;
   const field = `.agentic-form-control, ${nativeField}, .agentic-select-trigger`;
   return `/* Generated from agentic-design-system@${sourceRevision}; profile sha256 ${profileDigest}. Do not edit. */
-:root, :host {
+${renderTypographyCss(profile)}:root, :host {
 ${declarations.join("\n")}
-}
-.agentic-mono, .agentic-mono-detail {
-  font-family: var(--agentic-font-mono); font-variant-numeric: tabular-nums;
 }
 .agentic-toggle-group {
   box-sizing: border-box; display: inline-flex; align-items: stretch;
@@ -493,12 +511,14 @@ async function main() {
   if (!ref || `sha256:${digest(bytes)}` !== ref.digest) fail("catalog source pin");
   const css = renderSharedUiCss(profile, ref.revision, digest(bytes));
   if (args[0] === "--check") {
+    if (await readFile(typographyPath, "utf8") !== renderTypographyCss(profile)) fail("typography projection drift");
     const output = await readFile(outputPath, "utf8");
     if (output !== css || `sha256:${digest(Buffer.from(output))}` !== ref.projection?.digest) fail("generated projection drift");
     console.log(`Shared UI projection valid: ${profile.tokens.length} pinned shared UI tokens.`);
     return;
   }
   if (args[0] === "--write") {
+    await writeFile(typographyPath, renderTypographyCss(profile), "utf8");
     await writeFile(outputPath, css, "utf8");
     console.log(`Shared UI projection written: ${profile.tokens.length} tokens; sha256:${digest(Buffer.from(css))}`);
     return;

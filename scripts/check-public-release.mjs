@@ -3,7 +3,7 @@ import { execFileSync } from "node:child_process";
 import { readFile, readdir, stat } from "node:fs/promises";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { validateIconLibrary } from "./design-system-icon-profile.mjs";
+import { renderTypographyCss, validateIconLibrary } from "./design-system-icon-profile.mjs";
 import { checkDesignRegistry } from "./design-registry.mjs";
 import { prepareLocalDevHtml } from "./dev-csp.mjs";
 
@@ -70,6 +70,7 @@ const expectedFiles = [
   "site/vendor/commerce-theme.css",
   "site/vendor/graph-profile.css",
   "site/vendor/shared-ui-profile.css",
+  "site/vendor/typography.css",
 ].sort();
 const prohibitedPaths = [
   "registry",
@@ -158,6 +159,9 @@ async function assertFloatingPanelOwnerContract(indexHtml) {
 
   const panelCss = await readFile(resolve(root, "site/floating-panel.css"), "utf8");
   const sharedUiCss = await readFile(resolve(root, "site/vendor/shared-ui-profile.css"), "utf8");
+  const typography = renderTypographyCss(JSON.parse(await readFile(resolve(root, "site/tokens/shared-ui-profile.json"), "utf8")));
+  if (await readFile(resolve(root, "site/vendor/typography.css"), "utf8") !== typography ||
+      sharedUiCss.split(typography).length !== 2) fail("Typography must match its single generated owner");
   if (!sharedUiCss.includes("--agentic-control-hover-background: light-dark(#fffbeb, rgb(251 191 36 / 0.16));")
     || !sharedUiCss.includes("--agentic-icon-size-default: 1rem;")
     || !sharedUiCss.includes("inline-size: var(--agentic-icon-size-default); block-size: var(--agentic-icon-size-default);")
