@@ -1,5 +1,6 @@
 .agentic-dashboard-range {
   display: grid;
+  container: agentic-range / inline-size;
   grid-template-columns: max-content minmax(0, 1fr);
   gap: var(--agentic-control-padding-inline);
   --range-height: clamp(8rem, 16vw, 12rem);
@@ -47,6 +48,17 @@
 .agentic-range-interval[data-direction="down"] rect { fill: currentColor; }
 .agentic-range-labels { width: auto; }
 .agentic-range-labels > span { text-align: center; overflow-wrap: anywhere; }
+/* Put the scale outside the plotting area on narrow cards, preserving the hit width. */
+@container agentic-range (max-width: 30rem) {
+  .agentic-range-axis, .agentic-range-timeline { grid-area: 1 / 1 / 2 / -1; }
+  .agentic-range-axis {
+    height: calc(var(--range-height) + 2 * var(--kg-text-xs-line, 1rem));
+    align-items: start;
+    pointer-events: none;
+  }
+  .agentic-range-axis > :nth-child(2) { display: none; }
+  .agentic-range-timeline, .agentic-range-labels { padding-block-start: var(--kg-text-xs-line, 1rem); }
+}
 @media (forced-colors: active) {
   .agentic-range-interval[aria-pressed="true"] { border-block-end-color: Highlight; }
 }
