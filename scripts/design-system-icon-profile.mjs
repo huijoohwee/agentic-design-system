@@ -3,6 +3,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import graphProfile from "../site/tokens/graph-profile.json" with { type: "json" };
 import { dashboardLayoutCss } from "./dashboard-layout-css.mjs";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
@@ -273,16 +274,28 @@ export function renderTypographyCss(profile) {
     const { cssVar, value } = profile.tokens.find(token => token.key === 'typography.' + key);
     return `var(${cssVar}, ${value})`;
   };
+  // Workbook and edge shells can load this projection without loading the Graph theme.
+  const compact = key => {
+    const { cssVar, values } = graphProfile.tokens.find(token => token.key === key);
+    if (!DIMENSION.test(values.light) || !Object.values(values).every(value => value === values.light)) {
+      fail('standalone typography needs a common dimension for ' + key);
+    }
+    return `var(${cssVar}, ${values.light})`;
+  };
+  const label = ':where(dt), .agentic-fact-label';
   const data = '[data-agentic-typography] :where(dd, code, pre, samp, kbd, time)';
   return `:where([data-agentic-typography]) {
   font: ${font('body.size')}/${font('body.line-height')} ${font('family.sans')};
 }
+${label} {
+  font-family: ${font('family.sans')}; font-weight: normal;
+}
 .agentic-mono, .agentic-mono-detail, ${data} {
   font-family: ${font('family.mono')}; font-variant-numeric: tabular-nums;
 }
-.agentic-text-detail, .agentic-mono-detail, ${data},
+${label}, .agentic-text-detail, .agentic-mono-detail, ${data},
 .agentic-dashboard-eyebrow, .agentic-dashboard-description, .agentic-dashboard-detail {
-  font-size: .75rem; line-height: 1rem;
+  font-size: ${compact('text-xs')}; line-height: ${compact('text-xs-line')};
 }
 `;
 }
