@@ -66,6 +66,8 @@ enhancement; regular search remains available when a browser does not expose tha
 
 The shared UI profile centrally owns body typography (14px/20px), font families, responsive KTV column tracks, icon sizes and row geometry. Consumers pin its generated projection. Design System owns the native `agentic-design-system/ktv` and React `agentic-design-system/react/ktv` row APIs; products supply typed content and callbacks.
 
+Use `agentic-mono-detail` for compact data values and receipt paths. It uses the dashboard detail text size and line height, the shared monospace stack and tabular numerals. Use `agentic-mono` to inherit the surrounding text size and line height.
+
 KTV sizing adapts to the shared row container; the shared profile owns tracks, the stacking breakpoint and the default field-panel width. Consumer projections remain immutable local artifacts.
 
 Each KTV row represents one independently editable value. Range minimum and maximum use separate rows through `createKeyTypeValueRows` (`/ktv`) or `KeyTypeValueRows` (`/react/ktv`). Supply a unique stable `id` and key/type/value content for each row; the group composes the existing row owner without another layout. Native groups validate all descriptors before moving controls; React uses the same IDs as list keys. Multiple controls that edit the same value, such as a slider and its numeric input, remain one value.
