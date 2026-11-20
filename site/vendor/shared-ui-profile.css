@@ -72,6 +72,9 @@
   --agentic-ktv-panel-width: var(--agentic-panel-width);
   --agentic-floating-panel-radius: var(--agentic-panel-radius);
 }
+.agentic-mono, .agentic-mono-detail {
+  font-family: var(--agentic-font-mono); font-variant-numeric: tabular-nums;
+}
 .agentic-toggle-group {
   box-sizing: border-box; display: inline-flex; align-items: stretch;
   min-inline-size: 0; max-inline-size: 100%; block-size: var(--agentic-control-height); overflow-x: auto;
@@ -265,7 +268,7 @@ textarea.agentic-form-control, .agentic-form-controls :where(textarea) {
 .agentic-dashboard-card[data-accent="secondary"] { --agentic-dashboard-accent: var(--agentic-dashboard-secondary); }
 .agentic-dashboard-card[data-accent="success"] { --agentic-dashboard-accent: var(--agentic-dashboard-success); }
 .agentic-dashboard-card[data-accent]:where(:not([data-accent="neutral"],[data-accent="warning"])) { border-color: color-mix(in srgb, var(--agentic-dashboard-accent) 48%, transparent); }
-.agentic-dashboard-eyebrow, .agentic-dashboard-description, .agentic-dashboard-detail { font-size: .75rem; line-height: 1rem; }
+.agentic-dashboard-eyebrow, .agentic-dashboard-description, .agentic-dashboard-detail, .agentic-mono-detail { font-size: .75rem; line-height: 1rem; }
 .agentic-dashboard-eyebrow { color: var(--agentic-dashboard-accent); }
 .agentic-dashboard-description { padding-block: var(--agentic-control-padding-block); }
 .agentic-dashboard-detail { padding-block-end: var(--agentic-control-padding-inline); }

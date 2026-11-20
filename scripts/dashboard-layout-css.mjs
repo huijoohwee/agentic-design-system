@@ -52,7 +52,7 @@ export function dashboardLayoutCss(profile) {
 .agentic-dashboard-card[data-accent="secondary"] { --agentic-dashboard-accent: var(--agentic-dashboard-secondary); }
 .agentic-dashboard-card[data-accent="success"] { --agentic-dashboard-accent: var(--agentic-dashboard-success); }
 .agentic-dashboard-card[data-accent]:where(:not([data-accent="neutral"],[data-accent="warning"])) { border-color: color-mix(in srgb, var(--agentic-dashboard-accent) 48%, transparent); }
-.agentic-dashboard-eyebrow, .agentic-dashboard-description, .agentic-dashboard-detail { font-size: .75rem; line-height: 1rem; }
+.agentic-dashboard-eyebrow, .agentic-dashboard-description, .agentic-dashboard-detail, .agentic-mono-detail { font-size: .75rem; line-height: 1rem; }
 .agentic-dashboard-eyebrow { color: var(--agentic-dashboard-accent); }
 .agentic-dashboard-description { padding-block: var(--agentic-control-padding-block); }
 .agentic-dashboard-detail { padding-block-end: var(--agentic-control-padding-inline); }

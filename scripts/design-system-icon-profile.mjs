@@ -281,6 +281,9 @@ export function renderSharedUiCss(profile, sourceRevision, profileDigest) {
 :root, :host {
 ${declarations.join("\n")}
 }
+.agentic-mono, .agentic-mono-detail {
+  font-family: var(--agentic-font-mono); font-variant-numeric: tabular-nums;
+}
 .agentic-toggle-group {
   box-sizing: border-box; display: inline-flex; align-items: stretch;
   min-inline-size: 0; max-inline-size: 100%; block-size: var(--agentic-control-height); overflow-x: auto;
