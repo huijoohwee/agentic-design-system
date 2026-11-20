@@ -41,3 +41,27 @@ test('native adapter moves host nodes and appends literal text', () => {
   assert.equal(shell.children[0].children[0].children[0], heading);
   assert.deepEqual(heading.children,['<literal>']);
 });
+
+test('range widget preserves intervals, handles a flat series and navigates the source index', async () => {
+  const { createDashboardRange } = await import('../site/dashboard-range.mjs');
+  const el = () => ({ children: [], dataset: {}, attrs: {}, append(...nodes) { this.children.push(...nodes); },
+    setAttribute(key, value) { this.attrs[key] = value; }, focus() { this.focused = true; } });
+  const document = { createElement: el, createElementNS: el };
+  const first = { label: 'First', open: 5, high: 5, low: 5, close: 5 };
+  const second = { label: 'Next', open: 5, high: 8, low: 3, close: 7 };
+  let selected;
+  const draw = points => createDashboardRange(document, { label: 'Observed range', points, onSelect: value => { selected = value; } });
+  assert.throws(() => draw([]), RangeError);
+  assert.throws(() => draw([{ ...first, low: 6 }]), RangeError);
+  assert.throws(() => draw([{ ...first, open: NaN }]), RangeError);
+  const flatLine = draw([first]).children[1].children[0].children[0].children[0].children[0];
+  assert.equal(flatLine.attrs.y1, '50');
+  const buttons = draw([first, second]).children[1].children[0].children;
+  assert.deepEqual(buttons.map(button => button.tabIndex), [-1, 0]);
+  buttons[1].onkeydown({ key: 'Home', preventDefault() {} });
+  assert.equal(selected, first);
+  assert.deepEqual(buttons.map(button => button.attrs['aria-pressed']), ['true', 'false']);
+  assert.equal(buttons[0].focused, true);
+  buttons[1].onclick();
+  assert.equal(selected, second);
+});
