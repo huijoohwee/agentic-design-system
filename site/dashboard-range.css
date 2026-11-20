@@ -1,0 +1,52 @@
+.agentic-dashboard-range {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--agentic-control-padding-inline);
+  --range-height: clamp(8rem, 16vw, 12rem);
+}
+.agentic-range-axis {
+  height: var(--range-height);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: end;
+}
+.agentic-range-timeline { min-width: 0; overflow-x: auto; }
+.agentic-range-plot, .agentic-range-labels { display: flex; min-width: 100%; width: max-content; }
+.agentic-range-plot {
+  height: var(--range-height);
+  width: auto;
+  background: linear-gradient(to bottom, transparent calc(50% - .5px), var(--agentic-panel-border-color) 50%, transparent calc(50% + .5px));
+}
+.agentic-range-interval, .agentic-range-labels > span {
+  flex: 1 0 2.5rem;
+  min-width: 0;
+  box-sizing: border-box;
+}
+.agentic-range-interval {
+  appearance: none;
+  display: grid;
+  justify-items: center;
+  align-items: stretch;
+  padding: 0;
+  border: 0;
+  border-block: var(--agentic-panel-border);
+  background: transparent;
+  color: var(--agentic-dashboard-primary);
+  cursor: pointer;
+}
+.agentic-range-interval[data-direction="down"] { color: var(--agentic-dashboard-secondary); }
+.agentic-range-interval[aria-pressed="true"] {
+  background: color-mix(in srgb, currentColor 8%, transparent);
+  border-block-end: var(--agentic-control-focus-width) solid currentColor;
+}
+.agentic-range-interval:focus-visible { outline: var(--agentic-control-focus-width) solid Highlight; outline-offset: -2px; }
+.agentic-range-interval svg { width: min(100%, 4rem); height: 100%; }
+.agentic-range-interval :is(rect, line) { vector-effect: non-scaling-stroke; stroke: currentColor; stroke-width: 1.5; }
+.agentic-range-interval rect { fill: var(--agentic-panel-background); }
+.agentic-range-interval[data-direction="down"] rect { fill: currentColor; }
+.agentic-range-labels { width: auto; }
+.agentic-range-labels > span { text-align: center; overflow-wrap: anywhere; }
+@media (forced-colors: active) {
+  .agentic-range-interval[aria-pressed="true"] { border-block-end-color: Highlight; }
+}

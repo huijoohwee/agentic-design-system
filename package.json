@@ -83,6 +83,11 @@
       "types": "./site/dashboard.d.mts",
       "import": "./site/dashboard.mjs"
     },
+    "./dashboard/range": {
+      "types": "./site/dashboard-range.d.mts",
+      "import": "./site/dashboard-range.mjs"
+    },
+    "./dashboard/range.css": "./site/dashboard-range.css",
     "./react/dashboard": {
       "types": "./packages/react-dashboard/src/index.ts",
       "import": "./packages/react-dashboard/src/index.ts"
