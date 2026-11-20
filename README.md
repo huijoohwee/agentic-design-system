@@ -66,7 +66,7 @@ enhancement; regular search remains available when a browser does not expose tha
 
 The shared UI profile centrally owns body typography (14px/20px), font families, responsive KTV column tracks, icon sizes and row geometry. Consumers pin its generated projection. Design System owns the native `agentic-design-system/ktv` and React `agentic-design-system/react/ktv` row APIs; products supply typed content and callbacks.
 
-Use `agentic-mono-detail` for compact data values and receipt paths. It uses the dashboard detail text size and line height, the shared monospace stack and tabular numerals. Use `agentic-mono` to inherit the surrounding text size and line height.
+Put `data-agentic-typography` on the document body or a region. Body text uses the shared sans stack. Definition values, code, preformatted text, sample output, keyboard keys and timestamps use dashboard detail sizing, the shared monospace stack and tabular numerals. For other elements, `agentic-mono-detail` opts into the same data typography and `agentic-text-detail` selects only its size and line height. Use `agentic-mono` for monospace text with contextual sizing. Standalone documents can load `agentic-design-system/typography.css`. The full profile already contains those same rules.
 
 KTV sizing adapts to the shared row container; the shared profile owns tracks, the stacking breakpoint and the default field-panel width. Consumer projections remain immutable local artifacts.
 
