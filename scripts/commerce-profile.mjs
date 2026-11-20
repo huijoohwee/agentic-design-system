@@ -53,7 +53,8 @@ function parseProfile(source) {
         || !tokenKey.test(token.colorKey ?? "")) fail(`outline value ${token.key}`);
     } else if (token.type === "font-stack") {
       exactKeys(token, ["key", "cssVar", "type", "value"], token.key);
-      if (typeof token.value !== "string" || !/^[A-Za-z0-9 ,"-]{1,200}$/u.test(token.value)) fail(`font stack ${token.key}`);
+      if (token.key !== "font.family" || token.cssVar !== "--commerce-font-family" ||
+          token.value !== "var(--agentic-font-sans, sans-serif)") fail("Commerce font must use the shared sans family");
     } else if (token.type === "shadow") {
       exactKeys(token, ["key", "cssVar", "type", "value"], token.key);
       if (typeof token.value !== "string" || !/^[0-9 .a-z(),/%-]{1,160}$/u.test(token.value)
