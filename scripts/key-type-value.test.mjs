@@ -1,10 +1,11 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { readFileSync } from 'node:fs'
-import { createKeyTypeValueRow, createKeyTypeValueRows, validateKeyTypeValueRows, KTV_ROW_PARTS } from '../site/key-type-value.js'
+import { createFieldTypeIcon, createKeyTypeValueRow, createKeyTypeValueRows, validateKeyTypeValueRows, KTV_ROW_PARTS } from '../site/key-type-value.js'
 
 function documentFixture() {
-  const document = { createElement: tag => ({ tag, nodeType: 1, ownerDocument: document, dataset: {}, children: [], append(...nodes) { this.children.push(...nodes) } }) }
+  const document = { createElement: tag => ({ tag, nodeType: 1, ownerDocument: document, dataset: {}, attributes: {}, setAttribute(key, value) { this.attributes[key] = value }, children: [], append(...nodes) { this.children.push(...nodes) } }) }
+  document.createElementNS = (_, name) => document.createElement(name)
   return document
 }
 
@@ -62,4 +63,17 @@ test('invalid row groups fail atomically before moving any control', () => {
   const adapter = readFileSync(new URL('../packages/react-ktv/src/index.tsx', import.meta.url), 'utf8')
   assert.match(adapter, /validateKeyTypeValueRows\(rows\)/)
   assert.match(adapter, /key=\{row\.id\}/)
+})
+
+test('compact field types have a shared glyph, tooltip and accessible name', () => {
+  const doc = documentFixture()
+  for (const [kind, label] of Object.entries({ text: 'Text', number: 'Number', boolean: 'Boolean', datetime: 'Date and time', list: 'List', object: 'Object' })) {
+    const marker = createFieldTypeIcon(kind, doc)
+    assert.equal(marker.attributes.role, 'img')
+    assert.equal(marker.attributes['aria-label'], label)
+    assert.equal(marker.title, label)
+    assert.equal(marker.children[0].tag, 'svg')
+    assert.equal(marker.children[0].attributes['aria-hidden'], 'true')
+  }
+  assert.throws(() => createFieldTypeIcon('constructor', doc), /Unknown field type/)
 })

@@ -1,3 +1,5 @@
+export type FieldType = 'text' | 'number' | 'boolean' | 'datetime' | 'list' | 'object'
+export function createFieldTypeIcon(type: FieldType, ownerDocument?: Document): HTMLSpanElement
 export const KTV_CONTAINER_CLASS: 'agentic-ktv-container'
 export const KTV_ROW_CLASS: 'agentic-ktv-row'
 export const KTV_ROW_PARTS: readonly Readonly<{ slot: 'key' | 'type' | 'value'; tag: 'dt' | 'dd'; className: string }>[]
