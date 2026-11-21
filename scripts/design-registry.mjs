@@ -320,9 +320,9 @@ function assertRegistry(registry) {
     || base.licenseEvidence.length !== 2 || base.consumerPins.length !== 0
     || base.projection?.path !== "./vendor/base-profile.css") fail("Base scoped profile binding");
   if (graph.id !== "graph" || graph.owner !== registry.owner || graph.repository !== registry.owner
-    || graph.revision !== "e52a52111f52b6af85f99195ec9e59a490548575" || graph.source !== "./tokens/graph-profile.json"
+    || graph.revision !== "96ed1df5b63d1b487d9f027b6b709d38aca71c0f" || graph.source !== "./tokens/graph-profile.json"
     || graph.rights !== "cleared-scoped" || graph.scope.join(",") !== "graph-ui,application-typography"
-    || graph.permissionEvidence !== "User instructions 2026-11-07: centralize design token values and generated projections from the eight listed Graph token sources in Agentic Design System, with attribution; no broader Graph source grant."
+    || graph.permissionEvidence !== "User instructions 2026-11-07: centralize design token values and generated projections from the eight listed Graph token sources in Agentic Design System, with attribution; no broader Graph source grant. User instruction 2026-11-21: refresh attribution to Graph revision 746dd7042a23c4b64492026d41a4c2819f477cb9 and expand the inventory to eleven paths, adding kgTokenContract.ts, design-runtime-profile.json and graph-profile.pin.json as contract adapters and checked projections of the central profile; token values unchanged."
     || graph.licenseEvidence.length !== 1 || graph.consumerPins.length !== 0
     || graph.projection?.path !== "./vendor/graph-profile.css") fail("Graph exact-source grant binding");
   if (sharedUi.id !== "shared-ui" || sharedUi.owner !== registry.owner || sharedUi.repository !== registry.owner
@@ -508,7 +508,7 @@ export async function checkDesignRegistry() {
   console.log(`PASS design-singleton-enforcement-check · ${claims.length} globally unique keys and variables across four profiles; duplicate and override fixtures rejected; ${declarations.length} owner/projection declarations.`);
   console.log("PASS design-agent-tool-contract-check · browser WebMCP and newline-delimited stdio MCP share read-only schemas and handlers.");
   console.log("PASS design-generated-output-check · All four projections match their profile pins.");
-  console.log("PASS design-license-boundary-check · Commerce/Base MIT evidence and the eight-source Graph token grant are pinned; The 2026-11-17 shared Markdown/palette transfer is separately user-authorized; other Graph source remains private.");
+  console.log("PASS design-license-boundary-check · Commerce/Base MIT evidence and the eleven-source Graph token grant are pinned; The 2026-11-17 shared Markdown/palette transfer is separately user-authorized; other Graph source remains private.");
   console.log("Scope: four candidate profiles are central and globally unique; consumer projection pins are not an all-repository scan or parity claim.");
 }
 
