@@ -314,9 +314,9 @@ function assertRegistry(registry) {
     path: "public/local-first/commerce-theme.css", digest: "sha256:c512ee76dc6160ff41e8bac9706b8e8d0b9e56f42b6c4b128594605e19c93474",
   })) fail("Commerce rights or consumer pin evidence");
   if (base.id !== "base" || base.owner !== registry.owner || base.repository !== registry.owner
-    || base.revision !== "bc1921bbcf56e1abb11fef2593917e5459d58df1" || base.source !== "./tokens/base-profile.json"
+    || base.revision !== "5319c839789787b74ad3e02196688ba12b251c99" || base.source !== "./tokens/base-profile.json"
     || base.status !== "candidate" || base.rights !== "cleared" || base.scope.join(",") !== "shared-data-view"
-    || base.permissionEvidence !== "User instruction on 2026-10-29 to centralize the named product repositories; Base MIT license is pinned to the source revision."
+    || base.permissionEvidence !== "User instruction on 2026-10-29 to centralize the named product repositories; Base MIT license is pinned to the source revision. User instruction on 2026-11-21 converges Base local literal colors into the central base-profile v2 with light, dark and black values aligned to the Graph theme palette, rendered with light-dark() and a black variant override."
     || base.licenseEvidence.length !== 2 || base.consumerPins.length !== 0
     || base.projection?.path !== "./vendor/base-profile.css") fail("Base scoped profile binding");
   if (graph.id !== "graph" || graph.owner !== registry.owner || graph.repository !== registry.owner
