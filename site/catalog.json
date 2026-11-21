@@ -224,15 +224,15 @@
         "name": "Base shared data-view profile",
         "owner": "github.com/huijoohwee/agentic-design-system",
         "repository": "github.com/huijoohwee/agentic-design-system",
-        "revision": "bc1921bbcf56e1abb11fef2593917e5459d58df1",
+        "revision": "5319c839789787b74ad3e02196688ba12b251c99",
         "source": "./tokens/base-profile.json",
-        "digest": "sha256:3c231b5a57ae6acac862a4ede882d24657d93e45b1bc7ea32d1799ef4b32e361",
+        "digest": "sha256:b2d1f2a115373c0471c1309f1f371434033791be96b3ad5069a6304a80d2ac7c",
         "scope": [
           "shared-data-view"
         ],
         "status": "candidate",
         "rights": "cleared",
-        "permissionEvidence": "User instruction on 2026-10-29 to centralize the named product repositories; Base MIT license is pinned to the source revision.",
+        "permissionEvidence": "User instruction on 2026-10-29 to centralize the named product repositories; Base MIT license is pinned to the source revision. User instruction on 2026-11-21 converges Base local literal colors into the central base-profile v2 with light, dark and black values aligned to the Graph theme palette, rendered with light-dark() and a black variant override.",
         "licenseEvidence": [
           {
             "repository": "github.com/huijoohwee/agentic-design-system",
@@ -250,7 +250,7 @@
         "consumerPins": [],
         "projection": {
           "path": "./vendor/base-profile.css",
-          "digest": "sha256:9fb7da765d4f597f7e130faa51c10faff9dd977b943818904e4d474236f28758"
+          "digest": "sha256:aeeebf62854d76f79dedd2771a46aa55312f835840249db998ac6c3f37097f5f"
         }
       },
       {
