@@ -47,6 +47,13 @@ Granted token sources: grph-shared/src/ui/kgTokens.ts; grph-shared/src/ui/typogr
 User instructions 2026-11-07: centralize design token values and generated projections from the eight listed Graph token sources in Agentic Design System, with attribution; no broader Graph source grant. User instruction 2026-11-21: refresh attribution to Graph revision 746dd7042a23c4b64492026d41a4c2819f477cb9 and expand the inventory to eleven paths, adding kgTokenContract.ts, design-runtime-profile.json and graph-profile.pin.json as contract adapters and checked projections of the central profile; token values unchanged.
 Consumer continuation: https://github.com/huijoohwee/agentic-graph/pull/1240 (retains PR #1239 history; protected integration pending).
 
+Graph generic UI intent and state presentation
+----------------------------------------------
+Source: agentic-graph@d7e505f02aad482d3ee98fd2040d9b7c7d3f5ff4
+Transferred sources: grph-shared/src/ui/intentTokens.ts; grph-shared/src/ui/themeTokens.ts (generic intent, focus, ring, status, surface and row-selection values only).
+User approval 2026-11-22 of the design-token consolidation proposal (lane A): transfer Graph's generic intent palettes, focus/ring/status presentation, surface washes and selected-row paint values verbatim from agentic-graph@d7e505f02aad482d3ee98fd2040d9b7c7d3f5ff4 (grph-shared/src/ui/intentTokens.ts, grph-shared/src/ui/themeTokens.ts) into central Design System ownership; appearance unchanged; no broader Graph source grant.
+Central artifact: site/ui-intent-palette.json (agentic-design-system/ui-intent-palette/v1). Consumers derive from the pinned central bytes and do not re-author these values.
+
 Base shared data-view values
 ---------------------------
 Source: agentic-base@a5d0f2d87d8c6871e9639f8224f5eaee056c5b6e

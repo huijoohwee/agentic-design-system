@@ -55,6 +55,7 @@ const expectedFiles = [
   "site/index.html",
   "site/floating-panel-contract.d.ts",
   "site/icons.json",
+  "site/ui-intent-palette.json",
   "site/collection-layout.js", "site/collection-layout.d.ts", "site/collection-layout.css",
   "site/panel-section.js", "site/panel-section.d.ts", "site/panel-section.css",
   "packages/react-panels/src/PanelSection.tsx", "scripts/panel-section.test.mjs",
