@@ -18,6 +18,10 @@ Consumer projections bind the exact Design System revision and file digests. Rol
 
 For a native browser, import `mountFloatingPanel` from `agentic-design-system/floating-panel`. Pass the opening button, a hidden container with a unique ID, and a label. Each direct child supplies a stable `data-panel-tab` key, `data-panel-label`, optional registry `data-panel-icon`, and the product content. The component builds the shell on first open, handles tab navigation and provides the shared Close control. A host that edits text can supply `returnFocus` to restore its editor selection.
 
+### Shared navigation across routes
+
+Keep the product’s destinations and Skills & Commands trigger in one toolbar template or component. Each participating route uses that owner, the same application base stylesheet, and the Design System toolbar styles. Mark the current destination with `aria-current="page"`. Use the canonical `agentic-design-system/toolbar.css` export for a standalone toolbar or `agentic-design-system/panels.css` for the complete surface. Offline builds may seal the exact pinned source bytes. Test navigation and the panel from each route, including narrow and offline layouts.
+
 ### Skills & Commands
 
 Import the tab metadata and catalog header from `agentic-design-system/skills-commands` and its styles from `agentic-design-system/skills-commands.css`. The header owns prefix selection, Subject/Verb/Object grouping, search and bulk disclosure. Interactive hosts supply rows, disclosure state, catalog provenance and activation handlers. Use the shared catalog, body, list, row, title and metadata classes for their layout. A read-only host can use `mountSkillsCommandsReference` for the entire tab. Both adapters work with local data and preserve product authorization boundaries.
