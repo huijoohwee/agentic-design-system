@@ -398,6 +398,53 @@ async function declarationsInSite(claims) {
   return declarations;
 }
 
+const intentPalettePath = resolve(root, "site/ui-intent-palette.json");
+const intentIds = ["primary", "success", "info", "example", "neutral", "warning", "danger"];
+const primaryIntentRoles = ["text", "border", "softBorder", "bg", "solidBg", "solidText", "hoverText", "indicator", "ringIndicator"];
+const sharedIntentRoles = ["border", "bg", "text", "accentBg"];
+const statusIds = ["success", "info", "warning", "error", "neutral", "lilac", "pink", "orange"];
+const focusIds = ["iconWash", "primaryRing", "primaryStrongRing", "primaryBorderRing", "primarySoftRing", "primarySofterRing"];
+const interactionIds = ["ring", "selectionControl", "disabledText", "inverseHoverBg", "dangerHoverBg", "hintHoverBorder", "rowRelated"];
+const surfaceIds = ["neutralSubtle", "neutralMuted", "tableHeaderBg", "tableRowHover", "chipWash"];
+
+// Generic intent/state presentation has one editable owner; consumers derive, never re-author.
+function validateIntentPalette(text) {
+  const value = JSON.parse(text);
+  exactKeys(value, ["schema", "id", "owner", "version", "status", "scope", "permissionEvidence", "intents", "statuses", "focus", "interaction", "surfaces"], "intent palette root");
+  if (value.schema !== "agentic-design-system/ui-intent-palette/v1" || value.id !== "ui-intent-palette"
+    || value.owner !== "github.com/huijoohwee/agentic-design-system" || value.status !== "candidate"
+    || !/^\d+\.\d+\.\d+$/u.test(value.version)) fail("intent palette owner contract");
+  exactKeys(value.scope, ["repository", "surfaces"], "intent palette scope");
+  if (value.scope.repository !== value.owner || JSON.stringify(value.scope.surfaces) !== JSON.stringify(["shared-interface"])) fail("intent palette scope contract");
+  if (typeof value.permissionEvidence !== "string" || !value.permissionEvidence.trim()) fail("intent palette permission evidence");
+  const classString = (entry, label) => {
+    if (typeof entry !== "string" || !entry.trim() || /[;{}]|url\(/u.test(entry)) fail(`unsafe intent palette value ${label}`);
+  };
+  exactKeys(value.intents, intentIds, "intents");
+  for (const id of intentIds) {
+    const roles = value.intents[id];
+    exactKeys(roles, id === "primary" ? primaryIntentRoles : sharedIntentRoles, `intent ${id}`);
+    for (const [role, entry] of Object.entries(roles)) {
+      if (role === "indicator") { if (typeof entry !== "string" || !/^#[0-9A-Fa-f]{6}$/u.test(entry)) fail(`intent ${id}.indicator color`); }
+      else classString(entry, `${id}.${role}`);
+    }
+  }
+  exactKeys(value.statuses, statusIds, "statuses");
+  for (const id of statusIds) classString(value.statuses[id], `statuses.${id}`);
+  exactKeys(value.focus, focusIds, "focus");
+  for (const id of focusIds) classString(value.focus[id], `focus.${id}`);
+  exactKeys(value.interaction, [...interactionIds, "rowSelection"], "interaction");
+  for (const id of interactionIds) classString(value.interaction[id], `interaction.${id}`);
+  const paint = value.interaction.rowSelection;
+  exactKeys(paint, ["accent", "alpha", "accentWidthPx"], "rowSelection");
+  if (typeof paint.accent !== "string" || !/^#[0-9a-f]{6}$/u.test(paint.accent)
+    || typeof paint.alpha !== "number" || !(paint.alpha > 0 && paint.alpha < 1)
+    || !Number.isInteger(paint.accentWidthPx) || paint.accentWidthPx <= 0) fail("rowSelection paint values");
+  exactKeys(value.surfaces, surfaceIds, "surfaces");
+  for (const id of surfaceIds) classString(value.surfaces[id], `surfaces.${id}`);
+  return value;
+}
+
 export async function checkDesignRegistry() {
   await assertCatalogSchema();
   const catalogBytes = await readFile(catalogPath);
@@ -412,14 +459,11 @@ export async function checkDesignRegistry() {
     const bytes = await readFile(resolve(root, "site", ref.source.slice(2)));
     if (`sha256:${sha(bytes)}` !== ref.digest) fail(`${ref.id} profile digest drift`);
     profileBytes.set(ref.id, bytes);
-    if (["commerce", "base", "graph"].includes(ref.id)) {
+    if (["commerce", "base", "graph", "shared-ui"].includes(ref.id)) {
       const pinned = execFileSync("git", ["show", `${ref.revision}:site/${ref.source.slice(2)}`], { cwd: root });
       if (!pinned.equals(bytes)) fail(`${ref.id} profile differs from its pinned central source revision`);
-      profiles.push(({ commerce: validateCommerceProfile, base: validateBaseProfile, graph: validateGraphProfile })[ref.id](bytes.toString("utf8")));
-    } else if (ref.id === "base") profiles.push(validateBaseProfile(bytes.toString("utf8")));
-    else if (ref.id === "graph") profiles.push(validateGraphProfile(bytes.toString("utf8")));
-    else if (ref.id === "shared-ui") profiles.push(validateSharedUiProfile(bytes.toString("utf8")));
-    else fail(`unsupported profile ${ref.id}`);
+      profiles.push(({ commerce: validateCommerceProfile, base: validateBaseProfile, graph: validateGraphProfile, "shared-ui": validateSharedUiProfile })[ref.id](bytes.toString("utf8")));
+    } else fail(`unsupported profile ${ref.id}`);
   }
   const centralOwner = "github.com/huijoohwee/agentic-design-system";
   for (const ref of profileRefs) {
@@ -490,6 +534,20 @@ export async function checkDesignRegistry() {
   const commerceLicenseText = notices.slice(commerceIndexInSection + commerceSource.length);
   if (`sha256:${sha(Buffer.from(baseLicenseText))}` !== baseLicense
     || `sha256:${sha(Buffer.from(commerceLicenseText))}` !== commerceRef.licenseEvidence[1].digest) fail("owner MIT notice does not match its pinned license digest");
+  const intentPalette = validateIntentPalette((await readFile(intentPalettePath)).toString("utf8"));
+  if (!notices.includes(intentPalette.permissionEvidence)) fail("intent palette attribution is missing from notices");
+  const rejectsPalette = mutate => {
+    const candidate = structuredClone(intentPalette); mutate(candidate);
+    try { validateIntentPalette(JSON.stringify(candidate)); } catch { return; }
+    fail("unsafe or unknown intent palette value accepted");
+  };
+  rejectsPalette(value => { value.intents.primary.text = "text-blue-600; color:red"; });
+  rejectsPalette(value => { value.intents.primary.extra = "text-white"; });
+  rejectsPalette(value => { value.intents.primary.indicator = "blue"; });
+  rejectsPalette(value => { value.interaction.rowSelection.alpha = 2; });
+  rejectsPalette(value => { value.interaction.rowSelection.accent = "var(--kg-accent)"; });
+  rejectsPalette(value => { value.surfaces.chipWash = "url(https://example.invalid)"; });
+  rejectsPalette(value => { value.statuses.unknown = "text-white"; });
   await assertMachineInvocation(catalog, profiles);
   const claims = profiles.flatMap(profile => {
     const ref = profileRefs.find(item => item.id === profile.id);
@@ -508,6 +566,7 @@ export async function checkDesignRegistry() {
   console.log(`PASS design-singleton-enforcement-check · ${claims.length} globally unique keys and variables across four profiles; duplicate and override fixtures rejected; ${declarations.length} owner/projection declarations.`);
   console.log("PASS design-agent-tool-contract-check · browser WebMCP and newline-delimited stdio MCP share read-only schemas and handlers.");
   console.log("PASS design-generated-output-check · All four projections match their profile pins.");
+  console.log("PASS design-intent-palette-check · Generic intent, focus, status, surface and row-selection presentation has one central owner; unsafe and unknown values rejected.");
   console.log("PASS design-license-boundary-check · Commerce/Base MIT evidence and the eleven-source Graph token grant are pinned; The 2026-11-17 shared Markdown/palette transfer is separately user-authorized; other Graph source remains private.");
   console.log("Scope: four candidate profiles are central and globally unique; consumer projection pins are not an all-repository scan or parity claim.");
 }
