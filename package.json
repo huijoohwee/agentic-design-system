@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./toolbar.css": "./site/toolbar.css",
     "./panels.css": "./site/panels.css",
     "./profile.css": "./site/vendor/shared-ui-profile.css",
     "./typography.css": "./site/vendor/typography.css",

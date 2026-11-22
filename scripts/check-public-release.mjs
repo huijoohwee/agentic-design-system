@@ -186,6 +186,21 @@ async function assertFloatingPanelOwnerContract(indexHtml) {
     fail("Shared controls must use one canonical hover-background token");
   }
 
+  const manifest = JSON.parse(await readFile(resolve(root, 'package.json'), 'utf8'));
+  const toolbarOwner = 'site/toolbar.css';
+  if (manifest.exports['./toolbar.css'] !== './' + toolbarOwner) fail('Toolbar export must resolve to its source');
+  const styleLinks = [...indexHtml.matchAll(/<link\b[^>]*>/gu)].map(([tag]) => tag);
+  for (const href of ['./toolbar.css', './vendor/shared-ui-profile.css'])
+    if (styleLinks.filter(tag => tag.includes('rel="stylesheet"') && tag.includes('href="' + href + '"')).length !== 1)
+      fail('The registry must load exactly one stylesheet at ' + href);
+  const panelImports = (await readFile(resolve(root, 'site/panels.css'), 'utf8')).split(/\r?\n/u);
+  if (panelImports.filter(line => line.trim() === '@import "./toolbar.css";').length !== 1)
+    fail('The complete panel stylesheet must import the same toolbar owner once');
+  const ownedToolbar = /\.agentic-toolbar(?:-(?:dock|item|overlay-layer|status))?(?![\w-])/u;
+  for (const path of expectedFiles.filter(file => file.endsWith('.css') && file !== toolbarOwner)) {
+    const css = (await readFile(resolve(root, path), 'utf8')).replace(/\/\*[\s\S]*?\*\//gu, '');
+    if (ownedToolbar.test(css)) fail(path + ' redefines the shared toolbar outside its stylesheet');
+  }
   const duplicatePanelRule = /\.(?:agentic-panel-(?:surface|header|body|main|bottom)(?:-[a-z0-9-]+)?|agentic-base-floating-panel(?:-[a-z0-9-]+)?|agentic-floating-panel-(?:tabs|tab|title|body|dock))\b/iu;
   for (const path of expectedFiles.filter(file => file.endsWith(".css") && file !== "site/floating-panel.css")) {
     const stylesheet = await readFile(resolve(root, path), "utf8");
