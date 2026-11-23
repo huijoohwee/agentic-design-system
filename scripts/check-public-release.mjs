@@ -14,7 +14,7 @@ const expectedFiles = [
   "site/dashboard.mjs", "site/dashboard.d.mts", "packages/react-dashboard/src/index.ts", "scripts/dashboard-renderer.test.mjs",
   "site/panels.css", "site/skills-commands.js", "site/skills-commands.d.ts", "site/skills-commands.css",
   "site/floating-panel.js", "site/inline-editor.js", "site/inline-editor.d.ts",
-  "site/viewer-surface.js", "site/viewer-surface.d.ts", "site/viewer-surface.css", "packages/react-viewer/src/index.tsx", "scripts/viewer-surface.test.mjs",
+  "site/viewer-surface.js", "site/viewer-surface.d.ts", "site/viewer-surface.css", "packages/react-viewer/src/document-blocks.tsx", "packages/react-viewer/src/index.tsx", "scripts/viewer-surface.test.mjs",
   "site/markdown.js", "site/markdown.d.ts", "site/markdown-parser.js", "site/markdown-parser.d.ts", "site/color.js", "site/color.d.ts", "site/rich-text.css", "packages/react-rich-text/src/index.tsx", "scripts/markdown.test.mjs",
   ".agentic-os.json",
   ".github/workflows/integration.yml",

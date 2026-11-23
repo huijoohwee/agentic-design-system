@@ -35,3 +35,5 @@ export const ViewerSurface=React.forwardRef<HTMLElement,ViewerSurfaceProps>(func
   return <Tag key={generation} {...attributes} ref={(node:HTMLElement|null)=>{root.current=node;const target=node?(resolveEditRoot?.(node)??node):null;editRoot.current=target;surfaceRef?.(node);if(typeof editorRef==='function')editorRef(target);else if(editorRef)(editorRef as React.MutableRefObject<HTMLElement|null>).current=target;if(typeof ref==='function')ref(node);else if(ref)ref.current=node}}
     suppressContentEditableWarning className={`agentic-viewer-surface ${className}`}>{renderedChildren.current}</Tag>
 })
+
+export { CodeBlock, CodeBlockHeader, CodeBlockText, TableToolbar, TableColumnHeader } from './document-blocks'
