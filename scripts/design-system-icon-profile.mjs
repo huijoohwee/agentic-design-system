@@ -433,13 +433,22 @@ textarea.agentic-form-control, .agentic-form-controls :where(textarea) {
 .agentic-form-control:disabled, .agentic-form-control[aria-disabled="true"], ${nativeField}:disabled {
   opacity: .5; cursor: not-allowed;
 }
+select:not([multiple]):not([size]:not([size="1"])) {
+  color: var(--agentic-base-text-primary, var(--agentic-panel-foreground, var(--kg-text-primary, CanvasText)));
+  background-color: var(--agentic-base-surface, var(--agentic-panel-background, var(--kg-panel-bg, Canvas)));
+  color-scheme: inherit;
+}
+select:not([multiple]):not([size]:not([size="1"])) option {
+  color: var(--agentic-base-text-primary, var(--agentic-panel-foreground, var(--kg-text-primary, CanvasText)));
+  background-color: var(--agentic-base-surface, var(--agentic-panel-background, var(--kg-panel-bg, Canvas)));
+}
 .agentic-menu {
   box-sizing: border-box; margin: 0; padding: var(--agentic-menu-padding); list-style: none;
   display: flex; flex-direction: column; gap: var(--agentic-menu-gap); min-inline-size: 0;
-  color: var(--agentic-base-text, var(--kg-text-primary, CanvasText));
+  color: var(--agentic-base-text-primary, var(--agentic-panel-foreground, var(--kg-text-primary, CanvasText)));
   background: var(--agentic-base-surface, var(--kg-panel-bg, Canvas));
   border: var(--agentic-panel-control-border, var(--agentic-control-border));
-  border-radius: var(--agentic-control-radius); box-shadow: var(--kg-shadow-overlay, 0 8px 24px rgb(0 0 0 / .12));
+  border-radius: var(--agentic-control-radius); box-shadow: var(--agentic-base-shadow-overlay, var(--kg-shadow-overlay, 0 8px 24px rgb(0 0 0 / .12)));
   font: var(--agentic-font-size-body)/var(--agentic-line-height-body) var(--agentic-font-sans);
   max-block-size: calc(100dvh - var(--agentic-menu-edge-gap) - var(--agentic-menu-edge-gap));
   overflow: auto; overscroll-behavior: contain;
@@ -452,13 +461,13 @@ textarea.agentic-form-control, .agentic-form-controls :where(textarea) {
 }
 .agentic-menu-option:is(:hover, :focus-visible) { background: var(--agentic-control-hover-background); }
 .agentic-menu-option:is([aria-checked="true"], [aria-selected="true"], [data-selected="true"], .agentic-menu-selected) {
-  color: var(--kg-accent, LinkText); background: var(--agentic-base-selected, var(--kg-accent-soft-bg, color-mix(in srgb, Highlight 12%, Canvas)));
+  color: var(--agentic-base-accent, var(--kg-accent, LinkText)); background: var(--agentic-base-selected, var(--kg-accent-soft-bg, color-mix(in srgb, Highlight 12%, Canvas)));
   border-color: var(--agentic-base-focus, var(--kg-accent, Highlight));
 }
 .agentic-menu-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; min-inline-size: 0; }
 .agentic-menu-mark { inline-size: var(--agentic-icon-size-default); flex: 0 0 auto; text-align: center; }
 .agentic-select-source { display: none !important; }
-.agentic-select-trigger { background: var(--agentic-base-surface, var(--kg-panel-bg, Canvas)); color: inherit; display: inline-flex; align-items: center; gap: var(--agentic-control-padding-inline); inline-size: 100%; text-align: start; }
+.agentic-select-trigger { background: var(--agentic-base-surface, var(--kg-panel-bg, Canvas)); color: var(--agentic-base-text-primary, var(--agentic-panel-foreground, var(--kg-text-primary, CanvasText))); color-scheme: inherit; display: inline-flex; align-items: center; gap: var(--agentic-control-padding-inline); inline-size: 100%; text-align: start; }
 .agentic-menu-popup { position: fixed; z-index: 2147483000; }
 ${dashboardLayoutCss(profile)}
 @media (pointer: coarse), (max-width: 768px) {

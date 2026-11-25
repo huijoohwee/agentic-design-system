@@ -124,7 +124,7 @@ export function renderBaseCss(profile, sourceRevision, profileDigest) {
     return `  ${token.cssVar}: ${token.value};`;
   });
   const blackRows = sorted.filter(themed).map(token => `  ${token.cssVar}: ${token.values.black};`);
-  return `/* Generated from agentic-design-system Base profile; origin agentic-base@${sourceRevision}; profile sha256 ${profileDigest}. Do not edit. */\n:root, :host {\n${rows.join("\n")}\n}\n:root[data-dark-variant="black"], :host([data-dark-variant="black"]) {\n${blackRows.join("\n")}\n}\n`;
+  return `/* Generated from agentic-design-system Base profile; origin agentic-base@${sourceRevision}; profile sha256 ${profileDigest}. Do not edit. */\n:root, :host {\n${rows.join("\n")}\n}\n:root[data-theme="dark"][data-dark-variant="black"], :host([data-theme="dark"][data-dark-variant="black"]) {\n${blackRows.join("\n")}\n}\n`;
 }
 
 async function main() {
