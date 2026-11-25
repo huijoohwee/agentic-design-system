@@ -65,3 +65,30 @@ test('range widget preserves intervals, handles a flat series and navigates the 
   buttons[1].onclick();
   assert.equal(selected, second);
 });
+
+test('dev serves the published dashboard and browser entry points', {timeout: 10000}, async t => {
+  const {spawn} = await import('node:child_process');
+  const {once} = await import('node:events');
+  const {createInterface} = await import('node:readline');
+  const {readFile} = await import('node:fs/promises');
+  const child = spawn(process.execPath, ['scripts/dev.mjs', '--port', '0'], {stdio: ['ignore', 'pipe', 'inherit']});
+  t.after(async () => {
+    if (child.exitCode === null && child.signalCode === null) {
+      const exited = once(child, 'exit');
+      child.kill();
+      await exited;
+    }
+  });
+  const [line] = await once(createInterface({input: child.stdout}), 'line');
+  const url = line.match(/http:\/\/127\.0\.0\.1:\d+\//)[0];
+  const pkg = JSON.parse(await readFile('package.json', 'utf8'));
+  for (const binding of Object.values(pkg.exports)) {
+    const target = typeof binding === 'string' ? binding : binding.import ?? binding.default;
+    if (!target?.startsWith('./site/') || !/\.(m?js|css|json)$/.test(target)) continue;
+    const response = await fetch(url + target.slice(7));
+    assert.equal(response.status, 200, target);
+    assert.equal(await response.text(), await readFile(target, 'utf8'), target);
+    if (target.endsWith('.mjs')) assert.match(response.headers.get('content-type'), /javascript/);
+  }
+  assert.equal((await fetch(url + 'package.json')).status, 404);
+});

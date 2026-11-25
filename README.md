@@ -32,7 +32,7 @@ download is needed:
 npm run dev
 ```
 
-The server prints its local URL. It serves only the static site on `127.0.0.1`; the browser reads the
+The server prints its local URL, using port 4173 when available. Use `npm run dev -- --port 0` for a free port or specify a port number. It serves only the static site on `127.0.0.1`; the browser reads the
 same catalog and pinned profile files used by the registry check. No backend or runtime network
 service is used.
 

@@ -1,10 +1,11 @@
 import { createLayoutService } from './dashboard-layout-service.mjs';
 import { homedir } from 'node:os';
 import { constants } from "node:fs";
-import { open } from "node:fs/promises";
+import { open, readFile } from "node:fs/promises";
 import { createServer } from "node:http";
 import { extname, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
+import { parseArgs } from "node:util";
 import { prepareLocalDevHtml } from "./dev-csp.mjs";
 
 const site = resolve(fileURLToPath(new URL("../site", import.meta.url)));
@@ -12,7 +13,9 @@ const host = "127.0.0.1";
 const requestedHost = process.env.HOST;
 if (requestedHost && requestedHost !== host) throw new Error("The design-system server only binds to 127.0.0.1");
 
-const portText = process.env.PORT ?? "4173";
+const { values } = parseArgs({ options: { port: { type: 'string' } } });
+const explicitPort = values.port ?? process.env.PORT;
+const portText = explicitPort ?? "4173";
 if (!/^(?:0|[1-9][0-9]{0,4})$/u.test(portText) || Number(portText) > 65535) {
   throw new Error("PORT must be an integer from 0 to 65535");
 }
@@ -22,9 +25,16 @@ const files = new Set([
   "collection-layout.js", "collection-layout.css",
   "key-type-value.js", "hover.js", "hover-text.js", "hover.css", "icons.json", "index.html", "skills-commands.js", "skills-commands.css", "floating-panel.js", "floating-panel.css", "toolbar.css", "toolbar-icons.js", "dashboard-columns.js", "registry.css", "app.js", "registry-query.js", "sw.js", "favicon.svg", "catalog.json", "catalog.schema.json", "THIRD-PARTY-NOTICES.txt",
   "tokens/commerce-profile.json", "tokens/base-profile.json", "tokens/graph-profile.json", "tokens/shared-ui-profile.json",
-  "vendor/commerce-theme.css", "vendor/base-profile.css", "vendor/graph-profile.css", "vendor/shared-ui-profile.css",
+  "ui-intent-palette.json", "vendor/commerce-theme.css", "vendor/base-profile.css", "vendor/graph-profile.css", "vendor/shared-ui-profile.css",
 ]);
+// Serve browser entry points straight from the package's public export map.
+const pkg = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'));
+for (const entry of Object.values(pkg.exports)) {
+  const target = typeof entry === 'string' ? entry : entry.import ?? entry.default;
+  if (target?.startsWith('./site/') && /\.(?:m?js|css|json)$/.test(target)) files.add(target.slice(7));
+}
 const types = new Map([
+  [".mjs", "text/javascript; charset=utf-8"],
   [".css", "text/css; charset=utf-8"], [".html", "text/html; charset=utf-8"],
   [".js", "text/javascript; charset=utf-8"], [".json", "application/json; charset=utf-8"],
   [".txt", "text/plain; charset=utf-8"], [".svg", "image/svg+xml"],
@@ -88,11 +98,17 @@ const server = createServer(async (request, response) => {
   }
 });
 
-server.listen(Number(portText), host, () => {
+server.once('error', error => {
+  if (error.code === 'EADDRINUSE' && explicitPort === undefined) server.listen(0, host);
+  else throw error;
+});
+server.once('listening', () => {
   const address = server.address();
   console.log(`Agentic Design System is live at http://${host}:${address.port}/`);
   console.log("Loopback only · static files · no external runtime requests");
 });
+
+server.listen(Number(portText), host);
 
 for (const signal of ["SIGINT", "SIGTERM"]) {
   process.once(signal, () => server.close(() => process.exit(0)));
