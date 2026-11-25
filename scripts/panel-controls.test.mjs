@@ -153,6 +153,15 @@ test('icon and icon-label panel tabs share one control height', () => {
   assert.match(panelCss.slice(touchTabRule, touchTabRule + 320), /block-size:\s*max\(var\(--agentic-control-height-touch\), var\(--agentic-icon-size-default\)\);\s*min-block-size:\s*max\(var\(--agentic-control-height-touch\), var\(--agentic-icon-size-default\)\);/u)
 })
 
+test('collection views use the toolbar height inside documents and shadow roots', () => {
+  const collection = readFileSync(new URL('../site/collection-layout.css', import.meta.url), 'utf8')
+  const toolbar = readFileSync(new URL('../site/toolbar.css', import.meta.url), 'utf8')
+  assert.match(collection, /^@import "\.\/toolbar\.css";/u)
+  assert.match(collection, /\.agentic-table-toolbar,\s*\.agentic-table-column-header\[scope="col"\]\s*\{[^}]*block-size: var\(--agentic-toolbar-height\)/u)
+  assert.doesNotMatch(collection, /--agentic-toolbar-height\s*:/u)
+  assert.match(toolbar, /:root, :host\s*\{[^}]*--agentic-toolbar-height:/u)
+})
+
 test('minimized dock panels override placement height without changing their width', () => {
   const panelCss = readFileSync(new URL('../site/floating-panel.css', import.meta.url), 'utf8')
   const dockSizing = panelCss.indexOf('.agentic-base-floating-panel-root[data-agentic-floating-panel-placement="dock"] > .agentic-base-floating-panel { height: 100%; }')
