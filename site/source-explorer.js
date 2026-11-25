@@ -64,22 +64,42 @@ export function flattenVisibleSourceFileTree({ root, expandedPaths }) {
     return visible;
 }
 
+const explorerState = new WeakMap();
+
 // Native tree for model pages and source files. Products supply items and activation.
 export function mountSourceExplorer(host, { items, label = 'Source files', selectedId, onOpen }) {
     const document = host.ownerDocument;
-    const { root } = buildSourceFileTree(items);
+    let root = buildSourceFileTree(items).root;
+    const prior = explorerState.get(host);
     const active = items.find(item => item.id === selectedId);
     let expandedPaths = expandSourceFolderAncestors({
-        expandedPaths: new Set(['']), selectedFolderPath: resolveSourceParentFolderPath(active?.name || '')
+        expandedPaths: prior?.expandedPaths || new Set(['']), selectedFolderPath: resolveSourceParentFolderPath(active?.name || '')
     });
     const tree = document.createElement('div');
     tree.className = 'agentic-source-explorer';
     tree.setAttribute('role', 'tree');
     tree.setAttribute('aria-label', label);
-    host.replaceChildren(tree);
+    const search = document.createElement('input');
+    search.type = 'search';
+    search.placeholder = 'Filter pages and files';
+    search.setAttribute('aria-label', search.placeholder);
+    search.value = prior?.query || '';
+    host.replaceChildren(search, tree);
+    function filter() {
+        const query = search.value.trim().toLocaleLowerCase();
+        const matches = query ? items.filter(item => item.name.toLocaleLowerCase().includes(query)) : items;
+        root = buildSourceFileTree(matches).root;
+        if (query) for (const item of matches) {
+            expandedPaths = expandSourceFolderAncestors({ expandedPaths, selectedFolderPath: resolveSourceParentFolderPath(item.name) });
+        }
+        render();
+    }
+    search.oninput = filter;
     let focusKey = active ? 'file:' + active.id : null;
     function render(moveFocus = false) {
+        explorerState.set(host, { expandedPaths, query: search.value });
         const nodes = flattenVisibleSourceFileTree({ root, expandedPaths });
+        if (!nodes.some(node => node.key === focusKey)) focusKey = nodes[0]?.key || null;
         const rows = nodes.map((node, index) => {
             const folder = node.kind === 'folder', open = expandedPaths.has(node.path);
             const row = document.createElement('button');
@@ -126,7 +146,7 @@ export function mountSourceExplorer(host, { items, label = 'Source files', selec
         tree.replaceChildren(...rows);
         if (moveFocus) rows.find(button => button.tabIndex === 0)?.focus();
     }
-    render();
+    filter();
 }
 
 /** Two signed extents on the same scale, with a common zero at the midpoint. */
