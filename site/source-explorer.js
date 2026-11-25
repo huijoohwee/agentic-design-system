@@ -128,3 +128,21 @@ export function mountSourceExplorer(host, { items, label = 'Source files', selec
     }
     render();
 }
+
+/** Two signed extents on the same scale, with a common zero at the midpoint. */
+export function createVarianceBar(document, low, high, scale, label) {
+    if (![low, high, scale].every(Number.isFinite) || scale <= 0 || Math.max(Math.abs(low), Math.abs(high)) > scale)
+        throw new RangeError('Invalid variance bar domain');
+    const chart = document.createElement('span');
+    chart.className = 'agentic-variance-bar';
+    chart.setAttribute('role', 'img');
+    chart.setAttribute('aria-label', label);
+    for (const extent of [Math.max(0, -low, -high), Math.max(0, low, high)]) {
+        const bar = document.createElement('progress');
+        bar.max = scale;
+        bar.value = extent;
+        bar.setAttribute('aria-hidden', 'true');
+        chart.append(bar);
+    }
+    return chart;
+}

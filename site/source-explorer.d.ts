@@ -48,3 +48,4 @@ export declare function mountSourceExplorer(host: HTMLElement, options: {
     label?: string;
     onOpen: (id: string) => void;
 }): void;
+export declare function createVarianceBar(document: Document, low: number, high: number, scale: number, label: string): HTMLElement;
