@@ -92,7 +92,12 @@
     "./react/dashboard": {
       "types": "./packages/react-dashboard/src/index.ts",
       "import": "./packages/react-dashboard/src/index.ts"
-    }
+    },
+    "./source-explorer": {
+      "types": "./site/source-explorer.d.ts",
+      "import": "./site/source-explorer.js"
+    },
+    "./source-explorer.css": "./site/source-explorer.css"
   },
   "engines": {
     "node": ">=20.11"
@@ -114,7 +119,7 @@
     "lane": "agentic-os start",
     "land": "agentic-os land",
     "dev": "node scripts/dev.mjs",
-    "check:design-system": "node --test scripts/panel-controls.test.mjs scripts/react-panel-adapter.test.mjs scripts/key-type-value.test.mjs scripts/hover.test.mjs scripts/panel-section.test.mjs scripts/markdown.test.mjs scripts/viewer-surface.test.mjs scripts/dashboard-renderer.test.mjs && node scripts/design-registry.mjs check",
+    "check:design-system": "node --test scripts/source-explorer.test.mjs scripts/panel-controls.test.mjs scripts/react-panel-adapter.test.mjs scripts/key-type-value.test.mjs scripts/hover.test.mjs scripts/panel-section.test.mjs scripts/markdown.test.mjs scripts/viewer-surface.test.mjs scripts/dashboard-renderer.test.mjs && node scripts/design-registry.mjs check",
     "mcp": "node scripts/design-registry.mjs mcp"
   },
   "devDependencies": {

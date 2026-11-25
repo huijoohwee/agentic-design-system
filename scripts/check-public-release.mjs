@@ -8,8 +8,9 @@ import { checkDesignRegistry } from "./design-registry.mjs";
 import { prepareLocalDevHtml } from "./dev-csp.mjs";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
-execFileSync(process.execPath, ['--test', 'scripts/key-type-value.test.mjs', 'scripts/hover.test.mjs', 'scripts/panel-section.test.mjs', 'scripts/markdown.test.mjs', 'scripts/viewer-surface.test.mjs', 'scripts/dashboard-renderer.test.mjs'], { cwd: root, stdio: 'inherit' });
+execFileSync(process.execPath, ['--test', 'scripts/source-explorer.test.mjs', 'scripts/key-type-value.test.mjs', 'scripts/hover.test.mjs', 'scripts/panel-section.test.mjs', 'scripts/markdown.test.mjs', 'scripts/viewer-surface.test.mjs', 'scripts/dashboard-renderer.test.mjs'], { cwd: root, stdio: 'inherit' });
 const expectedFiles = [
+  "site/source-explorer.js", "site/source-explorer.d.ts", "site/source-explorer.css", "scripts/source-explorer.test.mjs",
   "site/dashboard-range.mjs", "site/dashboard-range.css", "site/dashboard-range.d.mts",
   "site/dashboard.mjs", "site/dashboard.d.mts", "packages/react-dashboard/src/index.ts", "scripts/dashboard-renderer.test.mjs",
   "site/panels.css", "site/skills-commands.js", "site/skills-commands.d.ts", "site/skills-commands.css",
