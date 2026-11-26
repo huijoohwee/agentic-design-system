@@ -30,6 +30,10 @@ jobs:
         with:
           node-version: 22
 
+      - name: Enforce shared owner reuse
+        uses: huijoohwee/agentic-os/.github/actions/owner-reuse@2a394c589064105387f1c58e6db54da135059c28
+        with:
+          baseline: efb6c8e3b19898ccfe48b060a9ecc99c24a4000e
       - name: Check JavaScript syntax
         run: |
           node --input-type=module --check < site/app.js
