@@ -33,6 +33,9 @@ jobs:
       - name: Install locked shared policy helper
         run: npm ci --ignore-scripts --no-audit --no-fund
 
+      - name: Install Chromium for rendered target audit
+        run: npx playwright install --with-deps chromium
+
       - name: Enforce shared owner reuse
         uses: huijoohwee/agentic-os/.github/actions/owner-reuse@2a394c589064105387f1c58e6db54da135059c28
         with:
@@ -41,6 +44,7 @@ jobs:
         run: |
           node --input-type=module --check < site/app.js
           node --check site/registry-query.js
+          node --check site/annotation-targets.js
           node --check site/sw.js
           node --check scripts/base-profile.mjs
           node --check scripts/check-public-release.mjs
@@ -52,3 +56,6 @@ jobs:
 
       - name: Check public release contents
         run: node scripts/check-public-release.mjs
+
+      - name: Audit rendered annotation targets
+        run: node scripts/check-annotation-targets-browser.mjs

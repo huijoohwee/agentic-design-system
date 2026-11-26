@@ -1,4 +1,9 @@
 import { createTabList } from '../site/floating-panel.js'
+import {
+  SELECTION_TARGET_ATTRIBUTE,
+  SELECTION_TARGET_SELECTOR,
+  assertAnnotationTargets,
+} from '../site/annotation-targets.js'
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import test from 'node:test'
@@ -206,4 +211,72 @@ test('a standalone worksheet rail binds selected tabs to their panels and report
   assert.deepEqual(events, ['source'])
   assert.deepEqual(list.rail.children.map(tab => tab.tabIndex), [0, -1])
   assert.throws(() => list.select('unknown'), RangeError)
+})
+
+test('annotation target lookup has one stable selector and keeps the shared panel on a semantic dialog root', () => {
+  const source = readFileSync(new URL('../site/floating-panel.js', import.meta.url), 'utf8')
+
+  assert.equal(SELECTION_TARGET_ATTRIBUTE, 'data-selection-target')
+  assert.equal(SELECTION_TARGET_SELECTOR, '[data-selection-target]')
+  assert.equal(typeof assertAnnotationTargets, 'function')
+  assert.match(source, /element\(doc, 'aside', 'agentic-base-floating-panel agentic-form-controls'\)/u)
+  assert.match(source, /selectionTarget, returnFocus/u)
+  assert.match(source, /if \(selectionTarget\) dialog\.dataset\.selectionTarget = selectionTarget/u)
+  assert.doesNotMatch(source, /dialog\.dataset\.selectionTarget = 'floating-panel'/u)
+  assert.match(readFileSync(new URL('../site/index.html', import.meta.url), 'utf8'), /id="floating-panel-preview-trigger"[^>]*data-selection-target="floating-panel-preview-trigger"/u)
+  assert.match(source, /dialog\.setAttribute\('role', 'dialog'\)/u)
+})
+
+function annotationFixture({ name = 'sample.target', tag = 'button', hit = true, hidden = false, left = 0 } = {}) {
+  let element
+  const document = {
+    defaultView: {
+      innerWidth: 200,
+      innerHeight: 100,
+      getComputedStyle: () => ({ display: 'block', visibility: 'visible', opacity: '1', pointerEvents: 'auto' }),
+    },
+    elementFromPoint: () => hit ? element : null,
+    getElementById: () => null,
+  }
+  element = {
+    nodeType: 1,
+    tagName: tag.toUpperCase(),
+    ownerDocument: document,
+    childNodes: [{ nodeType: 3, nodeValue: 'Visible target', textContent: 'Visible target' }],
+    hidden,
+    inert: false,
+    isConnected: true,
+    parentElement: null,
+    labels: [],
+    getAttribute: key => key === SELECTION_TARGET_ATTRIBUTE ? name : key === 'href' && tag === 'a' ? '#target' : null,
+    hasAttribute: key => key === SELECTION_TARGET_ATTRIBUTE || key === 'href' && tag === 'a',
+    getBoundingClientRect: () => ({ left, top: 0, width: 100, height: 40 }),
+    scrollIntoView: () => {},
+    contains: child => child === element,
+  }
+  return element
+}
+
+test('annotation release assertion is self-contained for browser execution and rejects duplicates or generic targets', () => {
+  const targets = [annotationFixture({ name: 'repeat', tag: 'div' }), annotationFixture({ name: 'repeat' })]
+  const root = { querySelectorAll: selector => selector === SELECTION_TARGET_SELECTOR ? targets : [] }
+  assert.match(assertAnnotationTargets.toString(), /data-selection-target/u)
+  assert.doesNotMatch(assertAnnotationTargets.toString(), /\b(?:SELECTION_TARGET_SELECTOR|inspectAnnotationTargets|findSelectionTargets)\b/u)
+  assert.throws(() => assertAnnotationTargets(root), /shared contract/u)
+})
+
+test('annotation release assertion requires visible browser hit-testing and accepts the browser-evaluation options form', () => {
+  const target = annotationFixture()
+  const root = { querySelectorAll: selector => selector === SELECTION_TARGET_SELECTOR ? [target] : [] }
+  assert.equal(assertAnnotationTargets(root).schema, 'agentic-design-system/annotation-target-audit/v1')
+  assert.throws(() => assertAnnotationTargets({ querySelectorAll: () => [annotationFixture({ hit: false })] }), /not-hit-testable/u)
+  assert.throws(() => assertAnnotationTargets({ querySelectorAll: () => [annotationFixture({ left: 300 })] }), /outside-viewport/u)
+  const previous = globalThis.document
+  try {
+    globalThis.document = root
+    assert.equal(assertAnnotationTargets({ minTargets: 1 }).targetCount, 1)
+  } finally {
+    if (previous === undefined) delete globalThis.document
+    else globalThis.document = previous
+  }
 })

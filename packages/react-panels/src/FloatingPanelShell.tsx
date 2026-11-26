@@ -20,13 +20,14 @@ export type FloatingPanelShellProps = Omit<CanonicalFloatingPanelShellProps, 'ro
 export const FloatingPanelShell = React.forwardRef<HTMLElement, FloatingPanelShellProps>(function FloatingPanelShell({
   rootPlacement = 'flow', rootStyle, panelStyle, theme = 'inherit', ariaLabel = 'Floating panel', minimized = false,
   pinned = true, rowHeight, fieldLine, onHeaderPointerDown, onPointerDownCapture, onFocusCapture,
-  panelLayer, header, children,
+  panelLayer, selectionTarget, header, children,
 }, ref) {
   return <section className="agentic-base-floating-panel-root" style={{ ...rootStyle, colorScheme: theme === 'system' ? 'light dark' : theme }}
     data-agentic-floating-panel-placement={rootPlacement === 'flow' ? undefined : rootPlacement}
     data-agentic-base-panel-layer={panelLayer} onPointerDownCapture={onPointerDownCapture} onFocusCapture={onFocusCapture}>
     <aside ref={ref} className="agentic-base-floating-panel agentic-form-controls" style={panelStyle}
       data-agentic-base-floating-panel="true" data-agentic-base-panel-minimized={minimized ? 'true' : undefined}
+      data-selection-target={selectionTarget}
       data-agentic-base-row-height={rowHeight} data-agentic-base-field-line={fieldLine}>
       <section className={['agentic-base-floating-panel-inner', minimized ? '' : 'agentic-base-floating-panel-expanded'].filter(Boolean).join(' ')}
         aria-label={ariaLabel}>

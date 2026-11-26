@@ -19,6 +19,8 @@ export interface FloatingPanelShellProps {
   rootStyle?: FloatingPanelRootStyle
   panelStyle?: FloatingPanelPanelStyle
   ariaLabel?: string
+  /** Product-owned unique name for this instance when it should be annotation-selectable. */
+  selectionTarget?: string
   minimized?: boolean
   pinned?: boolean
   rowHeight?: string

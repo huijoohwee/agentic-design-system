@@ -78,7 +78,7 @@ export function createTabList(root, { label, activeKey, onChange }) {
 
 /** Mount the native shell around product-owned tab contents. Build its chrome on first open. */
 export function mountFloatingPanel(trigger, root, {
-  label, tablistLabel = label, activeKey, placement = 'viewport-overlay', returnFocus = () => trigger.focus(), onChange,
+  label, tablistLabel = label, activeKey, placement = 'viewport-overlay', selectionTarget, returnFocus = () => trigger.focus(), onChange,
 }) {
   const doc = root.ownerDocument;
   const pages = [...root.children];
@@ -95,6 +95,7 @@ export function mountFloatingPanel(trigger, root, {
   }
   function build() {
     const dialog = element(doc, 'aside', 'agentic-base-floating-panel agentic-form-controls');
+    if (selectionTarget) dialog.dataset.selectionTarget = selectionTarget;
     dialog.setAttribute('role', 'dialog');
     dialog.setAttribute('aria-modal', 'false');
     dialog.setAttribute('aria-label', label);
