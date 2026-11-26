@@ -6,8 +6,8 @@
   <meta name="color-scheme" content="light dark">
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self'; script-src 'self'; worker-src 'self'; style-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
-  <meta name="description" content="A local, read-only design registry with revision-pinned Commerce, Graph, Base, and shared UI profiles.">
-  <title>Agentic Design System · Ownership registry</title>
+  <meta name="description" content="A local, read-only design token catalog with revision-pinned Commerce, Graph, Base, and shared UI candidate profiles.">
+  <title>Agentic Design System · Design token catalog</title>
   <link rel="stylesheet" href="./vendor/graph-profile.css">
   <link rel="stylesheet" href="./vendor/commerce-theme.css">
   <link rel="stylesheet" href="./vendor/shared-ui-profile.css">
@@ -21,9 +21,9 @@
   <main class="agentic-dashboard-layout">
     <header class="agentic-dashboard-header">
       <hgroup>
-        <p class="agentic-dashboard-observation">Ownership registry · Read only</p>
+        <p class="agentic-dashboard-observation">Design token catalog · Candidate profiles · Read only</p>
         <h1 id="top" data-dashboard-primitive="heading">Agentic Design System</h1>
-        <p data-dashboard-primitive="text">Find the owner, source revision, and reuse terms for a design token.</p>
+        <p data-dashboard-primitive="text">Browse owner-pinned token profiles and inspect each key’s source revision and reuse terms.</p>
       </hgroup>
     </header>
     <div class="agentic-toolbar-dock">
@@ -31,9 +31,10 @@
       <button id="floating-panel-preview-trigger" type="button" class="agentic-toolbar-item" data-icon-only data-dock-edge="end" aria-label="FloatingPanel" title="FloatingPanel" aria-haspopup="dialog" aria-controls="panel-preview" aria-expanded="false"><svg data-agentic-design-icon="SlidersHorizontal"></svg></button>
     </div>
     <section class="agentic-dashboard-region" aria-labelledby="records-heading">
-      <h2 id="records-heading">Owners and candidate profiles</h2>
-      <search class="registry-search" aria-label="Search the registry">
-        <label for="catalog-search">Search the registry</label>
+      <h2 id="records-heading">Design token catalog</h2>
+      <p>Candidate token profiles are available below for local review. Published records remain empty while the release is in draft.</p>
+      <search class="registry-search" aria-label="Search the design token catalog">
+        <label for="catalog-search">Search the token catalog</label>
         <input id="catalog-search" type="search" autocomplete="off" spellcheck="false" aria-controls="catalog-grid" aria-describedby="search-help" placeholder="Token key, section, owner, or scope">
         <p id="search-help" class="agentic-dashboard-observation">Use / for a section, @ for an owner, or # for a product scope.</p>
       </search>
