@@ -15,7 +15,7 @@ if (requestedHost && requestedHost !== host) throw new Error("The design-system 
 
 const { values } = parseArgs({ options: { port: { type: 'string' } } });
 const explicitPort = values.port ?? process.env.PORT;
-const portText = explicitPort ?? "4173";
+const portText = explicitPort ?? "4180";
 if (!/^(?:0|[1-9][0-9]{0,4})$/u.test(portText) || Number(portText) > 65535) {
   throw new Error("PORT must be an integer from 0 to 65535");
 }
