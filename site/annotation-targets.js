@@ -36,6 +36,7 @@ export function assertAnnotationTargets(rootOrOptions = globalThis.document, opt
     const nativeInteractive = tag === 'button' || tag === 'a' && element.hasAttribute('href')
       || ['details', 'input', 'select', 'textarea', 'summary'].includes(tag) && element.getAttribute('type') !== 'hidden';
     const landmark = ['article', 'aside', 'figure', 'footer', 'header', 'main', 'nav'].includes(tag)
+      || tag === 'form' && role === 'search'
       || tag === 'section' && (role === 'region' || element.hasAttribute('aria-label') || element.hasAttribute('aria-labelledby'));
     if (!nativeInteractive && !landmark) itemIssues.push('semantic-target-required');
     if (['generic', 'none', 'presentation'].includes(role)) itemIssues.push('presentation-role');
