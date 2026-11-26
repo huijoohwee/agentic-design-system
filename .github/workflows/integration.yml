@@ -30,6 +30,9 @@ jobs:
         with:
           node-version: 22
 
+      - name: Install locked shared policy helper
+        run: npm ci --ignore-scripts --no-audit --no-fund
+
       - name: Enforce shared owner reuse
         uses: huijoohwee/agentic-os/.github/actions/owner-reuse@2a394c589064105387f1c58e6db54da135059c28
         with:
