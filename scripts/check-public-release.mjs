@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import { renderTypographyCss, validateIconLibrary } from "./design-system-icon-profile.mjs";
 import { checkDesignRegistry } from "./design-registry.mjs";
 import { prepareLocalDevHtml } from "./dev-csp.mjs";
+import { contentSecurityPolicyHeaderName, validateContentSecurityPolicy } from 'agentic-os/content-security-policy';
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 execFileSync(process.execPath, ['--test', 'scripts/source-explorer.test.mjs', 'scripts/key-type-value.test.mjs', 'scripts/hover.test.mjs', 'scripts/panel-section.test.mjs', 'scripts/markdown.test.mjs', 'scripts/viewer-surface.test.mjs', 'scripts/dashboard-renderer.test.mjs'], { cwd: root, stdio: 'inherit' });
@@ -93,15 +94,19 @@ function fail(message) {
 }
 
 function verifyContentSecurityPolicy(indexHtml) {
-  const meta = [...indexHtml.matchAll(/<meta\s+http-equiv="Content-Security-Policy"\s+content="([^"]+)"\s*>/giu)];
-  if (meta.length !== 1) fail('Static HTML must declare exactly one Content-Security-Policy');
+  const headerName = contentSecurityPolicyHeaderName('enforce');
+  const escapedHeaderName = headerName.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
+  const meta = [...indexHtml.matchAll(new RegExp(`<meta\\s+http-equiv="${escapedHeaderName}"\\s+content="([^"]+)"\\s*>`, 'giu'))];
+  if (meta.length !== 1) fail(`Static HTML must declare exactly one ${headerName}`);
+  let policy;
+  try { policy = validateContentSecurityPolicy(meta[0][1]); } catch {
+    fail('Static CSP contains an empty, malformed, or duplicate directive');
+  }
   const directives = new Map();
-  for (const raw of meta[0][1].split(';')) {
+  for (const raw of policy.split(';')) {
     const [name, ...sources] = raw.trim().split(/\s+/u);
     const normalized = name?.toLowerCase();
-    if (!normalized || !/^[a-z][a-z0-9-]*$/u.test(normalized) || !sources.length || directives.has(normalized)) {
-      fail('Static CSP contains an empty, malformed, or duplicate directive');
-    }
+    if (!normalized || !sources.length) fail('Static CSP contains an empty directive');
     directives.set(normalized, sources);
   }
   const inlineStyleHashes = [...indexHtml.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style\s*>/giu)]
@@ -228,6 +233,7 @@ function assertLocalDevCspFixtures(indexHtml) {
   if (!match) fail("Local Dev CSP fixture requires the production policy source");
   const dev = prepareLocalDevHtml("index.html", "text/html; charset=utf-8", Buffer.from(indexHtml));
   if (!dev || dev.reportOnlyPolicy !== `${match[1]}; style-src-elem 'self' 'unsafe-inline'`
+    || dev.headerName !== contentSecurityPolicyHeaderName('report-only')
     || /<meta\s+http-equiv="Content-Security-Policy"/iu.test(dev.body.toString("utf8"))) {
     fail("Local Dev must derive one report-only annotation exception from the strict static CSP");
   }

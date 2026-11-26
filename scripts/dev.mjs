@@ -87,7 +87,7 @@ const server = createServer(async (request, response) => {
     if (devHtml) {
       body = devHtml.body;
       headers["Content-Length"] = body.byteLength;
-      headers["Content-Security-Policy-Report-Only"] = devHtml.reportOnlyPolicy;
+      headers[devHtml.headerName] = devHtml.reportOnlyPolicy;
     }
     response.writeHead(200, headers);
     response.end(request.method === "HEAD" ? undefined : body);
