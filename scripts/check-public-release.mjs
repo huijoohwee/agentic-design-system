@@ -38,6 +38,7 @@ const expectedFiles = [
   "packages/react-hover/src/index.tsx",
   "prd-tad-adr-mvp-gtm-agentic-design-system.md",
   "scripts/base-profile.mjs",
+  "scripts/check-annotation-targets-browser.mjs",
   "scripts/check-public-release.mjs",
   "scripts/commerce-profile.mjs",
   "scripts/dashboard-layout-css.mjs", "scripts/dashboard-layout-service.mjs", "scripts/dashboard-layout-service.test.mjs",
