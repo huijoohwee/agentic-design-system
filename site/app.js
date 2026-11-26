@@ -335,6 +335,7 @@ window.addEventListener("hashchange", updateSectionSelection);
 
 mountFloatingPanel(document.querySelector('#floating-panel-preview-trigger'), document.querySelector('#panel-preview'), {
   label: 'FloatingPanel preview', tablistLabel: 'Workspace panels', activeKey: 'console', placement: 'dock',
+  selectionTarget: 'floating-panel-preview-dialog',
 });
 
 async function sha256(bytes) {

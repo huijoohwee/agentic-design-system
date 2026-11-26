@@ -9,6 +9,10 @@
     "./profile.css": "./site/vendor/shared-ui-profile.css",
     "./typography.css": "./site/vendor/typography.css",
     "./floating-panel": "./site/floating-panel.js",
+    "./annotation-targets": {
+      "types": "./site/annotation-targets.d.ts",
+      "import": "./site/annotation-targets.js"
+    },
     "./inline-editor": {
       "types": "./site/inline-editor.d.ts",
       "import": "./site/inline-editor.js"
@@ -119,10 +123,11 @@
     "lane": "agentic-os start",
     "land": "agentic-os land",
     "dev": "node scripts/dev.mjs",
-    "check:design-system": "node --test scripts/source-explorer.test.mjs scripts/panel-controls.test.mjs scripts/react-panel-adapter.test.mjs scripts/key-type-value.test.mjs scripts/hover.test.mjs scripts/panel-section.test.mjs scripts/markdown.test.mjs scripts/viewer-surface.test.mjs scripts/dashboard-renderer.test.mjs && node scripts/design-registry.mjs check",
+    "check:design-system": "node --test scripts/source-explorer.test.mjs scripts/panel-controls.test.mjs scripts/react-panel-adapter.test.mjs scripts/key-type-value.test.mjs scripts/hover.test.mjs scripts/panel-section.test.mjs scripts/markdown.test.mjs scripts/viewer-surface.test.mjs scripts/dashboard-renderer.test.mjs && node scripts/design-registry.mjs check && node scripts/check-annotation-targets-browser.mjs",
     "mcp": "node scripts/design-registry.mjs mcp"
   },
   "devDependencies": {
-    "agentic-os": "https://codeload.github.com/huijoohwee/agentic-os/tar.gz/bf0db174f4c2f18757f844ef19864b12675905e0"
+    "agentic-os": "https://codeload.github.com/huijoohwee/agentic-os/tar.gz/bf0db174f4c2f18757f844ef19864b12675905e0",
+    "playwright": "1.62.1"
   }
 }
