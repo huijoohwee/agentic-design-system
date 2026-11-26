@@ -227,7 +227,7 @@ test('annotation target lookup has one stable selector and keeps the shared pane
   assert.match(source, /dialog\.setAttribute\('role', 'dialog'\)/u)
 })
 
-function annotationFixture({ name = 'sample.target', tag = 'button', hit = true, hidden = false, left = 0 } = {}) {
+function annotationFixture({ name = 'sample.target', tag = 'button', role = '', hit = true, hidden = false, left = 0 } = {}) {
   let element
   const document = {
     defaultView: {
@@ -248,7 +248,7 @@ function annotationFixture({ name = 'sample.target', tag = 'button', hit = true,
     isConnected: true,
     parentElement: null,
     labels: [],
-    getAttribute: key => key === SELECTION_TARGET_ATTRIBUTE ? name : key === 'href' && tag === 'a' ? '#target' : null,
+    getAttribute: key => key === SELECTION_TARGET_ATTRIBUTE ? name : key === 'role' ? role : key === 'href' && tag === 'a' ? '#target' : null,
     hasAttribute: key => key === SELECTION_TARGET_ATTRIBUTE || key === 'href' && tag === 'a',
     getBoundingClientRect: () => ({ left, top: 0, width: 100, height: 40 }),
     scrollIntoView: () => {},
@@ -279,4 +279,10 @@ test('annotation release assertion requires visible browser hit-testing and acce
     if (previous === undefined) delete globalThis.document
     else globalThis.document = previous
   }
+})
+
+test('annotation audit accepts an explicitly named search form as a semantic landmark', () => {
+  const target = annotationFixture({ tag: 'form', role: 'search' })
+  const root = { querySelectorAll: selector => selector === SELECTION_TARGET_SELECTOR ? [target] : [] }
+  assert.equal(assertAnnotationTargets(root).targets[0].ok, true)
 })
