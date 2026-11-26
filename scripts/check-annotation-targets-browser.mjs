@@ -16,7 +16,7 @@ const origin = await new Promise((resolve, reject) => {
     if (match) { clearTimeout(timeout); resolve(match[1]); }
   });
   server.once('exit', code => reject(new Error(`Design System server exited (${code}): ${output}`)));
-});
+}).catch(error => { server.kill('SIGTERM'); throw error; });
 
 let browser;
 try {
