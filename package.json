@@ -122,6 +122,9 @@
     "doctor": "agentic-os doctor",
     "lane": "agentic-os start",
     "land": "agentic-os land",
+    "successor": "agentic-os successor",
+    "release:common": "agentic-os release-common",
+    "sync:canonical": "agentic-os canonical-sync",
     "dev": "node scripts/dev.mjs",
     "check:design-system": "node --test scripts/source-explorer.test.mjs scripts/panel-controls.test.mjs scripts/react-panel-adapter.test.mjs scripts/key-type-value.test.mjs scripts/hover.test.mjs scripts/panel-section.test.mjs scripts/markdown.test.mjs scripts/viewer-surface.test.mjs scripts/dashboard-renderer.test.mjs && node scripts/design-registry.mjs check && node scripts/check-annotation-targets-browser.mjs",
     "mcp": "node scripts/design-registry.mjs mcp"
