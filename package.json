@@ -130,7 +130,7 @@
     "mcp": "node scripts/design-registry.mjs mcp"
   },
   "devDependencies": {
-    "agentic-os": "https://codeload.github.com/huijoohwee/agentic-os/tar.gz/bf0db174f4c2f18757f844ef19864b12675905e0",
+    "agentic-os": "https://codeload.github.com/huijoohwee/agentic-os/tar.gz/9e171b490b158ecbc5e8e024e9bccc409fd756b0",
     "playwright": "1.62.1"
   }
 }
