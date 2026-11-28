@@ -1,5 +1,11 @@
 # FloatingPanel shared contract
 
+## Default responsive support
+
+The shared panel and toolbar layouts support two default device profiles. The 16-inch MacBook Pro uses a full-screen 1728 × 1117 CSS-pixel viewport at 2× with a fine pointer and keyboard. The portrait iPhone 13 uses a 390 × 844 CSS-pixel screen at 3×, with 390 × 664 available when browser controls are visible. Its coarse-pointer toolbar controls have a 44 CSS-pixel minimum hit area.
+
+Consumers use the shared styles for layout and import `supportedResponsiveTargets` from `agentic-design-system/annotation-targets` in their existing browser checks. To add a supported device, extend the owner profile list, its type declaration and its acceptance check, then update the consumer pin. The application responds to the available space and pointer capabilities.
+
 ## Common action icons
 
 `site/icons.json` owns the semantic `panelControls` map for `search`, `pin`, `apply`, `reset`, `minimize`, `restore`, and `close`, including each role’s canonical icon and accessible label. Consumers use those roles through their shared UI adapter; they do not define local glyph aliases, labels, or copy icon paths. Panel controls use the same neutral labels across products (`Search`, `Pin`, `Apply`, `Reset`, `Minimize panel`, `Restore panel`, and `Close`). Panel restoration uses the maximize icon; history restoration remains a distinct history action and is never mapped to the panel `restore` role. Consumer governance documents reference this map; they do not restate role-to-glyph or role-to-label pairs as a second authority.

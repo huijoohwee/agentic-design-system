@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { once } from 'node:events';
 import { chromium } from 'playwright';
-import targets from 'agentic-design-system/responsive-targets' with { type: 'json' };
+import { supportedResponsiveTargets } from 'agentic-design-system/annotation-targets';
 
 const server = spawn(process.execPath, ['scripts/dev.mjs', '--port=0'], {
   cwd: process.cwd(), stdio: ['ignore', 'pipe', 'inherit'],
@@ -22,8 +22,8 @@ const origin = await new Promise((resolve, reject) => {
 let browser;
 try {
   browser = await chromium.launch({ headless: true });
-  assert.deepEqual(Object.keys(targets).sort(), ['iphone-13', 'macbook-pro-16']);
-  for (const [device, profile] of Object.entries(targets)) {
+  assert.deepEqual(Object.keys(supportedResponsiveTargets).sort(), ['iphone-13', 'macbook-pro-16']);
+  for (const [device, profile] of Object.entries(supportedResponsiveTargets)) {
     const context = await browser.newContext({ ...profile, serviceWorkers: 'block' });
     const page = await context.newPage();
     const pageErrors = [];
