@@ -13,3 +13,6 @@ export type { PanelControlGroupProps, PanelControlActions, PanelControlDisabledS
 
 export { PanelTabHeader, HeadingActions, SettingsSectionHeader, CollapsibleSection, PanelDisclosure, PanelScrollRegion, ExpandCollapseAllButton, useCollapsibleSectionGroup } from './PanelSection'
 export type { SettingsSectionHeaderProps, CollapsibleSectionProps, PanelDisclosureProps, ExpandCollapseAllButtonProps } from './PanelSection'
+
+export { CanvasToolIcon, canvasTools } from './CanvasToolIcon'
+export type { CanvasToolId } from './CanvasToolIcon'

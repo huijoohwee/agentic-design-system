@@ -479,8 +479,8 @@ ${dashboardLayoutCss(profile)}
 
 export function validateIconLibrary(source) {
   const library = JSON.parse(source);
-  exactKeys(library, ["schema", "version", "owner", "source", "viewBox", "panelControls", "icons"], "icon library");
-  if (library.schema !== "agentic-design-system/icon-library/v1" || library.version !== "1.3.0"
+  exactKeys(library, ["schema", "version", "owner", "source", "viewBox", "panelControls", "canvasTools", "icons"], "icon library");
+  if (library.schema !== "agentic-design-system/icon-library/v1" || library.version !== "1.4.0"
     || library.owner !== "github.com/huijoohwee/agentic-design-system" || library.viewBox !== "0 0 24 24") fail("icon identity");
   exactKeys(library.source, ["package", "version", "license", "licenseSha256"], "icon source");
   if (library.source.package !== "lucide-react" || library.source.version !== "0.562.0"
@@ -514,6 +514,14 @@ export function validateIconLibrary(source) {
     exactKeys(library.panelControls[role], ["icon", "label"], `panel control ${role}`);
     if (JSON.stringify(library.panelControls[role]) !== JSON.stringify(definition)
       || !Object.hasOwn(library.icons, definition.icon)) fail(`panel control ownership: ${role}`);
+  }
+  exactKeys(library.canvasTools, ["select", "pan", "node", "edge", "subgraph"], "canvas tool roles");
+  const shortcuts = new Set();
+  for (const [role, tool] of Object.entries(library.canvasTools)) {
+    exactKeys(tool, ["icon", "label", "hotkey"], `canvas tool ${role}`);
+    if (!Object.hasOwn(library.icons, tool.icon) || !tool.label?.trim()
+      || !/^[A-Z]$/u.test(tool.hotkey) || shortcuts.has(tool.hotkey)) fail(`invalid canvas tool: ${role}`);
+    shortcuts.add(tool.hotkey);
   }
   return library;
 }
