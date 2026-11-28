@@ -27,6 +27,7 @@ const expectedFiles = [
   "README.md",
   "package-lock.json",
   "package.json",
+  "packages/react-panels/src/CanvasToolIcon.tsx",
   "packages/react-panels/src/FloatingPanelCloseButton.tsx",
   "packages/react-panels/src/FloatingPanelShell.tsx",
   "packages/react-panels/src/FloatingPanelTabs.tsx",

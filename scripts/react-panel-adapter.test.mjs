@@ -61,3 +61,11 @@ test('React bridges reuse Design System runtime and canonical contracts', async 
     assert.doesNotMatch(source, /@agentic-base|PANEL_CONTROL_(?:ICONS|LABELS|ORDER)/)
   }
 })
+
+test('canvas tool roles resolve to owned glyphs and unique keyboard shortcuts', async () => {
+  const library = await readJson('site/icons.json')
+  const { validateIconLibrary } = await import('./design-system-icon-profile.mjs')
+  assert.equal(validateIconLibrary(JSON.stringify(library)).canvasTools.edge.hotkey, 'E')
+  library.canvasTools.node.hotkey = library.canvasTools.pan.hotkey
+  assert.throws(() => validateIconLibrary(JSON.stringify(library)), /invalid canvas tool/)
+})
