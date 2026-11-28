@@ -1,5 +1,5 @@
 import React from 'react'
-import library from '../../../site/icons.json'
+import library from '../../../site/icons.json' with { type: 'json' }
 import { createDesignIcon } from '../../../site/toolbar-icons.js'
 
 export const canvasTools = Object.freeze(library.canvasTools)
