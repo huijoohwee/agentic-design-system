@@ -1,3 +1,12 @@
+export type ResponsiveTarget = Readonly<{
+  screen: Readonly<{ width: number; height: number }>
+  viewport: Readonly<{ width: number; height: number }>
+  deviceScaleFactor: number
+  isMobile: boolean
+  hasTouch: boolean
+}>
+export declare const supportedResponsiveTargets: Readonly<Record<'macbook-pro-16' | 'iphone-13', ResponsiveTarget>>
+
 export interface AnnotationTargetAuditOptions {
   /** Minimum count of named selection targets required in the audited document. */
   minTargets?: number

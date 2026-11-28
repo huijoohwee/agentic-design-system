@@ -1,5 +1,17 @@
 export const SELECTION_TARGET_ATTRIBUTE = 'data-selection-target';
 export const SELECTION_TARGET_SELECTOR = `[${SELECTION_TARGET_ATTRIBUTE}]`;
+// Shared browser profiles for responsive controls and panel geometry.
+export const supportedResponsiveTargets = Object.freeze({
+  'macbook-pro-16': {
+    screen: { width: 1728, height: 1117 }, viewport: { width: 1728, height: 1117 },
+    deviceScaleFactor: 2, isMobile: false, hasTouch: false,
+  },
+  'iphone-13': {
+    screen: { width: 390, height: 844 }, viewport: { width: 390, height: 664 },
+    deviceScaleFactor: 3, isMobile: true, hasTouch: true,
+  },
+});
+
 export function assertAnnotationTargets(rootOrOptions = globalThis.document, options = {}) {
   const auditSchema = 'agentic-design-system/annotation-target-audit/v1';
   const hasRoot = typeof rootOrOptions?.querySelectorAll === 'function';
