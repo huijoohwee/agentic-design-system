@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./responsive-targets": "./site/responsive-targets.json",
     "./toolbar.css": "./site/toolbar.css",
     "./panels.css": "./site/panels.css",
     "./profile.css": "./site/vendor/shared-ui-profile.css",
